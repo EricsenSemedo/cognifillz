@@ -1,0 +1,13 @@
+{
+  "name": "@cognifillz/shared",
+  "version": "0.1.0",
+  "description": "Shared TypeScript types and utilities for CogniFillz",
+  "main": "index.ts",
+  "types": "index.ts",
+  "scripts": {
+    "type-check": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.3"
+  }
+}

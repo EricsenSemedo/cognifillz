@@ -1,0 +1,20 @@
+{
+  "name": "cognifillz",
+  "version": "0.1.0",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev:extension": "cd apps/extension && npm run dev",
+    "dev:server": "cd apps/server && uvicorn main:app --reload",
+    "build:extension": "cd apps/extension && npm run build",
+    "install:all": "npm install && npm run install:extension && npm run install:server",
+    "install:extension": "cd apps/extension && npm install",
+    "install:server": "cd apps/server && pip install -r requirements.txt"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.3"
+  }
+}
