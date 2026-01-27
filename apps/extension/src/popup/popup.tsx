@@ -84,8 +84,63 @@ const App: React.FC = () => {
   };
 
   const analyzeJob = async () => {
-    // TODO: Scrape job description from page and send to LLM
-    alert('Job analysis coming soon!');
+    try {
+      const [tab] = await browser.tabs.query({ active: true, currentWindow: true });
+      
+      if (!tab.id) {
+        alert('Cannot access current tab');
+        return;
+      }
+      
+      // Scrape job description from the page
+      const scrapeResponse: any = await browser.tabs.sendMessage(
+        tab.id,
+        { action: 'scrapeJobDescription' }
+      );
+      
+      if (!scrapeResponse.success || !scrapeResponse.jobData) {
+        alert('Failed to scrape job description');
+        return;
+      }
+      
+      const { jobData } = scrapeResponse;
+      
+      if (!jobData.jobDescription || jobData.jobDescription.length < 50) {
+        alert('Could not find job description on this page');
+        return;
+      }
+      
+      // Send to background for AI analysis
+      const analysisResponse: any = await browser.runtime.sendMessage({
+        action: 'analyzeJob',
+        jobDescription: jobData.jobDescription,
+        jobData: jobData
+      });
+      
+      if (analysisResponse.error) {
+        alert(`Analysis failed: ${analysisResponse.error}\n\nMake sure your local LLM is running.`);
+        return;
+      }
+      
+      if (analysisResponse.success && analysisResponse.analysis) {
+        const { score, missingKeywords, suggestions } = analysisResponse.analysis;
+        
+        let message = `Job Match Score: ${score}/100\n\n`;
+        
+        if (missingKeywords && missingKeywords.length > 0) {
+          message += `Missing Keywords:\n${missingKeywords.slice(0, 5).join(', ')}\n\n`;
+        }
+        
+        if (suggestions && suggestions.length > 0) {
+          message += `Suggestions:\n${suggestions.slice(0, 3).join('\n')}`;
+        }
+        
+        alert(message);
+      }
+    } catch (error) {
+      console.error('Analyze job error:', error);
+      alert('Failed to analyze job. Check console for details.');
+    }
   };
 
   if (isEditing || !profile) {

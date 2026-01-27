@@ -253,6 +253,124 @@ function fillField(field: DetectedField, value: string) {
 }
 
 /**
+ * Scrape job description from the current page
+ */
+function scrapeJobDescription(): any {
+  const url = window.location.href;
+  const domain = window.location.hostname;
+  
+  let jobTitle = '';
+  let companyName = '';
+  let jobDescription = '';
+  let location = '';
+  let salary = '';
+  
+  // LinkedIn scraping
+  if (domain.includes('linkedin.com')) {
+    jobTitle = document.querySelector('.job-details-jobs-unified-top-card__job-title')?.textContent?.trim() || 
+               document.querySelector('.jobs-unified-top-card__job-title')?.textContent?.trim() || '';
+    companyName = document.querySelector('.job-details-jobs-unified-top-card__company-name')?.textContent?.trim() || 
+                  document.querySelector('.jobs-unified-top-card__company-name')?.textContent?.trim() || '';
+    location = document.querySelector('.job-details-jobs-unified-top-card__bullet')?.textContent?.trim() || '';
+    
+    const descElement = document.querySelector('.jobs-description__content') || 
+                       document.querySelector('.jobs-box__html-content');
+    jobDescription = descElement?.textContent?.trim() || '';
+  }
+  
+  // Indeed scraping
+  else if (domain.includes('indeed.com')) {
+    jobTitle = document.querySelector('.jobsearch-JobInfoHeader-title')?.textContent?.trim() || 
+               document.querySelector('h1.jobTitle')?.textContent?.trim() || '';
+    companyName = document.querySelector('[data-company-name="true"]')?.textContent?.trim() || 
+                  document.querySelector('.jobsearch-InlineCompanyRating')?.textContent?.trim() || '';
+    location = document.querySelector('.jobsearch-JobInfoHeader-subtitle')?.textContent?.trim() || '';
+    
+    const descElement = document.querySelector('#jobDescriptionText') || 
+                       document.querySelector('.jobsearch-jobDescriptionText');
+    jobDescription = descElement?.textContent?.trim() || '';
+  }
+  
+  // Greenhouse scraping
+  else if (domain.includes('greenhouse.io') || domain.includes('boards.greenhouse.io')) {
+    jobTitle = document.querySelector('.app-title')?.textContent?.trim() || 
+               document.querySelector('h1')?.textContent?.trim() || '';
+    companyName = document.querySelector('.company-name')?.textContent?.trim() || '';
+    location = document.querySelector('.location')?.textContent?.trim() || '';
+    
+    const descElement = document.querySelector('#content') || 
+                       document.querySelector('.job-post');
+    jobDescription = descElement?.textContent?.trim() || '';
+  }
+  
+  // Lever scraping
+  else if (domain.includes('lever.co') || domain.includes('jobs.lever.co')) {
+    jobTitle = document.querySelector('.posting-headline h2')?.textContent?.trim() || 
+               document.querySelector('h2')?.textContent?.trim() || '';
+    companyName = document.querySelector('.main-header-text a')?.textContent?.trim() || '';
+    location = document.querySelector('.posting-categories .location')?.textContent?.trim() || '';
+    
+    const descElement = document.querySelector('.posting-description') || 
+                       document.querySelector('.content');
+    jobDescription = descElement?.textContent?.trim() || '';
+  }
+  
+  // Workday scraping
+  else if (domain.includes('workday.com') || domain.includes('myworkdayjobs.com')) {
+    jobTitle = document.querySelector('h2[data-automation-id="jobPostingHeader"]')?.textContent?.trim() || 
+               document.querySelector('h1')?.textContent?.trim() || '';
+    companyName = document.querySelector('[data-automation-id="company"]')?.textContent?.trim() || '';
+    location = document.querySelector('[data-automation-id="locations"]')?.textContent?.trim() || '';
+    
+    const descElement = document.querySelector('[data-automation-id="jobPostingDescription"]');
+    jobDescription = descElement?.textContent?.trim() || '';
+  }
+  
+  // SmartRecruiters scraping
+  else if (domain.includes('smartrecruiters.com')) {
+    jobTitle = document.querySelector('.job-title')?.textContent?.trim() || 
+               document.querySelector('h1')?.textContent?.trim() || '';
+    companyName = document.querySelector('.company-info')?.textContent?.trim() || '';
+    location = document.querySelector('.job-location')?.textContent?.trim() || '';
+    
+    const descElement = document.querySelector('.job-description');
+    jobDescription = descElement?.textContent?.trim() || '';
+  }
+  
+  // Generic fallback scraping
+  else {
+    // Try to find common job posting patterns
+    const h1Elements = Array.from(document.querySelectorAll('h1'));
+    if (h1Elements.length > 0) {
+      jobTitle = h1Elements[0].textContent?.trim() || '';
+    }
+    
+    // Look for common class names
+    const possibleDesc = document.querySelector('.job-description') || 
+                        document.querySelector('.description') || 
+                        document.querySelector('[class*="description"]') ||
+                        document.querySelector('main') ||
+                        document.querySelector('article');
+    
+    jobDescription = possibleDesc?.textContent?.trim() || document.body.textContent?.trim() || '';
+  }
+  
+  // Clean up the job description (remove excess whitespace)
+  jobDescription = jobDescription.replace(/\s+/g, ' ').trim();
+  
+  return {
+    url,
+    domain,
+    jobTitle,
+    companyName,
+    location,
+    salary,
+    jobDescription,
+    scrapedAt: new Date().toISOString()
+  };
+}
+
+/**
  * Main initialization
  */
 function init() {
@@ -292,6 +410,11 @@ function init() {
       });
       
       return Promise.resolve({ success: true, filledCount: detectedFields.length });
+    }
+    
+    if (message.action === 'scrapeJobDescription') {
+      const jobData = scrapeJobDescription();
+      return Promise.resolve({ success: true, jobData });
     }
     
     return Promise.resolve({ error: 'Unknown action' });
