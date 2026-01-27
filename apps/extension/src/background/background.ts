@@ -103,7 +103,21 @@ async function handleSaveProfile(profile: any): Promise<any> {
   try {
     await browser.storage.local.set({ profile });
     
-    // TODO: Also sync to Supabase
+    // Sync to Supabase if enabled
+    const settings = await browser.storage.local.get(['settings', 'user']);
+    const userSettings: any = settings.settings || {};
+    const user: any = settings.user;
+    
+    if (userSettings.supabaseEnabled && user?.id) {
+      try {
+        const { syncProfileToCloud } = await import('../lib/supabase');
+        await syncProfileToCloud(profile, user.id);
+        console.log('✅ Profile synced to cloud');
+      } catch (error) {
+        console.error('Failed to sync to cloud:', error);
+        // Continue even if cloud sync fails
+      }
+    }
     
     return { success: true };
   } catch (error) {
