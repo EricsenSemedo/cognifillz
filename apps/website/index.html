@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CogniFillz — Smart Job Application Autofill</title>
+  <meta name="description" content="AI-powered job application autofill that keeps your data local. Fill forms instantly across LinkedIn, Indeed, Greenhouse and more.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ── Nav ──────────────────────────────────── -->
+  <nav class="nav" id="nav">
+    <div class="nav-inner">
+      <a href="#" class="nav-logo">
+        <span class="nav-logo-icon">🧠</span>
+        <span class="nav-logo-text">CogniFillz</span>
+      </a>
+      <div class="nav-links">
+        <a href="#features">Features</a>
+        <a href="#how-it-works">How It Works</a>
+        <a href="#browsers">Browsers</a>
+        <a href="https://github.com/EricsenSemedo/cognifillz" class="nav-cta" target="_blank" rel="noopener">
+          GitHub →
+        </a>
+      </div>
+      <button class="nav-toggle" id="nav-toggle" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+    <div class="nav-mobile" id="nav-mobile">
+      <a href="#features">Features</a>
+      <a href="#how-it-works">How It Works</a>
+      <a href="#browsers">Browsers</a>
+      <a href="https://github.com/EricsenSemedo/cognifillz" target="_blank" rel="noopener">GitHub</a>
+    </div>
+  </nav>
+
+  <!-- ── Hero ─────────────────────────────────── -->
+  <section class="hero">
+    <div class="hero-glow"></div>
+    <div class="hero-grid"></div>
+    <div class="hero-content">
+      <div class="hero-badge anim" data-anim="fade-up">
+        <span class="hero-badge-dot"></span>
+        Open Source &middot; Local AI &middot; Free Forever
+      </div>
+      <h1 class="hero-title anim" data-anim="fade-up" data-delay="1">
+        Job applications,<br>
+        <span class="hero-accent">filled in seconds.</span>
+      </h1>
+      <p class="hero-sub anim" data-anim="fade-up" data-delay="2">
+        CogniFillz uses local AI to autofill job forms across LinkedIn, Indeed, Greenhouse
+        and 50+ platforms. Your data never leaves your machine.
+      </p>
+      <div class="hero-actions anim" data-anim="fade-up" data-delay="3">
+        <a href="#browsers" class="btn btn-glow">
+          <span class="btn-shimmer"></span>
+          Install Extension
+        </a>
+        <a href="#how-it-works" class="btn btn-outline">
+          See How It Works
+        </a>
+      </div>
+      <div class="hero-stats anim" data-anim="fade-up" data-delay="4">
+        <div class="stat">
+          <span class="stat-num">100%</span>
+          <span class="stat-label">Private</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat">
+          <span class="stat-num">5+</span>
+          <span class="stat-label">Browsers</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat">
+          <span class="stat-num">0</span>
+          <span class="stat-label">Subscriptions</span>
+        </div>
+      </div>
+    </div>
+    <div class="hero-visual anim" data-anim="fade-in" data-delay="2">
+      <div class="hero-mockup">
+        <div class="mockup-bar">
+          <span class="mockup-dot"></span>
+          <span class="mockup-dot"></span>
+          <span class="mockup-dot"></span>
+          <span class="mockup-url">linkedin.com/jobs/apply</span>
+        </div>
+        <div class="mockup-body">
+          <div class="mockup-field mockup-filled">
+            <span class="mockup-label">First Name</span>
+            <span class="mockup-value">Jane</span>
+            <span class="mockup-check">✓</span>
+          </div>
+          <div class="mockup-field mockup-filled" style="animation-delay:.15s">
+            <span class="mockup-label">Last Name</span>
+            <span class="mockup-value">Doe</span>
+            <span class="mockup-check">✓</span>
+          </div>
+          <div class="mockup-field mockup-filled" style="animation-delay:.3s">
+            <span class="mockup-label">Email</span>
+            <span class="mockup-value">jane@email.com</span>
+            <span class="mockup-check">✓</span>
+          </div>
+          <div class="mockup-field mockup-filling" style="animation-delay:.45s">
+            <span class="mockup-label">LinkedIn</span>
+            <span class="mockup-cursor"></span>
+          </div>
+          <div class="mockup-field">
+            <span class="mockup-label">Phone</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Features ─────────────────────────────── -->
+  <section class="features" id="features">
+    <div class="section-inner">
+      <div class="section-header anim" data-anim="fade-up">
+        <span class="section-tag">Features</span>
+        <h2 class="section-title">Everything you need.<br><span class="text-accent">Nothing you don't.</span></h2>
+      </div>
+      <div class="feature-grid">
+        <div class="feature-card anim" data-anim="fade-up" data-delay="0">
+          <div class="feature-icon">⚡</div>
+          <h3>Instant Autofill</h3>
+          <p>Detect and fill job application forms in one click. Works across 50+ ATS platforms including Greenhouse, Lever, and Workday.</p>
+        </div>
+        <div class="feature-card anim" data-anim="fade-up" data-delay="1">
+          <div class="feature-icon feature-icon-secondary">🔒</div>
+          <h3>Local-First Privacy</h3>
+          <p>All AI processing runs on your machine via LM Studio or Ollama. Zero cloud uploads, zero tracking, zero data harvesting.</p>
+        </div>
+        <div class="feature-card anim" data-anim="fade-up" data-delay="2">
+          <div class="feature-icon">◆</div>
+          <h3>AI Job Matching</h3>
+          <p>Get an instant match score for any posting. Your local LLM analyzes the job description against your profile in seconds.</p>
+        </div>
+        <div class="feature-card anim" data-anim="fade-up" data-delay="3">
+          <div class="feature-icon feature-icon-secondary">📄</div>
+          <h3>Resume Tailoring</h3>
+          <p>Automatically customize your resume for each application. Highlights relevant experience and skills for better conversion.</p>
+        </div>
+        <div class="feature-card feature-card-wide anim" data-anim="fade-up" data-delay="4">
+          <div class="feature-icon">∞</div>
+          <h3>Free Forever</h3>
+          <p>No subscriptions, no premium tiers, no "credits." CogniFillz is open source and will always be free. Build on it, fork it, make it yours.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── How It Works ─────────────────────────── -->
+  <section class="how" id="how-it-works">
+    <div class="section-inner">
+      <div class="section-header anim" data-anim="fade-up">
+        <span class="section-tag">How It Works</span>
+        <h2 class="section-title">Three steps to<br><span class="text-accent">never type again.</span></h2>
+      </div>
+      <div class="steps">
+        <div class="step anim" data-anim="fade-up" data-delay="0">
+          <div class="step-num">01</div>
+          <div class="step-content">
+            <h3>Create Your Profile</h3>
+            <p>Enter your details once — name, email, links, summary. Everything is stored locally in your browser's secure storage.</p>
+          </div>
+        </div>
+        <div class="step-connector anim" data-anim="fade-in" data-delay="1"></div>
+        <div class="step anim" data-anim="fade-up" data-delay="1">
+          <div class="step-num">02</div>
+          <div class="step-content">
+            <h3>Visit Any Job Page</h3>
+            <p>Navigate to a job application on LinkedIn, Indeed, Greenhouse, or any supported platform. CogniFillz detects fillable fields automatically.</p>
+          </div>
+        </div>
+        <div class="step-connector anim" data-anim="fade-in" data-delay="2"></div>
+        <div class="step anim" data-anim="fade-up" data-delay="2">
+          <div class="step-num">03</div>
+          <div class="step-content">
+            <h3>One Click, Done</h3>
+            <p>Hit "Autofill" and watch your information populate every field. Review, tweak if needed, and submit. That's it.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Browser Support ──────────────────────── -->
+  <section class="browsers" id="browsers">
+    <div class="section-inner">
+      <div class="section-header anim" data-anim="fade-up">
+        <span class="section-tag">Browser Support</span>
+        <h2 class="section-title">Works where<br><span class="text-accent">you work.</span></h2>
+      </div>
+      <div class="browser-grid">
+        <div class="browser-card browser-recommended anim" data-anim="fade-up" data-delay="0">
+          <div class="browser-badge">Recommended</div>
+          <div class="browser-icon">🌊</div>
+          <h4>Zen Browser</h4>
+          <p>Best privacy. Full support.</p>
+        </div>
+        <div class="browser-card anim" data-anim="fade-up" data-delay="1">
+          <div class="browser-icon">🦊</div>
+          <h4>Firefox</h4>
+          <p>Full support via .xpi</p>
+        </div>
+        <div class="browser-card anim" data-anim="fade-up" data-delay="1">
+          <div class="browser-icon">◉</div>
+          <h4>Chrome</h4>
+          <p>Full support. Tested.</p>
+        </div>
+        <div class="browser-card anim" data-anim="fade-up" data-delay="2">
+          <div class="browser-icon">◈</div>
+          <h4>Edge</h4>
+          <p>Chromium-based. Works.</p>
+        </div>
+        <div class="browser-card anim" data-anim="fade-up" data-delay="2">
+          <div class="browser-icon">🦁</div>
+          <h4>Brave</h4>
+          <p>Chromium-based. Works.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── CTA ──────────────────────────────────── -->
+  <section class="cta">
+    <div class="cta-glow"></div>
+    <div class="section-inner">
+      <div class="cta-content anim" data-anim="fade-up">
+        <h2 class="cta-title">Stop typing.<br>Start shipping applications.</h2>
+        <p class="cta-sub">Install CogniFillz in under a minute. Open source, local AI, free forever.</p>
+        <div class="cta-actions">
+          <a href="https://github.com/EricsenSemedo/cognifillz" class="btn btn-glow" target="_blank" rel="noopener">
+            <span class="btn-shimmer"></span>
+            Get Started on GitHub
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Footer ───────────────────────────────── -->
+  <footer class="footer">
+    <div class="section-inner">
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <span class="nav-logo-icon">🧠</span>
+          <span>CogniFillz</span>
+          <span class="footer-sep">·</span>
+          <span class="footer-by">Cranium Inc.</span>
+        </div>
+        <div class="footer-links">
+          <a href="https://github.com/EricsenSemedo/cognifillz" target="_blank" rel="noopener">GitHub</a>
+          <a href="https://github.com/EricsenSemedo/cognifillz/blob/main/LICENSE" target="_blank" rel="noopener">MIT License</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="main.js"></script>
+</body>
+</html>
