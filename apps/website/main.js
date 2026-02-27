@@ -1,6 +1,7 @@
 (() => {
   'use strict';
 
+  // Scroll-triggered animations
   const observer = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
@@ -12,9 +13,9 @@
     },
     { threshold: 0.1, rootMargin: '0px 0px -40px 0px' }
   );
-
   document.querySelectorAll('.anim').forEach((el) => observer.observe(el));
 
+  // Nav scroll state
   const nav = document.getElementById('nav');
   let ticking = false;
   window.addEventListener('scroll', () => {
@@ -27,6 +28,7 @@
     }
   });
 
+  // Mobile nav toggle
   const toggle = document.getElementById('nav-toggle');
   const mobile = document.getElementById('nav-mobile');
   toggle.addEventListener('click', () => {
@@ -48,6 +50,7 @@
     });
   });
 
+  // Smooth scroll
   document.querySelectorAll('a[href^="#"]').forEach((a) => {
     a.addEventListener('click', (e) => {
       const target = document.querySelector(a.getAttribute('href'));
@@ -56,5 +59,17 @@
         target.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
     });
+  });
+
+  // Dark mode toggle
+  const themeBtn = document.getElementById('theme-btn');
+  const stored = localStorage.getItem('cognifillz-dark');
+  if (stored === 'true' || (!stored && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+    document.documentElement.classList.add('dark');
+  }
+
+  themeBtn.addEventListener('click', () => {
+    const isDark = document.documentElement.classList.toggle('dark');
+    localStorage.setItem('cognifillz-dark', String(isDark));
   });
 })();

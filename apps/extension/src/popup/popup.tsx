@@ -23,20 +23,19 @@ interface DetectedField {
 
 type ToastType = 'success' | 'error';
 
-const FIELD_ICONS: Record<string, string> = {
-  firstName: '👤',
-  lastName: '👤',
-  email: '✉',
-  phone: '☎',
-  linkedin: '🔗',
-  location: '📍',
-  company: '🏢',
-  resume: '📄',
-  default: '◈',
+const FIELD_LABELS: Record<string, string> = {
+  firstName: 'FN',
+  lastName: 'LN',
+  email: 'EM',
+  phone: 'PH',
+  linkedin: 'LI',
+  location: 'LC',
+  company: 'CO',
+  resume: 'CV',
 };
 
-function getFieldIcon(type: string): string {
-  return FIELD_ICONS[type] || FIELD_ICONS.default;
+function getFieldLabel(type: string): string {
+  return FIELD_LABELS[type] || type.slice(0, 2).toUpperCase();
 }
 
 function getConfidenceClass(c: number): string {
@@ -49,6 +48,14 @@ function getInitials(first: string, last: string): string {
   return `${(first?.[0] || '').toUpperCase()}${(last?.[0] || '').toUpperCase()}` || '?';
 }
 
+const LogoMark = () => (
+  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M12 2L4 7v10l8 5 8-5V7l-8-5z" stroke="#FFF" strokeWidth="1.5" fill="none"/>
+    <circle cx="12" cy="10" r="2.5" fill="#FFF"/>
+    <path d="M8 15.5c0-2.2 1.8-4 4-4s4 1.8 4 4" stroke="#FFF" strokeWidth="1.5" strokeLinecap="round"/>
+  </svg>
+);
+
 const App: React.FC = () => {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [formData, setFormData] = useState<Profile>({
@@ -58,6 +65,7 @@ const App: React.FC = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [detectedFields, setDetectedFields] = useState<DetectedField[]>([]);
   const [activeTab, setActiveTab] = useState<'profile' | 'analyze'>('profile');
+  const [dark, setDark] = useState(false);
   const [toast, setToast] = useState<{ msg: string; type: ToastType; visible: boolean }>({
     msg: '', type: 'success', visible: false,
   });
@@ -68,9 +76,21 @@ const App: React.FC = () => {
   }, []);
 
   useEffect(() => {
+    const stored = localStorage.getItem('cognifillz-dark');
+    if (stored === 'true' || (!stored && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      setDark(true);
+      document.documentElement.classList.add('dark');
+    }
     loadProfile();
     loadDetectedFields();
   }, []);
+
+  const toggleDark = () => {
+    const next = !dark;
+    setDark(next);
+    document.documentElement.classList.toggle('dark', next);
+    localStorage.setItem('cognifillz-dark', String(next));
+  };
 
   const loadProfile = async () => {
     try {
@@ -91,9 +111,7 @@ const App: React.FC = () => {
       const [tab] = await browser.tabs.query({ active: true, currentWindow: true });
       if (tab.id) {
         const response: any = await browser.tabs.sendMessage(tab.id, { action: 'getDetectedFields' });
-        if (response?.fields) {
-          setDetectedFields(response.fields);
-        }
+        if (response?.fields) setDetectedFields(response.fields);
       }
     } catch { /* content script not loaded */ }
   };
@@ -106,29 +124,21 @@ const App: React.FC = () => {
         setIsEditing(false);
         showToast('Profile saved');
       } else {
-        showToast('Save failed: ' + response.error, 'error');
+        showToast('Save failed', 'error');
       }
-    } catch (e: any) {
+    } catch {
       showToast('Save failed', 'error');
     }
   };
 
   const fillFields = async () => {
-    if (!profile) {
-      showToast('Create a profile first', 'error');
-      return;
-    }
+    if (!profile) { showToast('Create a profile first', 'error'); return; }
     try {
       const [tab] = await browser.tabs.query({ active: true, currentWindow: true });
       if (tab.id) {
-        const response: any = await browser.tabs.sendMessage(
-          tab.id, { action: 'fillFields', profileData: profile }
-        );
-        if (response?.success) {
-          showToast(`Filled ${response.filledCount} fields`);
-        } else {
-          showToast('Could not fill fields', 'error');
-        }
+        const response: any = await browser.tabs.sendMessage(tab.id, { action: 'fillFields', profileData: profile });
+        if (response?.success) showToast(`Filled ${response.filledCount} fields`);
+        else showToast('Could not fill fields', 'error');
       }
     } catch {
       showToast('No fillable page detected', 'error');
@@ -146,136 +156,110 @@ const App: React.FC = () => {
     setIsEditing(true);
   };
 
-  // ── Edit / Create Profile ───────────────────
+  const headerBlock = (
+    <header className="header">
+      <div className="header-logo"><LogoMark /></div>
+      <div className="header-text">
+        <h1>CogniFillz</h1>
+        <span className="tagline">Cranium Inc.</span>
+      </div>
+      <div className="header-right">
+        <button className="theme-toggle" onClick={toggleDark} title="Toggle theme">
+          {dark ? '\u263C' : '\u25D1'}
+        </button>
+      </div>
+    </header>
+  );
+
   if (isEditing || !profile) {
     return (
       <div className="container">
-        <header className="header">
-          <div className="header-logo">🧠</div>
-          <div className="header-text">
-            <h1>CogniFillz</h1>
-            <span className="tagline">Cranium Inc.</span>
-          </div>
-          {profile && (
-            <button className="back-btn" onClick={() => setIsEditing(false)}>
-              ← Back
-            </button>
-          )}
-        </header>
-
+        {headerBlock}
         <div className="content">
-          <h2 className="section-title slide-in">
-            {profile ? 'Edit Profile' : 'Create Profile'}
-          </h2>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <h2 className="section-title slide-in">
+              {profile ? 'Edit Profile' : 'Create Profile'}
+            </h2>
+            {profile && (
+              <button className="back-btn" onClick={() => setIsEditing(false)}>
+                Back
+              </button>
+            )}
+          </div>
           <p className="section-subtitle slide-in stagger-1">
-            Your info is stored locally and never leaves your device.
+            Stored locally. Never leaves your device.
           </p>
-
           <div className="form">
             <div className="form-row slide-in stagger-1">
               <div className="input-group">
                 <label className="input-label">First name</label>
                 <input className="input" type="text" placeholder="Jane"
-                  value={formData.firstName}
-                  onChange={e => updateForm('firstName', e.target.value)} />
+                  value={formData.firstName} onChange={e => updateForm('firstName', e.target.value)} />
               </div>
               <div className="input-group">
                 <label className="input-label">Last name</label>
                 <input className="input" type="text" placeholder="Doe"
-                  value={formData.lastName}
-                  onChange={e => updateForm('lastName', e.target.value)} />
+                  value={formData.lastName} onChange={e => updateForm('lastName', e.target.value)} />
               </div>
             </div>
-
             <div className="form-row slide-in stagger-2">
               <div className="input-group">
                 <label className="input-label">Email</label>
                 <input className="input" type="email" placeholder="jane@email.com"
-                  value={formData.email}
-                  onChange={e => updateForm('email', e.target.value)} />
+                  value={formData.email} onChange={e => updateForm('email', e.target.value)} />
               </div>
               <div className="input-group">
                 <label className="input-label">Phone</label>
                 <input className="input" type="tel" placeholder="+1 555-0123"
-                  value={formData.phone}
-                  onChange={e => updateForm('phone', e.target.value)} />
+                  value={formData.phone} onChange={e => updateForm('phone', e.target.value)} />
               </div>
             </div>
-
             <div className="input-group slide-in stagger-2">
               <label className="input-label">LinkedIn</label>
               <input className="input" type="url" placeholder="linkedin.com/in/janedoe"
-                value={formData.linkedin}
-                onChange={e => updateForm('linkedin', e.target.value)} />
+                value={formData.linkedin} onChange={e => updateForm('linkedin', e.target.value)} />
             </div>
-
             <div className="form-row slide-in stagger-3">
               <div className="input-group">
                 <label className="input-label">GitHub</label>
                 <input className="input" type="url" placeholder="github.com/jane"
-                  value={formData.github}
-                  onChange={e => updateForm('github', e.target.value)} />
+                  value={formData.github} onChange={e => updateForm('github', e.target.value)} />
               </div>
               <div className="input-group">
                 <label className="input-label">Portfolio</label>
                 <input className="input" type="url" placeholder="janedoe.dev"
-                  value={formData.portfolio}
-                  onChange={e => updateForm('portfolio', e.target.value)} />
+                  value={formData.portfolio} onChange={e => updateForm('portfolio', e.target.value)} />
               </div>
             </div>
-
             <div className="input-group slide-in stagger-3">
               <label className="input-label">Location</label>
               <input className="input" type="text" placeholder="San Francisco, CA"
-                value={formData.location}
-                onChange={e => updateForm('location', e.target.value)} />
+                value={formData.location} onChange={e => updateForm('location', e.target.value)} />
             </div>
-
             <div className="input-group slide-in stagger-4">
               <label className="input-label">Summary</label>
-              <textarea className="textarea" rows={3}
-                placeholder="Brief professional summary…"
-                value={formData.summary}
-                onChange={e => updateForm('summary', e.target.value)} />
+              <textarea className="textarea" rows={3} placeholder="Brief professional summary..."
+                value={formData.summary} onChange={e => updateForm('summary', e.target.value)} />
             </div>
-
             <button className="btn btn-primary slide-in stagger-4" onClick={saveProfile}>
               Save Profile
             </button>
           </div>
         </div>
-
         <Toast msg={toast.msg} type={toast.type} visible={toast.visible} />
       </div>
     );
   }
 
-  // ── Main View ───────────────────────────────
   return (
     <div className="container">
-      <header className="header">
-        <div className="header-logo">🧠</div>
-        <div className="header-text">
-          <h1>CogniFillz</h1>
-          <span className="tagline">Cranium Inc.</span>
-        </div>
-        <div className="header-status">
-          <span className="status-dot" />
-          Ready
-        </div>
-      </header>
-
+      {headerBlock}
       <div className="tabs">
         <button className={`tab ${activeTab === 'profile' ? 'tab-active' : ''}`}
-          onClick={() => setActiveTab('profile')}>
-          Profile
-        </button>
+          onClick={() => setActiveTab('profile')}>Profile</button>
         <button className={`tab ${activeTab === 'analyze' ? 'tab-active' : ''}`}
-          onClick={() => setActiveTab('analyze')}>
-          Analyze
-        </button>
+          onClick={() => setActiveTab('analyze')}>Analyze</button>
       </div>
-
       <div className="content" key={activeTab}>
         {activeTab === 'profile' ? (
           <>
@@ -291,7 +275,6 @@ const App: React.FC = () => {
                 </div>
               </div>
             </div>
-
             <div className="card slide-in stagger-1">
               <div className="card-header">
                 <span className="card-title">Detected Fields</span>
@@ -304,7 +287,7 @@ const App: React.FC = () => {
                   {detectedFields.map((field, idx) => (
                     <li key={idx} className="field-item">
                       <span className="field-type">
-                        <span className="field-icon">{getFieldIcon(field.type)}</span>
+                        <span className="field-icon">{getFieldLabel(field.type)}</span>
                         {field.type}
                       </span>
                       <span className={`field-confidence ${getConfidenceClass(field.confidence)}`}>
@@ -315,15 +298,14 @@ const App: React.FC = () => {
                 </ul>
               ) : (
                 <div className="empty-state">
-                  <div className="empty-state-icon">◇</div>
+                  <div className="empty-state-mark">//</div>
                   Navigate to a job application page<br />to detect fillable fields
                 </div>
               )}
             </div>
-
             <div className="actions slide-in stagger-2">
               <button className="btn btn-primary" onClick={fillFields}>
-                ⚡ Autofill Application
+                Autofill Application
               </button>
               <button className="btn btn-secondary" onClick={startEditing}>
                 Edit Profile
@@ -333,7 +315,7 @@ const App: React.FC = () => {
         ) : (
           <div className="card slide-in">
             <div className="analyze-card">
-              <div className="analyze-icon">◆</div>
+              <div className="analyze-mark">AI</div>
               <h4 className="analyze-title">Job Match Analysis</h4>
               <p className="analyze-desc">
                 Compare your profile against the current job posting using local AI.
@@ -343,14 +325,12 @@ const App: React.FC = () => {
                 Analyze with AI
               </button>
               <div className="info-box">
-                <span>⚡</span>
                 Requires LM Studio running on localhost:1234
               </div>
             </div>
           </div>
         )}
       </div>
-
       <Toast msg={toast.msg} type={toast.type} visible={toast.visible} />
     </div>
   );
@@ -358,7 +338,6 @@ const App: React.FC = () => {
 
 const Toast: React.FC<{ msg: string; type: ToastType; visible: boolean }> = ({ msg, type, visible }) => (
   <div className={`toast toast-${type} ${visible ? 'toast-visible' : ''}`}>
-    <span>{type === 'success' ? '✓' : '✕'}</span>
     {msg}
   </div>
 );
