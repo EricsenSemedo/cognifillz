@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Design 9: Art Deco</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&family=Raleway:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#F5EDE4;
+  --surface:#FFFBF7;
+  --surface2:#F0E6DA;
+  --text:#1E1410;
+  --text2:#5A4A3C;
+  --text3:#9A8A78;
+  --red:#C43838;
+  --red-light:rgba(196,56,56,.08);
+  --red-glow:rgba(196,56,56,.2);
+  --gold:#B8960C;
+  --gold-light:rgba(184,150,12,.12);
+  --gold-dim:#D4B040;
+  --shadow:0 8px 32px rgba(80,50,20,.08);
+  --shadow-lg:0 16px 48px rgba(80,50,20,.12);
+  --line:rgba(184,150,12,.25);
+  --line2:rgba(184,150,12,.12);
+  --radius:6px;
+}
+html.dark{
+  --bg:#1A1412;
+  --surface:#252019;
+  --surface2:#1E1915;
+  --text:#F0E6DC;
+  --text2:#B0A090;
+  --text3:#6A5A4A;
+  --red:#E04A42;
+  --red-light:rgba(224,74,66,.12);
+  --red-glow:rgba(224,74,66,.3);
+  --gold:#D4B040;
+  --gold-light:rgba(212,176,64,.1);
+  --gold-dim:#A08020;
+  --shadow:0 8px 32px rgba(0,0,0,.25);
+  --shadow-lg:0 16px 48px rgba(0,0,0,.35);
+  --line:rgba(212,176,64,.2);
+  --line2:rgba(212,176,64,.08);
+}
+body{
+  font-family:'Raleway',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  -webkit-font-smoothing:antialiased;
+  min-height:100vh;
+  transition:background .5s,color .5s;
+  overflow-x:hidden;
+}
+
+/* Art Deco geometric fan background */
+.deco-bg{
+  position:fixed;top:0;left:0;right:0;bottom:0;
+  z-index:0;pointer-events:none;overflow:hidden;
+  opacity:.06;
+}
+html.dark .deco-bg{opacity:.04}
+.deco-bg::before{
+  content:'';position:absolute;
+  width:800px;height:800px;
+  top:-200px;right:-200px;
+  background:
+    repeating-conic-gradient(
+      from 0deg at 50% 100%,
+      var(--gold) 0deg 10deg,
+      transparent 10deg 20deg
+    );
+  opacity:.5;
+}
+.deco-bg::after{
+  content:'';position:absolute;
+  width:600px;height:600px;
+  bottom:-150px;left:-100px;
+  background:
+    repeating-conic-gradient(
+      from 0deg at 50% 0%,
+      var(--red) 0deg 15deg,
+      transparent 15deg 30deg
+    );
+  opacity:.3;
+}
+
+.page{max-width:1120px;margin:0 auto;padding:48px 32px 96px;position:relative;z-index:1}
+.page-title{
+  font-family:'Playfair Display',serif;
+  font-size:13px;font-weight:600;color:var(--text3);
+  margin-bottom:56px;display:flex;justify-content:space-between;align-items:center;
+  letter-spacing:.12em;text-transform:uppercase;
+}
+.toggle{
+  background:var(--surface);
+  border:1px solid var(--gold);
+  border-radius:2px;padding:8px 24px;
+  font-family:'Raleway',sans-serif;font-size:12px;font-weight:600;
+  color:var(--gold);cursor:pointer;
+  letter-spacing:.1em;text-transform:uppercase;
+  box-shadow:var(--shadow);
+  transition:all .35s;
+}
+.toggle:hover{
+  background:var(--gold);color:#FFF;
+  box-shadow:var(--shadow-lg);
+}
+.columns{display:grid;grid-template-columns:380px 1fr;gap:56px;align-items:start}
+
+/* Deco ornament mixin via borders */
+.deco-corner{position:relative}
+.deco-corner::before,.deco-corner::after{
+  content:'';position:absolute;
+  width:24px;height:24px;
+  border-color:var(--gold);border-style:solid;
+}
+.deco-corner::before{top:-1px;left:-1px;border-width:2px 0 0 2px}
+.deco-corner::after{bottom:-1px;right:-1px;border-width:0 2px 2px 0}
+
+/* POPUP */
+.popup{
+  width:380px;
+  background:var(--surface);
+  border:1px solid var(--line);
+  box-shadow:var(--shadow-lg);
+  overflow:hidden;
+  transition:all .5s;
+  position:relative;
+}
+.popup::before,.popup::after{
+  content:'';position:absolute;
+  width:20px;height:20px;
+  border-color:var(--gold);border-style:solid;z-index:10;
+}
+.popup::before{top:8px;left:8px;border-width:2px 0 0 2px}
+.popup::after{top:8px;right:8px;border-width:2px 2px 0 0}
+
+.popup-header{
+  padding:28px 28px 20px;
+  display:flex;align-items:center;gap:14px;
+  border-bottom:1px solid var(--line);
+  position:relative;
+}
+.popup-logo{
+  width:44px;height:44px;
+  background:var(--red);
+  display:flex;align-items:center;justify-content:center;
+  position:relative;
+}
+.popup-logo::before{
+  content:'';position:absolute;inset:3px;
+  border:1px solid rgba(255,255,255,.3);
+}
+.popup-logo svg{width:20px;height:20px;position:relative;z-index:1}
+.popup-brand{
+  font-family:'Playfair Display',serif;
+  font-size:22px;font-weight:700;letter-spacing:.02em;
+}
+.popup-brand small{
+  display:block;font-family:'Raleway',sans-serif;
+  font-size:9px;color:var(--text3);font-weight:600;
+  letter-spacing:.2em;text-transform:uppercase;margin-top:3px;
+}
+
+.popup-tabs{
+  display:flex;padding:0;
+  border-bottom:1px solid var(--line);
+}
+.popup-tab{
+  flex:1;padding:14px 18px;
+  font-family:'Raleway',sans-serif;font-size:11px;font-weight:700;
+  color:var(--text3);background:transparent;border:none;cursor:pointer;
+  letter-spacing:.12em;text-transform:uppercase;
+  border-bottom:2px solid transparent;
+  transition:all .25s;
+  margin-bottom:-1px;
+}
+.popup-tab:hover{color:var(--text2)}
+.popup-tab.active{
+  color:var(--red);
+  border-bottom-color:var(--red);
+}
+
+.popup-body{padding:24px 28px 28px}
+
+.profile-row{
+  display:flex;align-items:center;gap:16px;
+  margin-bottom:22px;padding:18px 20px;
+  background:var(--surface2);
+  border:1px solid var(--line2);
+  position:relative;
+  transition:all .4s;
+}
+.profile-row::before,.profile-row::after{
+  content:'';position:absolute;
+  width:12px;height:12px;
+  border-color:var(--gold);border-style:solid;
+}
+.profile-row::before{top:-1px;left:-1px;border-width:1px 0 0 1px}
+.profile-row::after{bottom:-1px;right:-1px;border-width:0 1px 1px 0}
+
+.profile-av{
+  width:48px;height:48px;
+  background:linear-gradient(135deg,var(--red),#D64444);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Playfair Display',serif;
+  font-size:17px;font-weight:700;color:#FFF;
+  position:relative;
+}
+.profile-av::before{
+  content:'';position:absolute;inset:3px;
+  border:1px solid rgba(255,255,255,.3);
+}
+.profile-name{
+  font-family:'Playfair Display',serif;
+  font-size:17px;font-weight:700;letter-spacing:.01em;
+}
+.profile-meta{font-size:11px;color:var(--text3);margin-top:3px;font-weight:500;letter-spacing:.02em}
+
+.section-hdr{
+  font-size:10px;font-weight:700;text-transform:uppercase;
+  letter-spacing:.18em;color:var(--text3);margin-bottom:14px;
+  display:flex;align-items:center;gap:12px;
+}
+.section-hdr::after{
+  content:'';flex:1;height:1px;
+  background:linear-gradient(to right,var(--line),transparent);
+}
+.section-pill{
+  background:var(--red-light);color:var(--red);
+  padding:3px 14px;
+  font-size:9px;font-weight:700;letter-spacing:.1em;
+  border:1px solid rgba(196,56,56,.15);
+}
+
+.empty-state{
+  text-align:center;padding:36px 20px;
+  background:var(--surface2);
+  border:1px solid var(--line2);
+  color:var(--text3);font-size:13px;font-weight:500;line-height:1.7;
+  position:relative;
+}
+.empty-icon{
+  width:52px;height:52px;margin:0 auto 14px;
+  background:var(--surface);
+  border:1px solid var(--line2);
+  display:flex;align-items:center;justify-content:center;
+}
+.empty-icon svg{width:22px;height:22px;color:var(--text3)}
+
+.popup-actions{margin-top:24px;display:flex;flex-direction:column;gap:10px}
+.btn-fill{
+  padding:16px;border:none;
+  background:var(--red);
+  color:#FFF;font-family:'Raleway',sans-serif;font-size:12px;font-weight:700;
+  cursor:pointer;transition:all .35s;text-align:center;
+  letter-spacing:.14em;text-transform:uppercase;
+  box-shadow:0 4px 16px var(--red-glow);
+  position:relative;
+}
+.btn-fill::before{
+  content:'';position:absolute;inset:4px;
+  border:1px solid rgba(255,255,255,.2);
+  pointer-events:none;
+}
+.btn-fill:hover{
+  transform:translateY(-2px);
+  box-shadow:0 8px 24px var(--red-glow);
+}
+.btn-outline{
+  padding:14px;
+  border:1px solid var(--gold);
+  background:transparent;
+  color:var(--gold);
+  font-family:'Raleway',sans-serif;font-size:11px;font-weight:700;
+  cursor:pointer;transition:all .3s;text-align:center;
+  letter-spacing:.14em;text-transform:uppercase;
+}
+.btn-outline:hover{
+  background:var(--gold);color:#FFF;
+}
+
+/* HERO */
+.hero{padding-top:8px}
+.hero-label{
+  font-size:10px;font-weight:700;
+  letter-spacing:.25em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:28px;
+  display:flex;align-items:center;gap:16px;
+}
+.hero-label::before,.hero-label::after{
+  content:'';width:40px;height:1px;background:var(--gold);
+}
+.hero-title{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(38px,5.5vw,58px);
+  font-weight:800;line-height:1.1;
+  letter-spacing:-.01em;margin-bottom:22px;
+}
+.hero-title span{
+  color:var(--red);
+  font-style:italic;
+}
+.hero-sub{
+  font-size:15px;color:var(--text2);max-width:440px;
+  line-height:1.8;margin-bottom:40px;font-weight:400;
+  letter-spacing:.01em;
+}
+
+/* Decorative divider */
+.deco-divider{
+  display:flex;align-items:center;gap:12px;margin-bottom:40px;
+}
+.deco-divider span{
+  width:8px;height:8px;
+  border:1px solid var(--gold);
+  transform:rotate(45deg);
+}
+.deco-divider::before,.deco-divider::after{
+  content:'';flex:1;height:1px;
+  background:linear-gradient(to right,var(--gold),transparent);
+}
+.deco-divider::after{
+  background:linear-gradient(to left,var(--gold),transparent);
+}
+
+.stats{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:48px}
+.stat{
+  background:var(--surface);
+  border:1px solid var(--line);
+  padding:28px 24px;flex:1;min-width:110px;text-align:center;
+  box-shadow:var(--shadow);
+  transition:all .35s;
+  position:relative;
+}
+.stat::before{
+  content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);
+  width:40px;height:3px;background:var(--gold);
+}
+.stat:hover{
+  transform:translateY(-4px);
+  box-shadow:var(--shadow-lg);
+}
+.stat-val{
+  font-family:'Playfair Display',serif;
+  font-size:42px;font-weight:800;color:var(--red);
+  letter-spacing:-.01em;
+}
+.stat-lbl{
+  font-size:10px;font-weight:700;text-transform:uppercase;
+  letter-spacing:.2em;color:var(--text3);margin-top:8px;
+}
+
+.feat-hdr{
+  font-family:'Playfair Display',serif;
+  font-size:24px;font-weight:700;margin-bottom:8px;letter-spacing:.01em;
+}
+.feat-hdr-line{
+  width:60px;height:2px;background:var(--gold);margin-bottom:28px;
+}
+.feat-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.feat-card{
+  background:var(--surface);
+  border:1px solid var(--line2);
+  border-top:3px solid var(--gold);
+  padding:28px 22px;
+  box-shadow:var(--shadow);
+  transition:all .35s;
+  position:relative;
+}
+.feat-card:hover{
+  transform:translateY(-4px);
+  box-shadow:var(--shadow-lg);
+  border-top-color:var(--red);
+}
+.feat-icon{
+  width:44px;height:44px;
+  background:var(--red-light);
+  border:1px solid var(--line2);
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:16px;
+}
+.feat-icon svg{width:20px;height:20px;color:var(--red)}
+.feat-card h4{
+  font-family:'Playfair Display',serif;
+  font-size:16px;font-weight:700;margin-bottom:4px;letter-spacing:.01em;
+}
+.feat-card .feat-line{
+  width:28px;height:1px;background:var(--gold);margin:10px 0;
+}
+.feat-card p{font-size:12px;color:var(--text2);line-height:1.7;font-weight:400}
+
+@media(max-width:860px){.columns{grid-template-columns:1fr}.popup{margin:0 auto}}
+</style>
+</head>
+<body>
+<div class="deco-bg"></div>
+<div class="page">
+  <div class="page-title">
+    Design 09 / Art Deco
+    <button class="toggle" id="themeToggle">Dark</button>
+  </div>
+  <div class="columns">
+    <div class="popup">
+      <div class="popup-header">
+        <div class="popup-logo">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#FFF" stroke-width="2.5" stroke-linecap="round"><path d="M12 4v16M8 8l4-4 4 4"/></svg>
+        </div>
+        <div class="popup-brand">CogniFillz<small>by Cranium Inc.</small></div>
+      </div>
+      <div class="popup-tabs">
+        <button class="popup-tab active">Profile</button>
+        <button class="popup-tab">Analyze</button>
+        <button class="popup-tab">Settings</button>
+      </div>
+      <div class="popup-body">
+        <div class="profile-row">
+          <div class="profile-av">JD</div>
+          <div>
+            <div class="profile-name">Jane Doe</div>
+            <div class="profile-meta">jane@email.com</div>
+          </div>
+        </div>
+        <div class="section-hdr">Detected Fields <span class="section-pill">0 found</span></div>
+        <div class="empty-state">
+          <div class="empty-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg>
+          </div>
+          Navigate to a job application<br>to detect fillable fields
+        </div>
+        <div class="popup-actions">
+          <button class="btn-fill">Autofill Application</button>
+          <button class="btn-outline">Edit Profile</button>
+        </div>
+      </div>
+    </div>
+    <div class="hero">
+      <div class="hero-label">Browser Extension</div>
+      <h1 class="hero-title">Job applications,<br><span>filled in seconds.</span></h1>
+      <p class="hero-sub">CogniFillz uses local AI to autofill job forms across LinkedIn, Indeed, Greenhouse and 50+ platforms. Your data never leaves your machine.</p>
+      <div class="deco-divider"><span></span></div>
+      <div class="stats">
+        <div class="stat"><div class="stat-val">100%</div><div class="stat-lbl">Private</div></div>
+        <div class="stat"><div class="stat-val">5+</div><div class="stat-lbl">Browsers</div></div>
+        <div class="stat"><div class="stat-val">$0</div><div class="stat-lbl">Forever</div></div>
+      </div>
+      <div class="feat-hdr">Features</div>
+      <div class="feat-hdr-line"></div>
+      <div class="feat-grid">
+        <div class="feat-card">
+          <div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
+          <h4>Instant Autofill</h4>
+          <div class="feat-line"></div>
+          <p>One click to fill 50+ ATS platforms including Greenhouse, Lever, and Workday.</p>
+        </div>
+        <div class="feat-card">
+          <div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></div>
+          <h4>Local Privacy</h4>
+          <div class="feat-line"></div>
+          <p>All AI runs on your machine. Zero cloud uploads, zero tracking.</p>
+        </div>
+        <div class="feat-card">
+          <div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M12 20V10M6 20V4M18 20v-4"/></svg></div>
+          <h4>AI Matching</h4>
+          <div class="feat-line"></div>
+          <p>Instant match score powered by your local LLM. Smart and private.</p>
+        </div>
+        <div class="feat-card">
+          <div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 000-7.78z"/></svg></div>
+          <h4>Free Forever</h4>
+          <div class="feat-line"></div>
+          <p>Open source. No subscriptions. No premium tiers. Community-driven.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+(function(){
+  var btn=document.getElementById('themeToggle');
+  btn.addEventListener('click',function(){
+    document.documentElement.classList.toggle('dark');
+    btn.textContent=document.documentElement.classList.contains('dark')?'Light':'Dark';
+  });
+})();
+</script>
+</body>
+</html>
