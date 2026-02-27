@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Design 3: Luxury Editorial</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Libre+Franklin:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#FDFBF7;--surface:#FFFFFF;--border:rgba(90,50,30,.08);
+  --text:#2A1810;--text2:#7A6050;--text3:#B8A898;
+  --wine:#6B1D2A;--wine-dim:rgba(107,29,42,.06);
+  --gold:#9A7B4F;--gold-dim:rgba(154,123,79,.08);
+}
+body{
+  font-family:'Libre Franklin',sans-serif;background:var(--bg);color:var(--text);
+  -webkit-font-smoothing:antialiased;font-weight:300;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.018'/%3E%3C/svg%3E");
+}
+.serif{font-family:'Cormorant Garamond',serif}
+
+.page{max-width:1100px;margin:0 auto;padding:48px 32px 96px}
+.page-title{
+  font-family:'Cormorant Garamond',serif;font-size:13px;font-weight:400;
+  font-style:italic;color:var(--text3);
+  border-bottom:1px solid var(--border);padding-bottom:14px;margin-bottom:56px;
+  display:flex;justify-content:space-between;align-items:baseline;
+}
+.page-title span{font-style:normal;font-weight:600;color:var(--wine);font-size:11px;letter-spacing:.08em;text-transform:uppercase}
+.columns{display:grid;grid-template-columns:380px 1fr;gap:64px;align-items:start}
+
+/* POPUP */
+.popup{
+  width:380px;background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:16px;
+  box-shadow:0 16px 48px rgba(42,24,16,.06);
+  overflow:hidden;
+}
+.popup-header{
+  padding:20px 24px 16px;
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:14px;
+}
+.popup-logo{
+  width:34px;height:34px;border-radius:10px;
+  background:var(--wine);color:#FFF;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:700;font-style:italic;
+}
+.popup-brand{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:700;letter-spacing:-.01em}
+.popup-brand small{display:block;font-family:'Libre Franklin',sans-serif;font-size:9px;color:var(--text3);font-weight:400;letter-spacing:.1em;text-transform:uppercase;margin-top:1px;font-style:normal}
+
+.popup-tabs{display:flex;border-bottom:1px solid var(--border);padding:0 24px}
+.popup-tab{
+  padding:12px 0;margin-right:28px;
+  font-family:'Libre Franklin',sans-serif;font-size:11px;font-weight:500;
+  letter-spacing:.08em;text-transform:uppercase;
+  color:var(--text3);background:transparent;border:none;cursor:pointer;
+  border-bottom:1.5px solid transparent;margin-bottom:-1px;
+}
+.popup-tab.active{color:var(--wine);border-bottom-color:var(--wine)}
+
+.popup-body{padding:24px}
+
+.profile-row{display:flex;align-items:center;gap:16px;margin-bottom:24px;padding-bottom:24px;border-bottom:1px solid var(--border)}
+.profile-av{
+  width:48px;height:48px;border-radius:50%;
+  background:var(--wine);color:#FFF;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:700;font-style:italic;
+}
+.profile-name{font-family:'Cormorant Garamond',serif;font-size:19px;font-weight:700;letter-spacing:-.01em}
+.profile-meta{font-size:11px;color:var(--text3);margin-top:2px;font-weight:400}
+
+.section-hdr{font-size:9px;font-weight:500;text-transform:uppercase;letter-spacing:.12em;color:var(--text3);margin-bottom:12px;display:flex;justify-content:space-between;align-items:center}
+.section-hdr .badge{font-size:10px;font-weight:600;color:var(--wine);background:var(--wine-dim);padding:2px 8px;border-radius:4px}
+
+.empty-ed{text-align:center;padding:32px 16px;color:var(--text3);font-size:12px;font-style:italic;line-height:1.7}
+.empty-ed div{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:600;color:var(--border);margin-bottom:8px;font-style:normal}
+
+.popup-actions{margin-top:20px;display:flex;flex-direction:column;gap:8px}
+.btn-ed{
+  padding:13px;border:none;border-radius:10px;background:var(--wine);
+  color:#FFF;font-family:'Libre Franklin',sans-serif;font-size:11px;
+  font-weight:500;letter-spacing:.06em;text-transform:uppercase;
+  cursor:pointer;transition:all .2s;text-align:center;
+}
+.btn-ed:hover{background:#5A1622;box-shadow:0 4px 16px rgba(107,29,42,.15)}
+.btn-ed-o{
+  padding:11px;border:1px solid var(--border);border-radius:10px;background:transparent;
+  color:var(--text2);font-family:'Libre Franklin',sans-serif;font-size:11px;
+  font-weight:400;letter-spacing:.04em;
+  cursor:pointer;transition:all .15s;text-align:center;
+}
+.btn-ed-o:hover{border-color:var(--text2);color:var(--text)}
+
+/* HERO */
+.hero{}
+.hero-overline{
+  font-family:'Libre Franklin',sans-serif;font-size:10px;font-weight:500;
+  text-transform:uppercase;letter-spacing:.16em;color:var(--gold);
+  margin-bottom:28px;
+}
+.hero-title{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(36px,5.5vw,64px);
+  font-weight:700;line-height:1.05;
+  letter-spacing:-.02em;margin-bottom:24px;
+}
+.hero-title em{font-style:italic;color:var(--wine)}
+.hero-sub{font-size:15px;color:var(--text2);max-width:440px;line-height:1.8;margin-bottom:40px;font-weight:300}
+.hero-cta{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:56px}
+.hero-btn{
+  padding:14px 32px;border:none;border-radius:10px;background:var(--wine);
+  color:#FFF;font-family:'Libre Franklin',sans-serif;font-size:12px;
+  font-weight:500;letter-spacing:.06em;text-transform:uppercase;
+  cursor:pointer;text-decoration:none;transition:all .2s;
+}
+.hero-btn:hover{background:#5A1622;box-shadow:0 6px 20px rgba(107,29,42,.15)}
+.hero-btn-o{
+  padding:14px 32px;border:1px solid var(--border);border-radius:10px;background:transparent;
+  color:var(--text2);font-family:'Libre Franklin',sans-serif;font-size:12px;
+  font-weight:400;letter-spacing:.04em;text-decoration:none;transition:all .15s;
+}
+.hero-btn-o:hover{border-color:var(--text2);color:var(--text)}
+
+.stats{display:flex;gap:32px}
+.stat-val{font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:700;color:var(--wine)}
+.stat-lbl{font-size:9px;font-weight:500;text-transform:uppercase;letter-spacing:.14em;color:var(--text3);margin-top:4px}
+
+.sep{height:1px;background:var(--border);margin:48px 0}
+
+.feat-hdr{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:700;font-style:italic;color:var(--text2);margin-bottom:24px}
+.feat-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.feat-card{
+  border:1px solid var(--border);border-radius:12px;padding:24px;
+  transition:all .2s;
+}
+.feat-card:hover{border-color:rgba(107,29,42,.15);box-shadow:0 8px 24px rgba(42,24,16,.04)}
+.feat-num{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:600;color:var(--gold);opacity:.4;margin-bottom:10px;font-style:italic}
+.feat-card h4{font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:700;margin-bottom:6px}
+.feat-card p{font-size:12px;color:var(--text2);line-height:1.7;font-weight:300}
+
+@media(max-width:860px){.columns{grid-template-columns:1fr}.popup{margin:0 auto}}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="page-title">
+    Design III &mdash; Luxury Editorial
+    <span>CogniFillz Concept</span>
+  </div>
+  <div class="columns">
+    <div class="popup">
+      <div class="popup-header">
+        <div class="popup-logo"><em>C</em></div>
+        <div class="popup-brand">CogniFillz<small>Cranium Inc.</small></div>
+      </div>
+      <div class="popup-tabs">
+        <button class="popup-tab active">Profile</button>
+        <button class="popup-tab">Analyze</button>
+      </div>
+      <div class="popup-body">
+        <div class="profile-row">
+          <div class="profile-av"><em>JD</em></div>
+          <div>
+            <div class="profile-name">Jane Doe</div>
+            <div class="profile-meta">jane@email.com &middot; San Francisco</div>
+          </div>
+        </div>
+        <div class="section-hdr"><span>Detected Fields</span><span class="badge">0</span></div>
+        <div class="empty-ed">
+          <div>&mdash;</div>
+          Navigate to a job application<br>to detect fillable fields
+        </div>
+        <div class="popup-actions">
+          <button class="btn-ed">Autofill Application</button>
+          <button class="btn-ed-o">Edit Profile</button>
+        </div>
+      </div>
+    </div>
+    <div class="hero">
+      <div class="hero-overline">Open Source &middot; Local AI &middot; Free Forever</div>
+      <h1 class="hero-title">
+        Job applications,<br>
+        <em>filled in seconds.</em>
+      </h1>
+      <p class="hero-sub">
+        CogniFillz uses local AI to autofill job forms across LinkedIn, Indeed, Greenhouse
+        and 50+ platforms. Your data never leaves your machine.
+      </p>
+      <div class="hero-cta">
+        <a href="#" class="hero-btn">Install Extension</a>
+        <a href="#" class="hero-btn-o">View on GitHub</a>
+      </div>
+      <div class="stats">
+        <div><div class="stat-val">100%</div><div class="stat-lbl">Private</div></div>
+        <div><div class="stat-val">5+</div><div class="stat-lbl">Browsers</div></div>
+        <div><div class="stat-val">$0</div><div class="stat-lbl">Forever</div></div>
+      </div>
+      <div class="sep"></div>
+      <div class="feat-hdr"><em>Features</em></div>
+      <div class="feat-grid">
+        <div class="feat-card"><div class="feat-num"><em>i.</em></div><h4>Instant Autofill</h4><p>One click to fill 50+ ATS platforms including Greenhouse, Lever, and Workday.</p></div>
+        <div class="feat-card"><div class="feat-num"><em>ii.</em></div><h4>Local-First Privacy</h4><p>All AI runs on your machine. Zero cloud uploads, zero tracking.</p></div>
+        <div class="feat-card"><div class="feat-num"><em>iii.</em></div><h4>AI Job Matching</h4><p>Instant match score via your local LLM.</p></div>
+        <div class="feat-card"><div class="feat-num"><em>iv.</em></div><h4>Free Forever</h4><p>Open source. No subscriptions. No premium tiers.</p></div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
