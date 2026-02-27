@@ -7,42 +7,54 @@
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Figtree:wght@400;500&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Figtree',sans-serif;background:#111;color:#eee;-webkit-font-smoothing:antialiased;min-height:100vh;display:flex;align-items:center;justify-content:center}
-.wrap{max-width:720px;padding:48px 24px;text-align:center}
-h1{font-family:'Syne',sans-serif;font-size:28px;font-weight:800;letter-spacing:-.03em;margin-bottom:8px}
-p{color:#888;font-size:14px;margin-bottom:40px}
-.grid{display:grid;grid-template-columns:1fr;gap:12px}
+body{font-family:'Figtree',sans-serif;background:#111;color:#eee;-webkit-font-smoothing:antialiased}
+.wrap{max-width:760px;margin:0 auto;padding:48px 24px 80px}
+h1{font-family:'Syne',sans-serif;font-size:28px;font-weight:800;letter-spacing:-.03em;margin-bottom:6px}
+.sub{color:#888;font-size:14px;margin-bottom:12px}
+.note{color:#555;font-size:12px;margin-bottom:40px}
+.label{font-family:'Syne',sans-serif;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:#555;margin:28px 0 12px;padding-top:20px;border-top:1px solid #222}
+.label:first-of-type{border-top:none;padding-top:0;margin-top:0}
+.grid{display:grid;grid-template-columns:1fr;gap:8px}
 a{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:18px 24px;border:1px solid #2a2a2a;border-radius:12px;
-  text-decoration:none;color:#eee;font-weight:500;font-size:15px;
+  display:flex;align-items:center;gap:16px;
+  padding:16px 20px;border:1px solid #222;border-radius:10px;
+  text-decoration:none;color:#eee;font-size:14px;font-weight:500;
   transition:all .2s;
 }
-a:hover{border-color:#555;background:#1a1a1a}
-a .num{font-family:'Syne',sans-serif;font-weight:800;font-size:12px;color:#666;letter-spacing:.06em}
-a .arrow{color:#555;font-size:18px}
+a:hover{border-color:#444;background:#1a1a1a}
+a .num{font-family:'Syne',sans-serif;font-weight:800;font-size:11px;color:#555;min-width:24px}
+a .desc{color:#777;font-size:12px;margin-top:2px}
+a .arrow{margin-left:auto;color:#444;font-size:16px;flex-shrink:0}
+.info{display:flex;flex-direction:column}
 </style>
 </head>
 <body>
 <div class="wrap">
   <h1>CogniFillz Design Concepts</h1>
-  <p>15 distinct aesthetic directions. Pick the one that resonates.</p>
+  <p class="sub">15 distinct aesthetics. Each has light + dark mode. Pick the one that resonates.</p>
+  <p class="note">All new designs (06-15) use the red + beige color scheme with dark mode toggle.</p>
+
+  <div class="label">Original Concepts</div>
   <div class="grid">
-    <a href="design-1-brutalist.html"><span class="num">01</span>Brutalist &mdash; Raw, monospace, neon yellow, thick borders<span class="arrow">&rarr;</span></a>
-    <a href="design-2-terminal.html"><span class="num">02</span>Terminal &mdash; CRT green, scanlines, hacker aesthetic<span class="arrow">&rarr;</span></a>
-    <a href="design-3-editorial.html"><span class="num">03</span>Luxury Editorial &mdash; Serif display, wine/gold, magazine feel<span class="arrow">&rarr;</span></a>
-    <a href="design-4-neomemphis.html"><span class="num">04</span>Neo-Memphis &mdash; Bold pop, offset shadows, primary colors<span class="arrow">&rarr;</span></a>
-    <a href="design-5-zen.html"><span class="num">05</span>Zen Minimal &mdash; Stone textures, vermillion, extreme whitespace<span class="arrow">&rarr;</span></a>
-    <a href="design-6-softcloud.html"><span class="num">06</span>Soft Cloud &mdash; Pastel gradients, fluffy, airy<span class="arrow">&rarr;</span></a>
-    <a href="design-7-comicpop.html"><span class="num">07</span>Comic Pop &mdash; Bold outlines, halftone dots, speech bubbles<span class="arrow">&rarr;</span></a>
-    <a href="design-8-glass.html"><span class="num">08</span>Glassmorphism &mdash; Frosted glass, blur, transparency<span class="arrow">&rarr;</span></a>
-    <a href="design-9-artdeco.html"><span class="num">09</span>Art Deco &mdash; Gold lines, geometric symmetry, 1920s luxury<span class="arrow">&rarr;</span></a>
-    <a href="design-10-clay.html"><span class="num">10</span>Clay 3D &mdash; Soft clay shadows, rounded, tactile<span class="arrow">&rarr;</span></a>
-    <a href="design-11-neumorph.html"><span class="num">11</span>Neumorphism &mdash; Soft inset/outset shadows, subtle depth<span class="arrow">&rarr;</span></a>
-    <a href="design-12-retrowarm.html"><span class="num">12</span>Retro Warm &mdash; 70s vibes, sunset gradients, rounded pill shapes<span class="arrow">&rarr;</span></a>
-    <a href="design-13-swissbold.html"><span class="num">13</span>Swiss International &mdash; Strict grid, massive type, pure typography<span class="arrow">&rarr;</span></a>
-    <a href="design-14-stacked.html"><span class="num">14</span>Stacked Cards &mdash; Overlapping depth layers, rotated deck-of-cards effect<span class="arrow">&rarr;</span></a>
-    <a href="design-15-inkpaper.html"><span class="num">15</span>Ink &amp; Paper &mdash; Stationery letterpress, stamp badges, wax seal, index cards<span class="arrow">&rarr;</span></a>
+    <a href="design-1-brutalist.html"><span class="num">01</span><div class="info">Brutalist<div class="desc">Space Mono, neon yellow, thick borders, raw</div></div><span class="arrow">&rarr;</span></a>
+    <a href="design-2-terminal.html"><span class="num">02</span><div class="info">Terminal<div class="desc">JetBrains Mono, CRT green, scanlines</div></div><span class="arrow">&rarr;</span></a>
+    <a href="design-3-editorial.html"><span class="num">03</span><div class="info">Luxury Editorial<div class="desc">Cormorant Garamond, wine/gold, serif italic</div></div><span class="arrow">&rarr;</span></a>
+    <a href="design-4-neomemphis.html"><span class="num">04</span><div class="info">Neo-Memphis<div class="desc">Unbounded, offset shadows, primary colors</div></div><span class="arrow">&rarr;</span></a>
+    <a href="design-5-zen.html"><span class="num">05</span><div class="info">Zen Minimal<div class="desc">DM Serif Display, stone texture, vermillion</div></div><span class="arrow">&rarr;</span></a>
+  </div>
+
+  <div class="label">Red + Beige with Dark Mode</div>
+  <div class="grid">
+    <a href="design-6-softcloud.html"><span class="num">06</span><div class="info">Soft Cloud<div class="desc">Lexend, puffy shadows, ultra-rounded, pillowy</div></div><span class="arrow">&rarr;</span></a>
+    <a href="design-7-comicpop.html"><span class="num">07</span><div class="info">Comic Pop<div class="desc">Bangers + Nunito, halftone, thick outlines, speech bubbles</div></div><span class="arrow">&rarr;</span></a>
+    <a href="design-8-glass.html"><span class="num">08</span><div class="info">Glassmorphism<div class="desc">Urbanist, frosted glass, blur, gradient mesh</div></div><span class="arrow">&rarr;</span></a>
+    <a href="design-9-artdeco.html"><span class="num">09</span><div class="info">Art Deco<div class="desc">Playfair Display + Raleway, gold trim, geometric fans</div></div><span class="arrow">&rarr;</span></a>
+    <a href="design-10-clay.html"><span class="num">10</span><div class="info">Clay 3D<div class="desc">Nunito, extruded shadows, plump buttons, tactile</div></div><span class="arrow">&rarr;</span></a>
+    <a href="design-11-neumorph.html"><span class="num">11</span><div class="info">Neumorphic<div class="desc">Red Hat Display, embossed/debossed, shadow-only depth</div></div><span class="arrow">&rarr;</span></a>
+    <a href="design-12-retrowarm.html"><span class="num">12</span><div class="info">Retro Warm<div class="desc">Quicksand, 70s sunset gradients, pill buttons, rotated cards</div></div><span class="arrow">&rarr;</span></a>
+    <a href="design-13-swissbold.html"><span class="num">13</span><div class="info">Swiss International<div class="desc">Familjen Grotesk, massive type contrast, red blocks, grid lines</div></div><span class="arrow">&rarr;</span></a>
+    <a href="design-14-stacked.html"><span class="num">14</span><div class="info">Stacked Cards<div class="desc">Bricolage Grotesque, overlapping layers, rotated depth</div></div><span class="arrow">&rarr;</span></a>
+    <a href="design-15-inkpaper.html"><span class="num">15</span><div class="info">Ink &amp; Paper<div class="desc">Lora + Urbanist, stamp badges, wax seal, stationery feel</div></div><span class="arrow">&rarr;</span></a>
   </div>
 </div>
 </body>
