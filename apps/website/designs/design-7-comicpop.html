@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Design 7: Comic Pop</title>
+<link href="https://fonts.googleapis.com/css2?family=Bangers&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#F5EDE4;
+  --bg2:#EDE3D8;
+  --surface:#FFFBF7;
+  --surface2:#FFF5ED;
+  --border:#1A1412;
+  --border-w:2.5px;
+  --text:#1A1412;
+  --text2:#4A3A30;
+  --text3:#8A7A6A;
+  --red:#C43838;
+  --red-bright:#E04040;
+  --red-bg:rgba(196,56,56,.08);
+  --yellow:#F5C842;
+  --offset:5px;
+  --halftone:radial-gradient(circle, var(--text) 1px, transparent 1px);
+}
+html.dark{
+  --bg:#1A1412;
+  --bg2:#241E1A;
+  --surface:#2C2420;
+  --surface2:#362E28;
+  --border:#E8D8C8;
+  --text:#F0E6DC;
+  --text2:#C0B0A0;
+  --text3:#706050;
+  --red:#E04A42;
+  --red-bright:#F05850;
+  --red-bg:rgba(224,74,66,.15);
+  --yellow:#F5C842;
+}
+body{
+  font-family:'Nunito',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  -webkit-font-smoothing:antialiased;
+  min-height:100vh;
+  transition:background .3s,color .3s;
+  position:relative;
+}
+body::before{
+  content:'';position:fixed;top:0;left:0;right:0;bottom:0;
+  background:var(--halftone);
+  background-size:8px 8px;
+  opacity:.03;pointer-events:none;z-index:0;
+}
+.page{max-width:1120px;margin:0 auto;padding:48px 32px 96px;position:relative;z-index:1}
+.page-title{
+  font-family:'Bangers',cursive;font-size:18px;color:var(--text2);
+  margin-bottom:56px;display:flex;justify-content:space-between;align-items:center;
+  letter-spacing:.06em;
+}
+.toggle{
+  background:var(--yellow);border:var(--border-w) solid var(--border);
+  border-radius:8px;padding:8px 20px;
+  font-family:'Bangers',cursive;font-size:14px;letter-spacing:.04em;
+  color:var(--text);cursor:pointer;
+  box-shadow:var(--offset) var(--offset) 0 var(--border);
+  transition:all .15s;
+  position:relative;
+}
+.toggle:hover{transform:translate(2px,2px);box-shadow:3px 3px 0 var(--border)}
+.toggle:active{transform:translate(var(--offset),var(--offset));box-shadow:0 0 0 var(--border)}
+.columns{display:grid;grid-template-columns:380px 1fr;gap:56px;align-items:start}
+
+/* COMIC CARD MIXIN */
+.comic-card{
+  background:var(--surface);
+  border:var(--border-w) solid var(--border);
+  border-radius:12px;
+  box-shadow:var(--offset) var(--offset) 0 var(--border);
+  transition:all .2s;
+}
+.comic-card:hover{
+  transform:translate(2px,2px);
+  box-shadow:3px 3px 0 var(--border);
+}
+
+/* POPUP */
+.popup{
+  width:380px;
+  background:var(--surface);
+  border:var(--border-w) solid var(--border);
+  border-radius:16px;
+  box-shadow:8px 8px 0 var(--border);
+  overflow:hidden;
+  transition:background .3s;
+}
+.popup-header{
+  padding:22px 24px 18px;
+  display:flex;align-items:center;gap:14px;
+  background:var(--red);
+  border-bottom:var(--border-w) solid var(--border);
+  position:relative;
+}
+.popup-header::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:20px;
+  background:var(--halftone);
+  background-size:4px 4px;
+  opacity:.15;
+}
+.popup-logo{
+  width:40px;height:40px;border-radius:10px;
+  background:var(--yellow);
+  border:var(--border-w) solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:3px 3px 0 rgba(0,0,0,.3);
+  position:relative;z-index:1;
+}
+.popup-logo svg{width:20px;height:20px}
+.popup-brand{
+  font-family:'Bangers',cursive;font-size:24px;color:#FFF;
+  letter-spacing:.04em;position:relative;z-index:1;
+  text-shadow:2px 2px 0 rgba(0,0,0,.2);
+}
+.popup-brand small{
+  display:block;font-family:'Nunito',sans-serif;font-size:10px;
+  color:rgba(255,255,255,.7);font-weight:600;
+  letter-spacing:.08em;text-transform:uppercase;margin-top:0;
+  text-shadow:none;
+}
+.popup-tabs{
+  display:flex;padding:0;
+  border-bottom:var(--border-w) solid var(--border);
+  background:var(--surface2);
+}
+.popup-tab{
+  flex:1;padding:12px 16px;
+  font-family:'Bangers',cursive;font-size:14px;letter-spacing:.04em;
+  color:var(--text3);background:transparent;border:none;cursor:pointer;
+  border-right:var(--border-w) solid var(--border);
+  transition:all .15s;text-align:center;
+}
+.popup-tab:last-child{border-right:none}
+.popup-tab:hover{background:var(--red-bg);color:var(--text)}
+.popup-tab.active{
+  background:var(--red-bg);color:var(--red);
+  box-shadow:inset 0 -3px 0 var(--red);
+}
+.popup-body{padding:22px 24px 26px}
+
+.profile-row{
+  display:flex;align-items:center;gap:16px;
+  margin-bottom:22px;padding:16px 18px;
+  background:var(--surface2);
+  border:var(--border-w) solid var(--border);
+  border-radius:12px;
+  box-shadow:4px 4px 0 var(--border);
+}
+.profile-av{
+  width:50px;height:50px;border-radius:12px;
+  background:var(--red);
+  border:var(--border-w) solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Bangers',cursive;font-size:20px;color:#FFF;
+  box-shadow:3px 3px 0 var(--border);
+  text-shadow:1px 1px 0 rgba(0,0,0,.2);
+}
+.profile-name{font-family:'Bangers',cursive;font-size:20px;letter-spacing:.02em}
+.profile-meta{font-size:12px;color:var(--text3);margin-top:2px;font-weight:600}
+
+.section-hdr{
+  font-family:'Bangers',cursive;font-size:14px;letter-spacing:.06em;
+  color:var(--text2);margin-bottom:14px;
+  display:flex;align-items:center;gap:10px;
+}
+.section-badge{
+  background:var(--red);color:#FFF;
+  padding:2px 12px;border-radius:6px;
+  font-family:'Bangers',cursive;font-size:12px;
+  border:2px solid var(--border);
+  box-shadow:2px 2px 0 var(--border);
+}
+
+/* Speech bubble empty state */
+.empty-state{
+  position:relative;
+  background:var(--surface2);
+  border:var(--border-w) solid var(--border);
+  border-radius:16px;
+  padding:28px 20px;
+  text-align:center;
+  color:var(--text2);font-size:13px;font-weight:600;line-height:1.6;
+  box-shadow:4px 4px 0 var(--border);
+}
+.empty-state::after{
+  content:'';position:absolute;bottom:-14px;left:32px;
+  width:0;height:0;
+  border-left:12px solid transparent;
+  border-right:12px solid transparent;
+  border-top:14px solid var(--border);
+}
+.empty-state::before{
+  content:'';position:absolute;bottom:-10px;left:34px;
+  width:0;height:0;
+  border-left:10px solid transparent;
+  border-right:10px solid transparent;
+  border-top:12px solid var(--surface2);
+  z-index:1;
+}
+.empty-search{
+  font-family:'Bangers',cursive;font-size:18px;color:var(--red);
+  margin-bottom:8px;letter-spacing:.04em;
+}
+
+.popup-actions{margin-top:28px;display:flex;flex-direction:column;gap:10px}
+.btn-action{
+  padding:14px;border:var(--border-w) solid var(--border);border-radius:10px;
+  background:var(--red);color:#FFF;
+  font-family:'Bangers',cursive;font-size:18px;letter-spacing:.06em;
+  cursor:pointer;transition:all .15s;text-align:center;
+  box-shadow:var(--offset) var(--offset) 0 var(--border);
+  text-shadow:1px 1px 0 rgba(0,0,0,.15);
+}
+.btn-action:hover{transform:translate(2px,2px);box-shadow:3px 3px 0 var(--border)}
+.btn-action:active{transform:translate(var(--offset),var(--offset));box-shadow:0 0 0 var(--border)}
+.btn-secondary{
+  padding:12px;border:var(--border-w) solid var(--border);border-radius:10px;
+  background:var(--surface);color:var(--text);
+  font-family:'Bangers',cursive;font-size:16px;letter-spacing:.04em;
+  cursor:pointer;transition:all .15s;text-align:center;
+  box-shadow:4px 4px 0 var(--border);
+}
+.btn-secondary:hover{transform:translate(2px,2px);box-shadow:2px 2px 0 var(--border)}
+
+/* HERO */
+.hero{padding-top:8px;position:relative}
+
+/* Starburst accent */
+.starburst{
+  position:absolute;width:100px;height:100px;
+  top:-20px;right:40px;
+  z-index:0;
+}
+.starburst svg{width:100%;height:100%}
+
+.hero-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  background:var(--yellow);color:var(--text);
+  padding:6px 18px;border-radius:6px;
+  font-family:'Bangers',cursive;font-size:14px;letter-spacing:.06em;
+  margin-bottom:28px;
+  border:var(--border-w) solid var(--border);
+  box-shadow:3px 3px 0 var(--border);
+  position:relative;z-index:1;
+}
+.hero-title{
+  font-family:'Bangers',cursive;
+  font-size:clamp(42px,6vw,68px);
+  line-height:1.05;letter-spacing:.02em;
+  margin-bottom:20px;
+  text-shadow:3px 3px 0 var(--red-bg);
+  position:relative;z-index:1;
+}
+.hero-title span{
+  color:var(--red);
+  text-shadow:3px 3px 0 rgba(196,56,56,.2);
+}
+.hero-sub{
+  font-size:16px;color:var(--text2);max-width:440px;
+  line-height:1.7;margin-bottom:36px;font-weight:600;
+  position:relative;z-index:1;
+}
+.hero-cta{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:48px;position:relative;z-index:1}
+.hero-btn{
+  padding:14px 32px;border:var(--border-w) solid var(--border);border-radius:10px;
+  background:var(--red);color:#FFF;
+  font-family:'Bangers',cursive;font-size:18px;letter-spacing:.06em;
+  cursor:pointer;text-decoration:none;transition:all .15s;
+  box-shadow:var(--offset) var(--offset) 0 var(--border);
+  text-shadow:1px 1px 0 rgba(0,0,0,.15);
+}
+.hero-btn:hover{transform:translate(2px,2px);box-shadow:3px 3px 0 var(--border)}
+.hero-btn-o{
+  padding:14px 32px;border:var(--border-w) solid var(--border);border-radius:10px;
+  background:var(--surface);color:var(--text);
+  font-family:'Bangers',cursive;font-size:18px;letter-spacing:.06em;
+  text-decoration:none;transition:all .15s;
+  box-shadow:var(--offset) var(--offset) 0 var(--border);
+}
+.hero-btn-o:hover{transform:translate(2px,2px);box-shadow:3px 3px 0 var(--border)}
+
+.stats{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:48px}
+.stat{
+  background:var(--surface);
+  border:var(--border-w) solid var(--border);
+  border-radius:12px;
+  padding:22px 24px;flex:1;min-width:110px;text-align:center;
+  box-shadow:var(--offset) var(--offset) 0 var(--border);
+  transition:all .15s;
+  position:relative;overflow:hidden;
+}
+.stat::before{
+  content:'';position:absolute;top:0;left:0;right:0;bottom:0;
+  background:var(--halftone);
+  background-size:6px 6px;
+  opacity:.03;
+}
+.stat:hover{transform:translate(2px,2px);box-shadow:3px 3px 0 var(--border)}
+.stat-val{
+  font-family:'Bangers',cursive;font-size:40px;color:var(--red);
+  letter-spacing:.02em;text-shadow:2px 2px 0 var(--red-bg);
+  position:relative;
+}
+.stat-lbl{
+  font-size:11px;font-weight:700;text-transform:uppercase;
+  letter-spacing:.08em;color:var(--text3);margin-top:4px;
+  position:relative;
+}
+
+.sep{
+  height:var(--border-w);background:var(--border);margin:0 0 36px;
+  background-image:repeating-linear-gradient(90deg,var(--border) 0,var(--border) 8px,transparent 8px,transparent 14px);
+  background-color:transparent;
+}
+.feat-hdr{
+  font-family:'Bangers',cursive;font-size:28px;letter-spacing:.04em;
+  margin-bottom:24px;
+  display:flex;align-items:center;gap:12px;
+}
+.feat-hdr-star{
+  display:inline-block;width:28px;height:28px;
+  background:var(--yellow);
+  border:var(--border-w) solid var(--border);
+  border-radius:6px;
+  box-shadow:2px 2px 0 var(--border);
+  display:flex;align-items:center;justify-content:center;
+}
+.feat-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.feat-card{
+  background:var(--surface);
+  border:var(--border-w) solid var(--border);
+  border-radius:12px;
+  padding:24px 22px;
+  box-shadow:var(--offset) var(--offset) 0 var(--border);
+  transition:all .15s;
+  position:relative;overflow:hidden;
+}
+.feat-card::after{
+  content:'';position:absolute;top:0;right:0;
+  width:40px;height:40px;
+  background:var(--halftone);
+  background-size:5px 5px;
+  opacity:.06;
+}
+.feat-card:hover{
+  transform:translate(2px,2px);
+  box-shadow:3px 3px 0 var(--border);
+}
+.feat-num{
+  font-family:'Bangers',cursive;font-size:32px;
+  color:var(--red);opacity:.2;position:absolute;
+  top:12px;right:16px;
+}
+.feat-card h4{
+  font-family:'Bangers',cursive;font-size:18px;letter-spacing:.04em;
+  margin-bottom:8px;
+}
+.feat-card p{font-size:13px;color:var(--text2);line-height:1.6;font-weight:600}
+
+@media(max-width:860px){.columns{grid-template-columns:1fr}.popup{margin:0 auto}}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="page-title">
+    Design 07 / Comic Pop
+    <button class="toggle">Light / Dark</button>
+  </div>
+  <div class="columns">
+    <div class="popup">
+      <div class="popup-header">
+        <div class="popup-logo">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#1A1412" stroke-width="2.5" stroke-linecap="round"><path d="M12 4v16M8 8l4-4 4 4"/></svg>
+        </div>
+        <div class="popup-brand">CogniFillz<small>by Cranium Inc.</small></div>
+      </div>
+      <div class="popup-tabs">
+        <button class="popup-tab active">Profile</button>
+        <button class="popup-tab">Analyze</button>
+        <button class="popup-tab">Settings</button>
+      </div>
+      <div class="popup-body">
+        <div class="profile-row">
+          <div class="profile-av">JD</div>
+          <div>
+            <div class="profile-name">Jane Doe</div>
+            <div class="profile-meta">jane@email.com &middot; San Francisco</div>
+          </div>
+        </div>
+        <div class="section-hdr">Detected Fields <span class="section-badge">0</span></div>
+        <div class="empty-state">
+          <div class="empty-search">No fields detected!</div>
+          Navigate to a job application<br>to detect fillable fields
+        </div>
+        <div class="popup-actions">
+          <button class="btn-action">Autofill Application</button>
+          <button class="btn-secondary">Edit Profile</button>
+        </div>
+      </div>
+    </div>
+    <div class="hero">
+      <div class="starburst">
+        <svg viewBox="0 0 100 100" fill="var(--yellow)" stroke="var(--border)" stroke-width="2">
+          <polygon points="50,2 61,35 97,35 68,57 79,91 50,70 21,91 32,57 3,35 39,35"/>
+        </svg>
+      </div>
+      <div class="hero-badge">Open Source -- Local AI -- Free Forever</div>
+      <h1 class="hero-title">Job applications,<br><span>filled in seconds.</span></h1>
+      <p class="hero-sub">CogniFillz uses local AI to autofill job forms across LinkedIn, Indeed, Greenhouse and 50+ platforms. Your data never leaves your machine.</p>
+      <div class="hero-cta">
+        <a href="#" class="hero-btn">Install Extension</a>
+        <a href="#" class="hero-btn-o">View on GitHub</a>
+      </div>
+      <div class="stats">
+        <div class="stat"><div class="stat-val">100%</div><div class="stat-lbl">Private</div></div>
+        <div class="stat"><div class="stat-val">5+</div><div class="stat-lbl">Browsers</div></div>
+        <div class="stat"><div class="stat-val">$0</div><div class="stat-lbl">Forever</div></div>
+      </div>
+      <div class="sep"></div>
+      <div class="feat-hdr">
+        <span class="feat-hdr-star"><svg viewBox="0 0 16 16" width="14" height="14" fill="var(--text)"><polygon points="8,1 10,6 15,6 11,9 12.5,14 8,11 3.5,14 5,9 1,6 6,6"/></svg></span>
+        Features
+      </div>
+      <div class="feat-grid">
+        <div class="feat-card">
+          <span class="feat-num">01</span>
+          <h4>Instant Autofill</h4>
+          <p>One click to fill 50+ ATS platforms including Greenhouse, Lever, and Workday.</p>
+        </div>
+        <div class="feat-card">
+          <span class="feat-num">02</span>
+          <h4>Local-First Privacy</h4>
+          <p>All AI runs on your machine. Zero cloud uploads, zero tracking.</p>
+        </div>
+        <div class="feat-card">
+          <span class="feat-num">03</span>
+          <h4>AI Job Matching</h4>
+          <p>Instant match score powered by your local LLM. Smart and private.</p>
+        </div>
+        <div class="feat-card">
+          <span class="feat-num">04</span>
+          <h4>Free Forever</h4>
+          <p>Open source. No subscriptions. No premium tiers. Community-driven.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+document.querySelector('.toggle').addEventListener('click',()=>{
+  document.documentElement.classList.toggle('dark');
+});
+</script>
+</body>
+</html>
