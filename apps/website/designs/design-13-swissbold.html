@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Design 13: Swiss International</title>
+<link href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#F5EDE4;
+  --surface:#FFFBF6;
+  --surface2:#EDE3D8;
+  --surface3:#E0D4C8;
+  --text:#1A1410;
+  --text2:#6B5B4E;
+  --text3:#A09080;
+  --red:#C43838;
+  --red-hover:#A82E2E;
+  --red-light:rgba(196,56,56,.07);
+  --red-bar:#C43838;
+  --rule:rgba(26,20,16,.10);
+  --grid-line:rgba(26,20,16,.04);
+  --shadow-color:rgba(100,70,40,.08);
+}
+html.dark{
+  --bg:#1A1412;
+  --surface:#252018;
+  --surface2:#1E1915;
+  --surface3:#342A24;
+  --text:#F0E8E0;
+  --text2:#B8A898;
+  --text3:#786858;
+  --red:#E04A42;
+  --red-hover:#C83C36;
+  --red-light:rgba(224,74,66,.08);
+  --red-bar:#E04A42;
+  --rule:rgba(240,232,224,.10);
+  --grid-line:rgba(240,232,224,.03);
+  --shadow-color:rgba(0,0,0,.20);
+}
+body{
+  font-family:'Familjen Grotesk',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  -webkit-font-smoothing:antialiased;
+  min-height:100vh;
+  transition:background .4s,color .4s;
+  overflow-x:hidden;
+  position:relative;
+}
+
+/* Swiss vertical grid lines */
+body::before{
+  content:'';position:fixed;top:0;left:0;right:0;bottom:0;
+  background:
+    repeating-linear-gradient(
+      90deg,
+      var(--grid-line) 0px,
+      var(--grid-line) 1px,
+      transparent 1px,
+      transparent 80px
+    );
+  pointer-events:none;z-index:0;
+}
+
+.page{max-width:1140px;margin:0 auto;padding:48px 32px 96px;position:relative;z-index:1}
+
+.page-title{
+  font-size:11px;font-weight:700;color:var(--text3);
+  text-transform:uppercase;letter-spacing:.14em;
+  margin-bottom:56px;display:flex;justify-content:space-between;align-items:center;
+}
+.toggle{
+  background:var(--red);
+  border:none;padding:8px 24px;
+  font-family:'Familjen Grotesk',sans-serif;font-size:11px;font-weight:700;
+  color:#FFF;cursor:pointer;text-transform:uppercase;letter-spacing:.1em;
+  transition:all .2s;
+}
+.toggle:hover{background:var(--red-hover)}
+.toggle:active{transform:scale(.97)}
+
+.columns{display:grid;grid-template-columns:380px 1fr;gap:56px;align-items:start}
+
+/* ---- POPUP ---- */
+.popup{
+  width:380px;
+  background:var(--surface);
+  box-shadow:0 1px 4px var(--shadow-color);
+  overflow:hidden;
+  transition:all .4s;
+  border:1px solid var(--rule);
+}
+
+.popup-header{
+  padding:20px 24px 16px;
+  display:flex;align-items:center;gap:14px;
+  border-bottom:2px solid var(--red);
+}
+.popup-logo{
+  width:40px;height:40px;
+  background:var(--red);
+  display:flex;align-items:center;justify-content:center;
+}
+.popup-logo svg{width:18px;height:18px}
+.popup-brand{font-size:20px;font-weight:700;letter-spacing:-.02em}
+.popup-brand small{
+  display:block;font-size:9px;color:var(--text3);font-weight:500;
+  text-transform:uppercase;letter-spacing:.12em;margin-top:2px;
+}
+
+.popup-tabs{
+  display:flex;
+  border-bottom:1px solid var(--rule);
+}
+.popup-tab{
+  flex:1;padding:12px 16px;
+  font-family:'Familjen Grotesk',sans-serif;font-size:10px;font-weight:700;
+  text-transform:uppercase;letter-spacing:.12em;
+  color:var(--text3);background:transparent;border:none;cursor:pointer;
+  border-bottom:2px solid transparent;
+  transition:all .2s;margin-bottom:-1px;
+}
+.popup-tab:hover{color:var(--text2)}
+.popup-tab.active{
+  color:var(--red);
+  border-bottom-color:var(--red);
+}
+
+.popup-body{padding:24px}
+
+.profile-row{
+  display:flex;align-items:center;gap:16px;
+  margin-bottom:24px;padding:16px;
+  border:1px solid var(--rule);
+  box-shadow:0 1px 4px var(--shadow-color);
+  transition:all .3s;
+}
+.profile-av{
+  width:48px;height:48px;
+  background:var(--red);
+  display:flex;align-items:center;justify-content:center;
+  font-size:16px;font-weight:700;color:#FFF;
+}
+.profile-name{font-size:22px;font-weight:700;letter-spacing:-.02em;line-height:1}
+.profile-meta{font-size:11px;color:var(--text3);margin-top:4px;font-weight:400}
+
+.section-hdr{
+  font-size:9px;font-weight:700;text-transform:uppercase;
+  letter-spacing:.16em;color:var(--text3);margin-bottom:12px;
+  display:flex;align-items:center;gap:10px;
+  padding-bottom:8px;border-bottom:1px solid var(--rule);
+}
+.section-pill{
+  background:var(--red);color:#FFF;
+  padding:3px 12px;
+  font-size:9px;font-weight:700;letter-spacing:.08em;
+}
+
+.empty-state{
+  text-align:center;padding:32px 20px;
+  border:1px solid var(--rule);
+  color:var(--text3);font-size:13px;font-weight:500;line-height:1.8;
+}
+.empty-icon{
+  width:48px;height:48px;margin:0 auto 14px;
+  border:1px solid var(--rule);
+  display:flex;align-items:center;justify-content:center;
+}
+.empty-icon svg{width:20px;height:20px;color:var(--text3)}
+
+.popup-actions{margin-top:24px;display:flex;flex-direction:column;gap:8px}
+.btn-fill{
+  padding:14px;border:none;
+  background:var(--red);
+  color:#FFF;font-family:'Familjen Grotesk',sans-serif;font-size:12px;font-weight:700;
+  text-transform:uppercase;letter-spacing:.1em;
+  cursor:pointer;transition:all .15s;text-align:center;
+}
+.btn-fill:hover{background:var(--red-hover)}
+.btn-fill:active{transform:scale(.98)}
+.btn-outline{
+  padding:13px;
+  border:1px solid var(--rule);
+  background:transparent;
+  color:var(--text2);
+  font-family:'Familjen Grotesk',sans-serif;font-size:11px;font-weight:700;
+  text-transform:uppercase;letter-spacing:.1em;
+  cursor:pointer;transition:all .15s;text-align:center;
+}
+.btn-outline:hover{border-color:var(--red);color:var(--red)}
+
+/* ---- HERO ---- */
+.hero{padding-top:0}
+
+.hero-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  color:var(--red);
+  font-size:10px;font-weight:700;
+  text-transform:uppercase;letter-spacing:.14em;
+  margin-bottom:32px;
+  padding-bottom:12px;border-bottom:1px solid var(--rule);
+}
+.hero-badge-dot{
+  width:6px;height:6px;
+  background:var(--red);
+}
+
+.hero-title{
+  font-size:clamp(44px,6vw,66px);
+  font-weight:700;line-height:1.0;
+  letter-spacing:-.04em;margin-bottom:16px;
+}
+.hero-title span{color:var(--red)}
+.hero-sub{
+  font-size:14px;color:var(--text2);max-width:420px;
+  line-height:1.9;margin-bottom:48px;font-weight:400;
+}
+
+/* Horizontal rule divider */
+.hr-divider{
+  border:none;border-top:1px solid var(--rule);
+  margin:0 0 40px 0;
+}
+
+/* ---- STATS with red accent bar ---- */
+.stats-section{position:relative;margin-bottom:56px}
+.stats-bar{
+  position:absolute;top:0;left:-32px;right:-32px;
+  height:100%;
+  background:var(--red);
+  opacity:.06;
+  pointer-events:none;
+}
+.stats{display:flex;gap:0;position:relative;z-index:1}
+.stat{
+  flex:1;text-align:center;
+  padding:32px 16px;
+  border-right:1px solid var(--rule);
+  position:relative;
+}
+.stat:last-child{border-right:none}
+.stat-val{
+  font-size:48px;font-weight:700;color:var(--red);
+  letter-spacing:-.03em;line-height:1;
+}
+.stat-lbl{
+  font-size:9px;font-weight:700;text-transform:uppercase;
+  letter-spacing:.16em;color:var(--text3);margin-top:8px;
+}
+
+/* ---- FEATURES ---- */
+.feat-hdr{
+  font-size:10px;font-weight:700;text-transform:uppercase;
+  letter-spacing:.16em;color:var(--text3);margin-bottom:24px;
+  padding-bottom:12px;border-bottom:1px solid var(--rule);
+}
+.feat-grid{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--rule)}
+.feat-card{
+  padding:24px;
+  border-bottom:1px solid var(--rule);
+  border-right:1px solid var(--rule);
+  transition:background .2s;
+  box-shadow:none;
+}
+.feat-card:nth-child(2n){border-right:none}
+.feat-card:nth-child(n+3){border-bottom:none}
+.feat-card:hover{background:var(--red-light)}
+
+.feat-num{
+  font-size:36px;font-weight:700;color:var(--red);
+  letter-spacing:-.03em;line-height:1;margin-bottom:8px;
+}
+.feat-card h4{font-size:15px;font-weight:700;margin-bottom:6px;letter-spacing:-.01em}
+.feat-card p{font-size:12px;color:var(--text2);line-height:1.7;font-weight:400}
+
+@media(max-width:860px){.columns{grid-template-columns:1fr}.popup{margin:0 auto}}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="page-title">
+    Design 13 / Swiss International
+    <button class="toggle" id="themeToggle">Dark</button>
+  </div>
+  <div class="columns">
+    <div class="popup">
+      <div class="popup-header">
+        <div class="popup-logo">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#FFF" stroke-width="2.5" stroke-linecap="round"><path d="M12 4v16M8 8l4-4 4 4"/></svg>
+        </div>
+        <div class="popup-brand">CogniFillz<small>by Cranium Inc.</small></div>
+      </div>
+      <div class="popup-tabs">
+        <button class="popup-tab active">Profile</button>
+        <button class="popup-tab">Analyze</button>
+      </div>
+      <div class="popup-body">
+        <div class="profile-row">
+          <div class="profile-av">JD</div>
+          <div>
+            <div class="profile-name">Jane Doe</div>
+            <div class="profile-meta">jane@email.com</div>
+          </div>
+        </div>
+        <div class="section-hdr">Detected Fields <span class="section-pill">0 Found</span></div>
+        <div class="empty-state">
+          <div class="empty-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg>
+          </div>
+          Navigate to a job application<br>to detect fillable fields
+        </div>
+        <div class="popup-actions">
+          <button class="btn-fill">Autofill Application</button>
+          <button class="btn-outline">Edit Profile</button>
+        </div>
+      </div>
+    </div>
+    <div class="hero">
+      <div class="hero-badge"><span class="hero-badge-dot"></span> Open Source &middot; Local AI &middot; Free Forever</div>
+      <h1 class="hero-title">Job applications,<br><span>filled in seconds.</span></h1>
+      <p class="hero-sub">CogniFillz uses local AI to autofill job forms across LinkedIn, Indeed, Greenhouse and 50+ platforms. Your data never leaves your machine.</p>
+      <hr class="hr-divider">
+      <div class="stats-section">
+        <div class="stats-bar"></div>
+        <div class="stats">
+          <div class="stat"><div class="stat-val">100%</div><div class="stat-lbl">Private</div></div>
+          <div class="stat"><div class="stat-val">5+</div><div class="stat-lbl">Browsers</div></div>
+          <div class="stat"><div class="stat-val">$0</div><div class="stat-lbl">Forever</div></div>
+        </div>
+      </div>
+      <div class="feat-hdr">Features</div>
+      <div class="feat-grid">
+        <div class="feat-card">
+          <div class="feat-num">01</div>
+          <h4>Instant Autofill</h4>
+          <p>One click to fill 50+ ATS platforms including Greenhouse, Lever, and Workday.</p>
+        </div>
+        <div class="feat-card">
+          <div class="feat-num">02</div>
+          <h4>Local Privacy</h4>
+          <p>All AI runs on your machine. Zero cloud uploads, zero tracking.</p>
+        </div>
+        <div class="feat-card">
+          <div class="feat-num">03</div>
+          <h4>AI Matching</h4>
+          <p>Instant match score powered by your local LLM. Smart and private.</p>
+        </div>
+        <div class="feat-card">
+          <div class="feat-num">04</div>
+          <h4>Free Forever</h4>
+          <p>Open source. No subscriptions. No premium tiers. Community-driven.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+(function(){
+  var btn=document.getElementById('themeToggle');
+  btn.addEventListener('click',function(){
+    document.documentElement.classList.toggle('dark');
+    btn.textContent=document.documentElement.classList.contains('dark')?'Light':'Dark';
+  });
+})();
+</script>
+</body>
+</html>

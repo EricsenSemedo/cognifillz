@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Design 12: Retro Warm</title>
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#F5EDE4;
+  --surface:#FFFBF6;
+  --surface2:#EDE3D8;
+  --surface3:#E6D9CC;
+  --text:#2A1F17;
+  --text2:#6B5B4E;
+  --text3:#A09080;
+  --red:#C43838;
+  --red-hover:#A82E2E;
+  --red-light:rgba(196,56,56,.08);
+  --red-glow:rgba(196,56,56,.18);
+  --peach:#E8825C;
+  --orange:#D96A3A;
+  --warm-grad:linear-gradient(135deg,#C43838 0%,#D06040 40%,#E8825C 70%,#F0A870 100%);
+  --sunset-grad:linear-gradient(180deg,#C43838,#E8825C,#F0C890);
+  --shadow-color:rgba(120,80,40,.10);
+  --shadow-warm:rgba(196,56,56,.08);
+  --radius:24px;
+  --radius-pill:50px;
+  --border-thick:3px solid var(--surface3);
+}
+html.dark{
+  --bg:#1A1412;
+  --surface:#2C2420;
+  --surface2:#221C18;
+  --surface3:#342A24;
+  --text:#F0E8E0;
+  --text2:#B8A898;
+  --text3:#786858;
+  --red:#E04A42;
+  --red-hover:#C83C36;
+  --red-light:rgba(224,74,66,.10);
+  --red-glow:rgba(224,74,66,.22);
+  --peach:#E8926C;
+  --orange:#DA7A4A;
+  --warm-grad:linear-gradient(135deg,#E04A42 0%,#DA7A4A 40%,#E8926C 70%,#F0B880 100%);
+  --sunset-grad:linear-gradient(180deg,#E04A42,#E8926C,#F0C890);
+  --shadow-color:rgba(0,0,0,.25);
+  --shadow-warm:rgba(224,74,66,.12);
+  --border-thick:3px solid var(--surface3);
+}
+body{
+  font-family:'Quicksand',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  -webkit-font-smoothing:antialiased;
+  min-height:100vh;
+  transition:background .5s,color .5s;
+  overflow-x:hidden;
+}
+
+.page{max-width:1140px;margin:0 auto;padding:48px 32px 96px;position:relative;z-index:1}
+
+.page-title{
+  font-size:14px;font-weight:700;color:var(--text3);
+  margin-bottom:56px;display:flex;justify-content:space-between;align-items:center;
+  letter-spacing:.03em;
+}
+.toggle{
+  background:var(--warm-grad);
+  border:none;border-radius:var(--radius-pill);
+  padding:10px 28px;
+  font-family:'Quicksand',sans-serif;font-size:13px;font-weight:700;
+  color:#FFF;cursor:pointer;
+  box-shadow:0 4px 16px var(--red-glow);
+  transition:all .25s;
+}
+.toggle:hover{transform:translateY(-1px);box-shadow:0 6px 24px var(--red-glow)}
+.toggle:active{transform:translateY(1px);box-shadow:0 2px 8px var(--red-glow)}
+
+.columns{display:grid;grid-template-columns:380px 1fr;gap:56px;align-items:start}
+
+/* ---- WAVY DECORATIVE BORDER HELPERS ---- */
+.wavy-top{
+  position:relative;
+}
+.wavy-top::before{
+  content:'';position:absolute;top:-6px;left:16px;right:16px;height:6px;
+  background:var(--warm-grad);
+  border-radius:0 0 50% 50% / 0 0 100% 100%;
+  opacity:.5;
+}
+
+/* ---- POPUP ---- */
+.popup{
+  width:380px;
+  background:var(--surface);
+  border-radius:32px;
+  box-shadow:
+    0 8px 32px var(--shadow-color),
+    0 2px 8px var(--shadow-warm);
+  overflow:hidden;
+  transition:all .5s;
+  border:3px solid var(--surface3);
+}
+
+.popup-header{
+  padding:22px 24px 16px;
+  display:flex;align-items:center;gap:14px;
+  border-bottom:var(--border-thick);
+  background:linear-gradient(180deg,var(--red-light),transparent);
+}
+.popup-logo{
+  width:48px;height:48px;border-radius:50%;
+  background:var(--warm-grad);
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:
+    0 0 0 4px var(--surface),
+    0 0 0 7px var(--red),
+    0 4px 16px var(--red-glow);
+}
+.popup-logo svg{width:20px;height:20px}
+.popup-brand{font-size:21px;font-weight:700;letter-spacing:-.01em}
+.popup-brand small{
+  display:block;font-size:10px;color:var(--text3);font-weight:600;
+  letter-spacing:.05em;margin-top:2px;
+}
+
+.popup-tabs{
+  display:flex;padding:10px 14px;gap:6px;
+  border-bottom:var(--border-thick);
+}
+.popup-tab{
+  flex:1;padding:10px 14px;
+  font-family:'Quicksand',sans-serif;font-size:12px;font-weight:700;
+  color:var(--text3);background:transparent;border:none;cursor:pointer;
+  border-radius:var(--radius-pill);
+  transition:all .25s;
+}
+.popup-tab:hover{background:var(--surface2);color:var(--text2)}
+.popup-tab.active{
+  background:var(--warm-grad);
+  color:#FFF;
+  box-shadow:0 3px 12px var(--red-glow);
+}
+
+.popup-body{padding:22px 24px 28px}
+
+.profile-row{
+  display:flex;align-items:center;gap:16px;
+  margin-bottom:24px;padding:16px 18px;
+  background:var(--surface2);
+  border-radius:var(--radius);
+  border:2px solid var(--surface3);
+  box-shadow:0 4px 16px var(--shadow-color);
+  transition:all .3s;
+}
+.profile-av{
+  width:54px;height:54px;border-radius:50%;
+  background:var(--warm-grad);
+  display:flex;align-items:center;justify-content:center;
+  font-size:17px;font-weight:700;color:#FFF;
+  box-shadow:
+    0 0 0 3px var(--surface2),
+    0 0 0 6px var(--peach),
+    0 4px 14px var(--red-glow);
+  position:relative;
+}
+.profile-name{font-size:17px;font-weight:700}
+.profile-meta{font-size:11px;color:var(--text3);margin-top:3px;font-weight:500}
+
+.section-hdr{
+  font-size:11px;font-weight:700;text-transform:uppercase;
+  letter-spacing:.08em;color:var(--text3);margin-bottom:14px;
+  display:flex;align-items:center;gap:10px;
+}
+.section-pill{
+  background:var(--warm-grad);color:#FFF;
+  padding:4px 16px;border-radius:var(--radius-pill);
+  font-size:10px;font-weight:700;
+  box-shadow:0 2px 8px var(--red-glow);
+}
+
+.empty-state{
+  text-align:center;padding:32px 20px;
+  background:var(--surface2);
+  border-radius:var(--radius);
+  border:2px dashed var(--surface3);
+  color:var(--text3);font-size:13px;font-weight:600;line-height:1.8;
+}
+.empty-icon{
+  width:56px;height:56px;margin:0 auto 14px;
+  background:var(--surface);
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 4px 14px var(--shadow-color);
+  border:2px solid var(--surface3);
+}
+.empty-icon svg{width:22px;height:22px;color:var(--text3)}
+
+.popup-actions{margin-top:24px;display:flex;flex-direction:column;gap:10px}
+.btn-fill{
+  padding:16px;border:none;border-radius:var(--radius-pill);
+  background:var(--warm-grad);
+  color:#FFF;font-family:'Quicksand',sans-serif;font-size:14px;font-weight:700;
+  cursor:pointer;transition:all .2s;text-align:center;
+  box-shadow:0 6px 24px var(--red-glow);
+}
+.btn-fill:hover{transform:translateY(-1px);box-shadow:0 8px 32px var(--red-glow)}
+.btn-fill:active{transform:translateY(2px);box-shadow:0 2px 12px var(--red-glow)}
+.btn-outline{
+  padding:14px;
+  border:2px solid var(--surface3);
+  border-radius:var(--radius-pill);
+  background:var(--surface2);
+  color:var(--text2);
+  font-family:'Quicksand',sans-serif;font-size:13px;font-weight:700;
+  cursor:pointer;transition:all .2s;text-align:center;
+}
+.btn-outline:hover{border-color:var(--peach);color:var(--text)}
+
+/* ---- HERO ---- */
+.hero{padding-top:8px}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:10px;
+  background:var(--surface);
+  color:var(--red);
+  padding:10px 24px;border-radius:var(--radius-pill);
+  font-size:12px;font-weight:700;letter-spacing:.03em;
+  margin-bottom:32px;
+  border:2px solid var(--surface3);
+  box-shadow:0 4px 16px var(--shadow-color);
+}
+.hero-badge-dot{
+  width:10px;height:10px;border-radius:50%;
+  background:var(--warm-grad);
+  box-shadow:0 0 8px var(--red-glow);
+}
+.hero-title{
+  font-size:clamp(38px,5.5vw,56px);
+  font-weight:700;line-height:1.12;
+  letter-spacing:-.02em;margin-bottom:20px;
+}
+.hero-title span{
+  background:var(--warm-grad);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.hero-sub{
+  font-size:15px;color:var(--text2);max-width:440px;
+  line-height:1.9;margin-bottom:44px;font-weight:500;
+}
+
+/* ---- STATS ---- */
+.stats{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:56px}
+.stat{
+  background:var(--surface);
+  border-radius:var(--radius);
+  padding:24px 20px;flex:1;min-width:100px;text-align:center;
+  border:2px solid var(--surface3);
+  box-shadow:0 6px 24px var(--shadow-color);
+  transition:all .25s;
+  position:relative;
+}
+.stat:hover{transform:translateY(-2px) rotate(-1deg);box-shadow:0 10px 32px var(--shadow-color)}
+.stat-val-wrap{
+  display:inline-block;
+  background:var(--warm-grad);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.stat-val{
+  font-size:40px;font-weight:700;
+  letter-spacing:-.02em;
+}
+.stat-lbl{
+  display:inline-block;
+  background:var(--red-light);
+  color:var(--red);
+  padding:4px 16px;border-radius:var(--radius-pill);
+  font-size:10px;font-weight:700;text-transform:uppercase;
+  letter-spacing:.06em;margin-top:8px;
+}
+
+/* ---- FEATURES ---- */
+.feat-hdr{font-size:24px;font-weight:700;margin-bottom:24px;letter-spacing:-.01em}
+.feat-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.feat-card{
+  background:var(--surface);
+  border-radius:var(--radius);
+  padding:26px 22px;
+  border:2px solid var(--surface3);
+  box-shadow:0 6px 24px var(--shadow-color);
+  transition:all .3s;
+  position:relative;
+}
+.feat-card:nth-child(1){transform:rotate(-0.8deg)}
+.feat-card:nth-child(2){transform:rotate(0.6deg)}
+.feat-card:nth-child(3){transform:rotate(0.5deg)}
+.feat-card:nth-child(4){transform:rotate(-0.7deg)}
+.feat-card:hover{transform:rotate(0deg) translateY(-3px);box-shadow:0 12px 36px var(--shadow-color)}
+
+.feat-icon{
+  width:50px;height:50px;border-radius:50%;
+  background:var(--warm-grad);
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:16px;
+  box-shadow:
+    0 0 0 3px var(--surface),
+    0 0 0 5px var(--peach),
+    0 4px 12px var(--red-glow);
+}
+.feat-icon svg{width:20px;height:20px;color:#FFF}
+.feat-card h4{font-size:16px;font-weight:700;margin-bottom:8px}
+.feat-card p{font-size:12px;color:var(--text2);line-height:1.8;font-weight:500}
+
+/* ---- WAVY DIVIDER ---- */
+.wavy-divider{
+  width:100%;height:24px;margin:32px 0;
+  position:relative;overflow:hidden;
+}
+.wavy-divider::before{
+  content:'';position:absolute;left:-10%;right:-10%;top:8px;
+  height:4px;
+  background:var(--warm-grad);
+  border-radius:50% 50% 50% 50% / 100% 100% 0 0;
+  opacity:.3;
+  transform:scaleY(3);
+}
+
+/* ---- CURVED ACCENT ---- */
+.hero::before{
+  content:'';position:absolute;top:-80px;right:-120px;
+  width:400px;height:400px;
+  background:var(--sunset-grad);
+  opacity:.06;
+  border-radius:50%;
+  pointer-events:none;
+}
+.hero{position:relative}
+
+@media(max-width:860px){.columns{grid-template-columns:1fr}.popup{margin:0 auto}}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="page-title">
+    Design 12 / Retro Warm
+    <button class="toggle" id="themeToggle">Dark</button>
+  </div>
+  <div class="columns">
+    <div class="popup">
+      <div class="popup-header">
+        <div class="popup-logo">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#FFF" stroke-width="2.5" stroke-linecap="round"><path d="M12 4v16M8 8l4-4 4 4"/></svg>
+        </div>
+        <div class="popup-brand">CogniFillz<small>by Cranium Inc.</small></div>
+      </div>
+      <div class="popup-tabs">
+        <button class="popup-tab active">Profile</button>
+        <button class="popup-tab">Analyze</button>
+      </div>
+      <div class="popup-body">
+        <div class="profile-row">
+          <div class="profile-av">JD</div>
+          <div>
+            <div class="profile-name">Jane Doe</div>
+            <div class="profile-meta">jane@email.com</div>
+          </div>
+        </div>
+        <div class="section-hdr">Detected Fields <span class="section-pill">0 found</span></div>
+        <div class="empty-state">
+          <div class="empty-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg>
+          </div>
+          Navigate to a job application<br>to detect fillable fields
+        </div>
+        <div class="popup-actions">
+          <button class="btn-fill">Autofill Application</button>
+          <button class="btn-outline">Edit Profile</button>
+        </div>
+      </div>
+    </div>
+    <div class="hero">
+      <div class="hero-badge"><span class="hero-badge-dot"></span> Open Source &middot; Local AI &middot; Free Forever</div>
+      <h1 class="hero-title">Job applications,<br><span>filled in seconds.</span></h1>
+      <p class="hero-sub">CogniFillz uses local AI to autofill job forms across LinkedIn, Indeed, Greenhouse and 50+ platforms. Your data never leaves your machine.</p>
+      <div class="stats">
+        <div class="stat"><div class="stat-val-wrap"><div class="stat-val">100%</div></div><div class="stat-lbl">Private</div></div>
+        <div class="stat"><div class="stat-val-wrap"><div class="stat-val">5+</div></div><div class="stat-lbl">Browsers</div></div>
+        <div class="stat"><div class="stat-val-wrap"><div class="stat-val">$0</div></div><div class="stat-lbl">Forever</div></div>
+      </div>
+      <div class="feat-hdr">Features</div>
+      <div class="feat-grid">
+        <div class="feat-card">
+          <div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
+          <h4>Instant Autofill</h4>
+          <p>One click to fill 50+ ATS platforms including Greenhouse, Lever, and Workday.</p>
+        </div>
+        <div class="feat-card">
+          <div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></div>
+          <h4>Local Privacy</h4>
+          <p>All AI runs on your machine. Zero cloud uploads, zero tracking.</p>
+        </div>
+        <div class="feat-card">
+          <div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M12 20V10M6 20V4M18 20v-4"/></svg></div>
+          <h4>AI Matching</h4>
+          <p>Instant match score powered by your local LLM. Smart and private.</p>
+        </div>
+        <div class="feat-card">
+          <div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 000-7.78z"/></svg></div>
+          <h4>Free Forever</h4>
+          <p>Open source. No subscriptions. No premium tiers. Community-driven.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+(function(){
+  var btn=document.getElementById('themeToggle');
+  btn.addEventListener('click',function(){
+    document.documentElement.classList.toggle('dark');
+    btn.textContent=document.documentElement.classList.contains('dark')?'Light':'Dark';
+  });
+})();
+</script>
+</body>
+</html>
