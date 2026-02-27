@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Design 14: Stacked Cards</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#F5EDE4;
+  --surface:#FFFBF6;
+  --surface2:#EDE3D8;
+  --surface3:#E0D4C8;
+  --surface4:#D6CCBF;
+  --text:#1A1410;
+  --text2:#6B5B4E;
+  --text3:#A09080;
+  --red:#C43838;
+  --red-hover:#A82E2E;
+  --red-light:rgba(196,56,56,.06);
+  --red-glow:rgba(196,56,56,.12);
+  --rule:rgba(26,20,16,.10);
+  --shadow1:rgba(100,70,40,.06);
+  --shadow2:rgba(100,70,40,.10);
+  --shadow3:rgba(100,70,40,.16);
+  --shadow4:rgba(100,70,40,.22);
+}
+html.dark{
+  --bg:#1A1412;
+  --surface:#262019;
+  --surface2:#1E1915;
+  --surface3:#342A24;
+  --surface4:#3E3228;
+  --text:#F0E8E0;
+  --text2:#B8A898;
+  --text3:#786858;
+  --red:#E04A42;
+  --red-hover:#C83C36;
+  --red-light:rgba(224,74,66,.07);
+  --red-glow:rgba(224,74,66,.14);
+  --rule:rgba(240,232,224,.08);
+  --shadow1:rgba(0,0,0,.12);
+  --shadow2:rgba(0,0,0,.20);
+  --shadow3:rgba(0,0,0,.30);
+  --shadow4:rgba(0,0,0,.40);
+}
+body{
+  font-family:'Bricolage Grotesque',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  -webkit-font-smoothing:antialiased;
+  min-height:100vh;
+  transition:background .4s,color .4s;
+  overflow-x:hidden;
+}
+.page{max-width:1180px;margin:0 auto;padding:48px 36px 96px}
+.page-title{
+  font-size:11px;font-weight:700;color:var(--text3);
+  text-transform:uppercase;letter-spacing:.14em;
+  margin-bottom:56px;display:flex;justify-content:space-between;align-items:center;
+}
+.toggle{
+  background:var(--red);border:none;padding:8px 22px;border-radius:6px;
+  font-family:'Bricolage Grotesque',sans-serif;font-size:11px;font-weight:700;
+  color:#FFF;cursor:pointer;text-transform:uppercase;letter-spacing:.1em;
+  transition:all .2s;box-shadow:0 2px 8px var(--shadow2);
+}
+.toggle:hover{background:var(--red-hover);box-shadow:0 4px 14px var(--shadow3)}
+.toggle:active{transform:scale(.96)}
+
+.columns{display:grid;grid-template-columns:380px 1fr;gap:56px;align-items:start}
+
+/* ===== STACKED CARD MIXIN ===== */
+.stacked{position:relative;z-index:1}
+.stacked::before,.stacked::after{
+  content:'';position:absolute;top:0;left:0;right:0;bottom:0;
+  background:var(--surface2);border-radius:inherit;
+  transition:all .4s;
+}
+.stacked::before{
+  z-index:-1;
+  transform:rotate(-2.2deg) translate(4px,6px);
+  box-shadow:0 2px 8px var(--shadow2);
+}
+.stacked::after{
+  z-index:-2;
+  background:var(--surface3);
+  transform:rotate(1.5deg) translate(-3px,12px);
+  box-shadow:0 4px 16px var(--shadow3);
+}
+
+/* ===== POPUP ===== */
+.popup{
+  width:380px;
+  background:var(--surface);
+  border-radius:14px;
+  box-shadow:0 6px 24px var(--shadow3),0 1px 3px var(--shadow1);
+  overflow:hidden;
+  transition:all .4s;
+}
+.popup::before{border-radius:14px}
+.popup::after{border-radius:14px}
+
+.popup-header{
+  padding:20px 24px 16px;
+  display:flex;align-items:center;gap:14px;
+  border-bottom:2.5px solid var(--red);
+  position:relative;
+}
+.popup-logo{
+  width:42px;height:42px;
+  background:var(--red);border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 3px 10px var(--shadow2);
+  position:relative;
+}
+.popup-logo::before{
+  content:'';position:absolute;inset:-3px;
+  border-radius:13px;border:2px solid var(--red);opacity:.25;
+}
+.popup-logo svg{width:18px;height:18px}
+.popup-brand{font-size:20px;font-weight:700;letter-spacing:-.02em}
+.popup-brand small{
+  display:block;font-size:9px;color:var(--text3);font-weight:500;
+  text-transform:uppercase;letter-spacing:.12em;margin-top:2px;
+}
+
+.popup-tabs{display:flex;border-bottom:1px solid var(--rule)}
+.popup-tab{
+  flex:1;padding:12px 16px;
+  font-family:'Bricolage Grotesque',sans-serif;font-size:11px;font-weight:700;
+  text-transform:uppercase;letter-spacing:.1em;
+  color:var(--text3);background:transparent;border:none;cursor:pointer;
+  border-bottom:2.5px solid transparent;
+  transition:all .2s;margin-bottom:-1px;
+}
+.popup-tab:hover{color:var(--text2)}
+.popup-tab.active{color:var(--red);border-bottom-color:var(--red)}
+
+.popup-body{padding:24px}
+
+/* Profile card - layered photo-stack feel */
+.profile-row{
+  display:flex;align-items:center;gap:16px;
+  margin-bottom:24px;padding:18px;
+  border-radius:12px;
+  background:var(--surface);
+  border:1px solid var(--rule);
+  position:relative;z-index:1;
+  box-shadow:0 4px 14px var(--shadow2);
+}
+.profile-row::before{
+  content:'';position:absolute;inset:0;
+  background:var(--surface2);border-radius:12px;
+  z-index:-1;
+  transform:rotate(-1.8deg) translate(3px,5px);
+  box-shadow:0 2px 8px var(--shadow1);
+}
+.profile-row::after{
+  content:'';position:absolute;inset:0;
+  background:var(--surface3);border-radius:12px;
+  z-index:-2;
+  transform:rotate(1.2deg) translate(-2px,10px);
+  box-shadow:0 3px 12px var(--shadow2);
+}
+.profile-av{
+  width:50px;height:50px;
+  background:var(--red);border-radius:12px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:17px;font-weight:800;color:#FFF;
+  box-shadow:0 3px 10px var(--shadow2);
+  position:relative;z-index:2;
+}
+.profile-av::before{
+  content:'';position:absolute;
+  width:50px;height:50px;border-radius:12px;
+  background:var(--red);opacity:.3;
+  transform:rotate(-5deg) translate(3px,3px);
+  z-index:-1;
+}
+.profile-name{font-size:20px;font-weight:700;letter-spacing:-.02em;line-height:1}
+.profile-meta{font-size:11px;color:var(--text3);margin-top:4px}
+
+.section-hdr{
+  font-size:10px;font-weight:700;text-transform:uppercase;
+  letter-spacing:.14em;color:var(--text3);margin-bottom:12px;
+  display:flex;align-items:center;gap:10px;
+  padding-bottom:8px;border-bottom:1px solid var(--rule);
+}
+.section-pill{
+  background:var(--red);color:#FFF;
+  padding:3px 12px;border-radius:20px;
+  font-size:9px;font-weight:700;letter-spacing:.06em;
+  box-shadow:0 2px 6px var(--shadow1);
+}
+
+.empty-state{
+  text-align:center;padding:30px 20px;
+  border-radius:12px;
+  border:1.5px dashed var(--rule);
+  color:var(--text3);font-size:13px;font-weight:500;line-height:1.8;
+  position:relative;z-index:1;
+}
+.empty-state::before{
+  content:'';position:absolute;inset:0;border-radius:12px;
+  background:var(--surface2);z-index:-1;opacity:.3;
+  transform:rotate(0.8deg) translate(2px,3px);
+}
+.empty-icon{
+  width:48px;height:48px;margin:0 auto 14px;
+  border-radius:12px;
+  border:1.5px solid var(--rule);
+  display:flex;align-items:center;justify-content:center;
+}
+.empty-icon svg{width:20px;height:20px;color:var(--text3)}
+
+.popup-actions{margin-top:24px;display:flex;flex-direction:column;gap:8px}
+.btn-fill{
+  padding:14px;border:none;border-radius:10px;
+  background:var(--red);
+  color:#FFF;font-family:'Bricolage Grotesque',sans-serif;font-size:12px;font-weight:700;
+  text-transform:uppercase;letter-spacing:.08em;
+  cursor:pointer;transition:all .15s;text-align:center;
+  box-shadow:0 4px 14px var(--shadow2);
+  position:relative;z-index:1;
+}
+.btn-fill::before{
+  content:'';position:absolute;inset:0;border-radius:10px;
+  background:var(--red);z-index:-1;opacity:.4;
+  transform:translate(2px,4px);
+  transition:all .15s;
+}
+.btn-fill:hover{background:var(--red-hover);transform:translateY(-1px)}
+.btn-fill:hover::before{transform:translate(3px,6px)}
+.btn-fill:active{transform:translateY(0)}
+.btn-outline{
+  padding:13px;border-radius:10px;
+  border:1.5px solid var(--rule);
+  background:transparent;
+  color:var(--text2);
+  font-family:'Bricolage Grotesque',sans-serif;font-size:11px;font-weight:700;
+  text-transform:uppercase;letter-spacing:.08em;
+  cursor:pointer;transition:all .15s;text-align:center;
+}
+.btn-outline:hover{border-color:var(--red);color:var(--red)}
+
+/* ===== HERO ===== */
+.hero{padding-top:8px}
+
+.hero-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  color:var(--red);font-size:10px;font-weight:700;
+  text-transform:uppercase;letter-spacing:.14em;
+  margin-bottom:36px;
+  padding:8px 16px;border-radius:8px;
+  background:var(--red-light);
+  border:1px solid var(--red-glow);
+}
+.hero-badge-dot{
+  width:6px;height:6px;border-radius:50%;
+  background:var(--red);
+}
+
+.hero-title{
+  font-size:clamp(42px,5.5vw,64px);
+  font-weight:800;line-height:1.0;
+  letter-spacing:-.04em;margin-bottom:18px;
+  position:relative;
+}
+.hero-title .accent{
+  color:var(--red);
+  position:relative;display:inline-block;
+}
+.hero-title .accent::before{
+  content:'filled in seconds.';
+  position:absolute;top:3px;left:3px;
+  color:var(--surface3);z-index:-1;
+  white-space:nowrap;
+}
+.hero-title .accent::after{
+  content:'filled in seconds.';
+  position:absolute;top:6px;left:6px;
+  color:var(--surface2);z-index:-2;
+  opacity:.5;white-space:nowrap;
+}
+.hero-sub{
+  font-size:15px;color:var(--text2);max-width:440px;
+  line-height:1.8;margin-bottom:48px;font-weight:400;
+}
+
+/* Stats on rotated card */
+.stats-wrap{
+  margin-bottom:56px;
+  position:relative;z-index:1;
+}
+.stats-card{
+  background:var(--surface);
+  border-radius:14px;
+  padding:8px 0;
+  box-shadow:0 6px 24px var(--shadow3),0 1px 3px var(--shadow1);
+  transform:rotate(-0.8deg);
+  transition:all .4s;
+  border:1px solid var(--rule);
+  position:relative;z-index:1;
+}
+.stats-card::before{
+  content:'';position:absolute;inset:0;
+  border-radius:14px;background:var(--surface2);
+  z-index:-1;
+  transform:rotate(1.6deg) translate(4px,6px);
+  box-shadow:0 3px 12px var(--shadow2);
+}
+.stats-card::after{
+  content:'';position:absolute;inset:0;
+  border-radius:14px;background:var(--surface3);
+  z-index:-2;
+  transform:rotate(-1deg) translate(-3px,12px);
+  box-shadow:0 4px 16px var(--shadow3);
+}
+.stats{display:flex;position:relative;z-index:2}
+.stat{flex:1;text-align:center;padding:28px 16px}
+.stat+.stat{border-left:1px solid var(--rule)}
+.stat-val{
+  font-size:44px;font-weight:800;color:var(--red);
+  letter-spacing:-.03em;line-height:1;
+}
+.stat-lbl{
+  font-size:9px;font-weight:700;text-transform:uppercase;
+  letter-spacing:.14em;color:var(--text3);margin-top:8px;
+}
+
+/* Feature cards with overlap + negative margins */
+.feat-hdr{
+  font-size:10px;font-weight:700;text-transform:uppercase;
+  letter-spacing:.14em;color:var(--text3);margin-bottom:28px;
+}
+.feat-grid{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:0;
+  position:relative;
+}
+.feat-card{
+  padding:26px 22px;
+  border-radius:14px;
+  background:var(--surface);
+  border:1px solid var(--rule);
+  transition:all .3s;
+  position:relative;
+  z-index:1;
+}
+.feat-card::before{
+  content:'';position:absolute;inset:0;
+  border-radius:14px;background:var(--surface2);
+  z-index:-1;
+  transform:rotate(-1.5deg) translate(3px,4px);
+  box-shadow:0 2px 8px var(--shadow1);
+  transition:all .3s;
+}
+.feat-card::after{
+  content:'';position:absolute;inset:0;
+  border-radius:14px;background:var(--surface3);
+  z-index:-2;
+  transform:rotate(1deg) translate(-2px,8px);
+  box-shadow:0 3px 12px var(--shadow2);
+  transition:all .3s;
+}
+
+.feat-card:nth-child(1){
+  box-shadow:0 4px 16px var(--shadow2);
+  z-index:4;
+  transform:rotate(-0.5deg);
+  margin-right:-8px;
+  margin-bottom:-6px;
+}
+.feat-card:nth-child(2){
+  box-shadow:0 6px 20px var(--shadow3);
+  z-index:3;
+  transform:rotate(0.8deg);
+  margin-left:-8px;
+  margin-bottom:-6px;
+}
+.feat-card:nth-child(3){
+  box-shadow:0 8px 24px var(--shadow3);
+  z-index:2;
+  transform:rotate(0.4deg);
+  margin-right:-8px;
+}
+.feat-card:nth-child(4){
+  box-shadow:0 10px 28px var(--shadow4);
+  z-index:1;
+  transform:rotate(-0.6deg);
+  margin-left:-8px;
+}
+
+.feat-card:hover{
+  transform:rotate(0deg) translateY(-4px) !important;
+  z-index:10 !important;
+  box-shadow:0 12px 32px var(--shadow4) !important;
+}
+.feat-card:hover::before{transform:rotate(-2.5deg) translate(5px,7px)}
+.feat-card:hover::after{transform:rotate(1.8deg) translate(-4px,12px)}
+
+.feat-num{
+  font-size:32px;font-weight:800;color:var(--red);
+  letter-spacing:-.03em;line-height:1;margin-bottom:10px;
+  opacity:.7;
+}
+.feat-card h4{
+  font-size:15px;font-weight:700;margin-bottom:6px;letter-spacing:-.01em;
+}
+.feat-card p{
+  font-size:12px;color:var(--text2);line-height:1.7;font-weight:400;
+}
+
+@media(max-width:860px){
+  .columns{grid-template-columns:1fr}
+  .popup{margin:0 auto}
+}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="page-title">
+    Design 14 / Stacked Cards
+    <button class="toggle" id="themeToggle">Dark</button>
+  </div>
+  <div class="columns">
+    <!-- POPUP -->
+    <div class="popup stacked">
+      <div class="popup-header">
+        <div class="popup-logo">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#FFF" stroke-width="2.5" stroke-linecap="round"><path d="M12 4v16M8 8l4-4 4 4"/></svg>
+        </div>
+        <div class="popup-brand">CogniFillz<small>by Cranium Inc.</small></div>
+      </div>
+      <div class="popup-tabs">
+        <button class="popup-tab active">Profile</button>
+        <button class="popup-tab">Analyze</button>
+      </div>
+      <div class="popup-body">
+        <div class="profile-row">
+          <div class="profile-av">JD</div>
+          <div>
+            <div class="profile-name">Jane Doe</div>
+            <div class="profile-meta">jane@email.com</div>
+          </div>
+        </div>
+        <div class="section-hdr">Detected Fields <span class="section-pill">0 Found</span></div>
+        <div class="empty-state">
+          <div class="empty-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg>
+          </div>
+          Navigate to a job application<br>to detect fillable fields
+        </div>
+        <div class="popup-actions">
+          <button class="btn-fill">Autofill Application</button>
+          <button class="btn-outline">Edit Profile</button>
+        </div>
+      </div>
+    </div>
+    <!-- HERO -->
+    <div class="hero">
+      <div class="hero-badge"><span class="hero-badge-dot"></span> Open Source &middot; Local AI &middot; Free Forever</div>
+      <h1 class="hero-title">Job applications,<br><span class="accent">filled in seconds.</span></h1>
+      <p class="hero-sub">CogniFillz uses local AI to autofill job forms across LinkedIn, Indeed, Greenhouse and 50+ platforms. Your data never leaves your machine.</p>
+      <div class="stats-wrap">
+        <div class="stats-card">
+          <div class="stats">
+            <div class="stat"><div class="stat-val">100%</div><div class="stat-lbl">Private</div></div>
+            <div class="stat"><div class="stat-val">5+</div><div class="stat-lbl">Browsers</div></div>
+            <div class="stat"><div class="stat-val">$0</div><div class="stat-lbl">Forever</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="feat-hdr">Features</div>
+      <div class="feat-grid">
+        <div class="feat-card">
+          <div class="feat-num">01</div>
+          <h4>Instant Autofill</h4>
+          <p>One click to fill 50+ ATS platforms including Greenhouse, Lever, and Workday.</p>
+        </div>
+        <div class="feat-card">
+          <div class="feat-num">02</div>
+          <h4>Local Privacy</h4>
+          <p>All AI runs on your machine. Zero cloud uploads, zero tracking.</p>
+        </div>
+        <div class="feat-card">
+          <div class="feat-num">03</div>
+          <h4>AI Matching</h4>
+          <p>Instant match score powered by your local LLM. Smart and private.</p>
+        </div>
+        <div class="feat-card">
+          <div class="feat-num">04</div>
+          <h4>Free Forever</h4>
+          <p>Open source. No subscriptions. No premium tiers. Community-driven.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+(function(){
+  var btn=document.getElementById('themeToggle');
+  btn.addEventListener('click',function(){
+    document.documentElement.classList.toggle('dark');
+    btn.textContent=document.documentElement.classList.contains('dark')?'Light':'Dark';
+  });
+})();
+</script>
+</body>
+</html>
