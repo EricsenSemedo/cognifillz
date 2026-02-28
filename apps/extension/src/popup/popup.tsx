@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { createRoot } from 'react-dom/client';
 import browser from 'webextension-polyfill';
 import './popup.css';
@@ -19,6 +19,13 @@ interface DetectedField {
   type: string;
   label: string;
   confidence: number;
+}
+
+interface PipelineCounts {
+  applied: number;
+  screening: number;
+  interview: number;
+  offer: number;
 }
 
 type ToastType = 'success' | 'error';
@@ -52,29 +59,40 @@ const App: React.FC = () => {
   const [detectedFields, setDetectedFields] = useState<DetectedField[]>([]);
   const [activeTab, setActiveTab] = useState<'profile' | 'analyze'>('profile');
   const [dark, setDark] = useState(true);
+  const [pipeline, setPipeline] = useState<PipelineCounts>({ applied: 0, screening: 0, interview: 0, offer: 0 });
+  const [matchScore, setMatchScore] = useState<number | null>(null);
   const [toast, setToast] = useState<{ msg: string; type: ToastType; visible: boolean }>({
     msg: '', type: 'success', visible: false,
   });
+  const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const showToast = useCallback((msg: string, type: ToastType = 'success') => {
+    if (toastTimer.current) clearTimeout(toastTimer.current);
     setToast({ msg, type, visible: true });
-    setTimeout(() => setToast(prev => ({ ...prev, visible: false })), 2400);
+    toastTimer.current = setTimeout(() => setToast(prev => ({ ...prev, visible: false })), 2400);
   }, []);
 
   useEffect(() => {
-    const stored = localStorage.getItem('cognifillz-dark');
-    const isDark = stored === null ? true : stored === 'true';
-    setDark(isDark);
-    document.documentElement.classList.toggle('dark', isDark);
+    return () => { if (toastTimer.current) clearTimeout(toastTimer.current); };
+  }, []);
+
+  useEffect(() => {
+    browser.storage.local.get('cognifillz-dark').then((result) => {
+      const stored = result['cognifillz-dark'];
+      const isDark = stored === undefined ? true : Boolean(stored);
+      setDark(isDark);
+      document.documentElement.classList.toggle('dark', isDark);
+    });
     loadProfile();
     loadDetectedFields();
+    loadPipeline();
   }, []);
 
   const toggleDark = () => {
     const next = !dark;
     setDark(next);
     document.documentElement.classList.toggle('dark', next);
-    localStorage.setItem('cognifillz-dark', String(next));
+    browser.storage.local.set({ 'cognifillz-dark': next });
   };
 
   const loadProfile = async () => {
@@ -99,6 +117,15 @@ const App: React.FC = () => {
     } catch { /* content script not loaded */ }
   };
 
+  const loadPipeline = async () => {
+    try {
+      const result = await browser.storage.local.get('cognifillz-pipeline');
+      if (result['cognifillz-pipeline']) {
+        setPipeline(result['cognifillz-pipeline'] as PipelineCounts);
+      }
+    } catch { /* no pipeline data yet */ }
+  };
+
   const saveProfile = async () => {
     try {
       const response: any = await browser.runtime.sendMessage({ action: 'saveProfile', profile: formData });
@@ -119,6 +146,11 @@ const App: React.FC = () => {
     } catch { showToast('No fillable page detected', 'error'); }
   };
 
+  const handleTabSwitch = (tab: 'profile' | 'analyze') => {
+    setActiveTab(tab);
+    if (tab === 'profile') loadDetectedFields();
+  };
+
   const analyzeJob = () => showToast('Job analysis coming soon');
   const updateForm = (key: keyof Profile, value: string) => setFormData(prev => ({ ...prev, [key]: value }));
   const startEditing = () => { if (profile) setFormData(profile); setIsEditing(true); };
@@ -131,7 +163,7 @@ const App: React.FC = () => {
         <span className="tagline">Cranium Inc.</span>
       </div>
       <div className="header-right">
-        <button className="theme-toggle" onClick={toggleDark}>
+        <button className="theme-toggle" onClick={toggleDark} aria-label="Toggle dark mode">
           {dark ? 'Light' : 'Dark'}
         </button>
       </div>
@@ -139,11 +171,11 @@ const App: React.FC = () => {
   );
 
   const pipelineBlock = (
-    <div className="pipeline">
-      <div className="pip-stage"><span className="pip-count">12</span><span className="pip-label">Applied</span></div>
-      <div className="pip-stage"><span className="pip-count">4</span><span className="pip-label">Screen</span></div>
-      <div className="pip-stage"><span className="pip-count">2</span><span className="pip-label">Interview</span></div>
-      <div className="pip-stage"><span className="pip-count">1</span><span className="pip-label">Offer</span></div>
+    <div className="pipeline" role="status" aria-label="Application pipeline">
+      <div className="pip-stage"><span className="pip-count">{pipeline.applied}</span><span className="pip-label">Applied</span></div>
+      <div className="pip-stage"><span className="pip-count">{pipeline.screening}</span><span className="pip-label">Screen</span></div>
+      <div className="pip-stage"><span className="pip-count">{pipeline.interview}</span><span className="pip-label">Interview</span></div>
+      <div className="pip-stage"><span className="pip-count">{pipeline.offer}</span><span className="pip-label">Offer</span></div>
     </div>
   );
 
@@ -152,7 +184,7 @@ const App: React.FC = () => {
       <div className="container">
         {headerBlock}
         <div className="content">
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div className="form-header">
             <h2 className="section-title slide-in">{profile ? 'Edit Profile' : 'Create Profile'}</h2>
             {profile && <button className="back-btn" onClick={() => setIsEditing(false)}>Back</button>}
           </div>
@@ -185,11 +217,11 @@ const App: React.FC = () => {
     <div className="container">
       {headerBlock}
       {pipelineBlock}
-      <div className="tabs">
-        <button className={`tab ${activeTab === 'profile' ? 'tab-active' : ''}`} onClick={() => setActiveTab('profile')}>Profile</button>
-        <button className={`tab ${activeTab === 'analyze' ? 'tab-active' : ''}`} onClick={() => setActiveTab('analyze')}>Analyze</button>
+      <div className="tabs" role="tablist">
+        <button className={`tab ${activeTab === 'profile' ? 'tab-active' : ''}`} role="tab" aria-selected={activeTab === 'profile'} onClick={() => handleTabSwitch('profile')}>Profile</button>
+        <button className={`tab ${activeTab === 'analyze' ? 'tab-active' : ''}`} role="tab" aria-selected={activeTab === 'analyze'} onClick={() => handleTabSwitch('analyze')}>Analyze</button>
       </div>
-      <div className="content" key={activeTab}>
+      <div className="content" role="tabpanel">
         {activeTab === 'profile' ? (
           <>
             <div className="card slide-in">
@@ -227,15 +259,17 @@ const App: React.FC = () => {
               <button className="btn btn-primary" onClick={fillFields}>Autofill Application</button>
               <button className="btn btn-secondary" onClick={startEditing}>Edit Profile</button>
             </div>
-            <div className="match-bar slide-in stagger-2">
-              <div>
-                <div className="match-pct">87%</div>
+            {matchScore !== null && (
+              <div className="match-bar slide-in stagger-2">
+                <div>
+                  <div className="match-pct">{matchScore}%</div>
+                </div>
+                <div className="match-meta">
+                  <div className="match-label">AI Resume Match</div>
+                  <div className="match-track"><div className="match-fill" style={{ width: `${matchScore}%` }}></div></div>
+                </div>
               </div>
-              <div className="match-meta">
-                <div className="match-label">AI Resume Match</div>
-                <div className="match-track"><div className="match-fill"></div></div>
-              </div>
-            </div>
+            )}
           </>
         ) : (
           <div className="card slide-in">
@@ -258,6 +292,7 @@ const Toast: React.FC<{ msg: string; type: ToastType; visible: boolean }> = ({ m
   <div className={`toast toast-${type} ${visible ? 'toast-visible' : ''}`}>{msg}</div>
 );
 
-const container = document.getElementById('root');
-const root = createRoot(container!);
+const rootEl = document.getElementById('root');
+if (!rootEl) throw new Error('Root element #root not found');
+const root = createRoot(rootEl);
 root.render(<App />);

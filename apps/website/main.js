@@ -1,11 +1,6 @@
 (() => {
   'use strict';
 
-  /* ── Dark mode ─────────────────────────────────
-     html starts with class="dark" (default).
-     On first visit: respect prefers-color-scheme.
-     After that: persist choice to localStorage.
-   ────────────────────────────────────────────── */
   const STORAGE_KEY = 'cognifillz-dark';
   const stored = localStorage.getItem(STORAGE_KEY);
 
@@ -20,14 +15,12 @@
     localStorage.setItem(STORAGE_KEY, String(isDark));
   }
 
-  document.getElementById('theme-btn').addEventListener('click', toggleDarkMode);
+  const themeBtn = document.getElementById('theme-btn');
+  if (themeBtn) themeBtn.addEventListener('click', toggleDarkMode);
 
-  const mobilThemeBtn = document.getElementById('theme-btn-mobile');
-  if (mobilThemeBtn) {
-    mobilThemeBtn.addEventListener('click', toggleDarkMode);
-  }
+  const mobileThemeBtn = document.getElementById('theme-btn-mobile');
+  if (mobileThemeBtn) mobileThemeBtn.addEventListener('click', toggleDarkMode);
 
-  /* ── Scroll-triggered animations ───────────── */
   const observer = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
@@ -42,34 +35,26 @@
 
   document.querySelectorAll('.anim').forEach((el) => observer.observe(el));
 
-  /* ── Nav scroll state ──────────────────────── */
   const nav = document.getElementById('nav');
   let ticking = false;
 
-  window.addEventListener('scroll', () => {
-    if (!ticking) {
-      requestAnimationFrame(() => {
-        nav.classList.toggle('scrolled', window.scrollY > 40);
-        ticking = false;
-      });
-      ticking = true;
-    }
-  });
+  if (nav) {
+    window.addEventListener('scroll', () => {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          nav.classList.toggle('scrolled', window.scrollY > 40);
+          ticking = false;
+        });
+        ticking = true;
+      }
+    });
+  }
 
-  /* ── Mobile nav toggle ─────────────────────── */
   const toggle = document.getElementById('nav-toggle');
   const mobile = document.getElementById('nav-mobile');
 
-  toggle.addEventListener('click', () => {
-    mobile.classList.toggle('open');
-    const spans = toggle.querySelectorAll('span');
-    const isOpen = mobile.classList.contains('open');
-    spans[0].style.transform = isOpen ? 'rotate(45deg) translate(5px, 5px)' : '';
-    spans[1].style.opacity = isOpen ? '0' : '1';
-    spans[2].style.transform = isOpen ? 'rotate(-45deg) translate(5px, -5px)' : '';
-  });
-
   function closeMobileNav() {
+    if (!mobile || !toggle) return;
     mobile.classList.remove('open');
     const spans = toggle.querySelectorAll('span');
     spans[0].style.transform = '';
@@ -77,11 +62,21 @@
     spans[2].style.transform = '';
   }
 
-  mobile.querySelectorAll('a').forEach((a) => {
-    a.addEventListener('click', closeMobileNav);
-  });
+  if (toggle && mobile) {
+    toggle.addEventListener('click', () => {
+      mobile.classList.toggle('open');
+      const spans = toggle.querySelectorAll('span');
+      const isOpen = mobile.classList.contains('open');
+      spans[0].style.transform = isOpen ? 'rotate(45deg) translate(5px, 5px)' : '';
+      spans[1].style.opacity = isOpen ? '0' : '1';
+      spans[2].style.transform = isOpen ? 'rotate(-45deg) translate(5px, -5px)' : '';
+    });
 
-  /* ── Smooth scroll for anchor links ────────── */
+    mobile.querySelectorAll('a').forEach((a) => {
+      a.addEventListener('click', closeMobileNav);
+    });
+  }
+
   document.querySelectorAll('a[href^="#"]').forEach((a) => {
     a.addEventListener('click', (e) => {
       const href = a.getAttribute('href');

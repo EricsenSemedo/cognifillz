@@ -161,6 +161,7 @@ html.dark .card {
 .nav {
   position: fixed; top: 0; left: 0; right: 0; z-index: 100;
   backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+  background: rgba(245, 237, 228, .85);
   background: color-mix(in srgb, var(--bg) 85%, transparent);
   border-bottom: 1px solid var(--border);
   transition: background .4s, border-color .4s;
@@ -604,8 +605,7 @@ html.dark .connector-line {
   opacity: .7;
   background: var(--red);
   box-shadow: 0 0 6px rgba(var(--neon-r),.6), 0 0 14px rgba(var(--neon-r),.3), 0 0 28px rgba(var(--neon-r),.15);
-  filter: blur(var(--tube-blur)) brightness(1.2);
-  filter: blur(0.5px);
+  filter: blur(0.5px) brightness(1.2);
 }
 
 /* ── Browser Support ─────────────────────────── */
