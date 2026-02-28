@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Design 17: Candy Gradient Mesh</title>
+<link href="https://fonts.googleapis.com/css2?family=Albert+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#FFF5EE;
+  --mesh1:#FDDCCC;
+  --mesh2:#F9C4B8;
+  --mesh3:#FFE8D6;
+  --mesh4:#FCEAE0;
+  --mesh5:#F5D0C0;
+  --surface:rgba(255,255,255,.55);
+  --surface-border:rgba(255,255,255,.65);
+  --surface-hover:rgba(255,255,255,.7);
+  --glass:rgba(255,252,248,.5);
+  --glass-border:rgba(255,255,255,.6);
+  --text:#2A1A12;
+  --text2:#6B4A38;
+  --text3:#9A7A68;
+  --red:#C43838;
+  --red-light:rgba(196,56,56,.08);
+  --red-glow:rgba(196,56,56,.25);
+  --red-hover:#A82E2E;
+  --pill-1:#FFD4C4;
+  --pill-2:#FFC4B0;
+  --pill-3:#FFB09A;
+  --pill-4:#FF9C86;
+  --shadow:rgba(180,120,80,.10);
+  --shadow-deep:rgba(160,100,60,.16);
+  --bar-g1:#E04A42;
+  --bar-g2:#FF8A70;
+  --radius:20px;
+  --radius-sm:14px;
+  --radius-pill:50px;
+}
+html.dark{
+  --bg:#1A1210;
+  --mesh1:rgba(180,60,50,.15);
+  --mesh2:rgba(200,80,60,.12);
+  --mesh3:rgba(160,50,40,.10);
+  --mesh4:rgba(140,40,30,.08);
+  --mesh5:rgba(180,70,55,.14);
+  --surface:rgba(40,30,24,.6);
+  --surface-border:rgba(60,45,35,.4);
+  --surface-hover:rgba(50,38,30,.7);
+  --glass:rgba(30,24,18,.55);
+  --glass-border:rgba(70,55,42,.35);
+  --text:#F0E8E0;
+  --text2:#C0A898;
+  --text3:#887060;
+  --red:#E04A42;
+  --red-light:rgba(224,74,66,.08);
+  --red-glow:rgba(224,74,66,.30);
+  --red-hover:#C83C36;
+  --pill-1:rgba(224,74,66,.18);
+  --pill-2:rgba(224,74,66,.25);
+  --pill-3:rgba(224,74,66,.32);
+  --pill-4:rgba(224,74,66,.40);
+  --shadow:rgba(0,0,0,.20);
+  --shadow-deep:rgba(0,0,0,.35);
+  --bar-g1:#E04A42;
+  --bar-g2:#FF6A52;
+}
+body{
+  font-family:'Albert Sans',sans-serif;
+  min-height:100vh;
+  color:var(--text);
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+  transition:color .5s;
+}
+
+.mesh-bg{
+  position:fixed;inset:0;z-index:0;
+  background:var(--bg);
+  transition:background .5s;
+}
+.mesh-bg::before{
+  content:'';position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 50% 40% at 15% 25%, var(--mesh1), transparent),
+    radial-gradient(ellipse 55% 45% at 80% 15%, var(--mesh2), transparent),
+    radial-gradient(ellipse 45% 50% at 50% 70%, var(--mesh3), transparent),
+    radial-gradient(ellipse 60% 35% at 25% 80%, var(--mesh4), transparent),
+    radial-gradient(ellipse 40% 50% at 75% 55%, var(--mesh5), transparent);
+  transition:background .5s;
+}
+.mesh-bg::after{
+  content:'';position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 35% 30% at 60% 35%, var(--mesh1), transparent),
+    radial-gradient(ellipse 40% 25% at 30% 50%, var(--mesh2), transparent);
+  opacity:.5;
+  transition:opacity .5s;
+}
+
+.page{
+  max-width:1220px;margin:0 auto;padding:40px 32px 80px;
+  position:relative;z-index:1;
+}
+
+.topbar{
+  display:flex;justify-content:space-between;align-items:center;
+  margin-bottom:44px;
+}
+.topbar-label{
+  font-size:12px;font-weight:600;color:var(--text3);
+  letter-spacing:.06em;
+}
+.toggle{
+  background:var(--surface);
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  border:1px solid var(--surface-border);
+  color:var(--text2);font-family:'Albert Sans',sans-serif;
+  font-size:12px;font-weight:700;
+  padding:10px 22px;border-radius:var(--radius-pill);cursor:pointer;
+  transition:all .3s;
+}
+.toggle:hover{background:var(--red);color:#fff;border-color:var(--red)}
+
+.layout{
+  display:grid;
+  grid-template-columns:380px 1fr;
+  gap:44px;
+  align-items:start;
+}
+
+/* ===== POPUP ===== */
+.popup{
+  background:var(--glass);
+  backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+  border:1px solid var(--glass-border);
+  border-radius:var(--radius);
+  box-shadow:0 24px 64px var(--shadow-deep),0 4px 12px var(--shadow);
+  overflow:hidden;
+  position:sticky;top:40px;
+  transition:all .5s;
+}
+.popup-header{
+  padding:22px 24px;
+  display:flex;align-items:center;gap:14px;
+  border-bottom:1px solid var(--surface-border);
+}
+.logo-mark{
+  width:40px;height:40px;border-radius:12px;
+  background:linear-gradient(135deg,var(--bar-g1),var(--bar-g2));
+  display:flex;align-items:center;justify-content:center;
+  font-weight:900;font-size:15px;color:#fff;
+  box-shadow:0 4px 16px var(--red-glow);
+}
+.brand{font-size:20px;font-weight:800;letter-spacing:-.02em}
+.brand-sub{font-size:11px;color:var(--text3);font-weight:500;margin-top:1px}
+
+.popup-body{padding:20px 24px 24px}
+
+.pipeline-pills{
+  display:flex;gap:8px;margin-bottom:22px;
+}
+.pill{
+  flex:1;text-align:center;padding:12px 4px;
+  border-radius:var(--radius-sm);
+  transition:transform .3s,box-shadow .3s;
+}
+.pill:nth-child(1){background:var(--pill-1)}
+.pill:nth-child(2){background:var(--pill-2)}
+.pill:nth-child(3){background:var(--pill-3)}
+.pill:nth-child(4){background:var(--pill-4)}
+.pill:hover{transform:translateY(-2px);box-shadow:0 6px 16px var(--shadow)}
+.pill-label{font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text2);margin-bottom:3px}
+.pill-num{font-size:22px;font-weight:900;color:var(--text)}
+
+.profile-row{
+  display:flex;align-items:center;gap:14px;
+  padding:16px;margin-bottom:18px;
+  background:var(--surface);
+  backdrop-filter:blur(12px);
+  border:1px solid var(--surface-border);
+  border-radius:var(--radius-sm);
+  transition:all .4s;
+}
+.avatar{
+  width:42px;height:42px;border-radius:50%;
+  background:linear-gradient(135deg,var(--bar-g1),var(--bar-g2));
+  display:flex;align-items:center;justify-content:center;
+  font-weight:800;font-size:15px;color:#fff;
+}
+.profile-name{font-weight:700;font-size:14px}
+.profile-email{font-size:12px;color:var(--text3);margin-top:1px}
+
+.status-bar{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 16px;margin-bottom:18px;
+  background:var(--surface);
+  border:1px solid var(--surface-border);
+  border-radius:var(--radius-sm);
+  font-size:13px;color:var(--text2);
+  backdrop-filter:blur(12px);
+}
+.status-dot{
+  width:8px;height:8px;border-radius:50%;
+  background:#34C759;margin-right:8px;display:inline-block;
+  box-shadow:0 0 8px rgba(52,199,89,.4);
+}
+
+.btn-autofill{
+  width:100%;padding:16px;border:none;border-radius:var(--radius-sm);
+  background:linear-gradient(135deg,var(--bar-g1),var(--bar-g2));
+  color:#fff;font-family:'Albert Sans',sans-serif;
+  font-size:16px;font-weight:800;cursor:pointer;
+  margin-bottom:16px;
+  box-shadow:0 8px 24px var(--red-glow);
+  transition:all .3s;
+}
+.btn-autofill:hover{
+  box-shadow:0 10px 32px var(--red-glow),0 0 0 4px rgba(224,74,66,.12);
+  transform:translateY(-2px);
+}
+
+.match-pill{
+  display:flex;align-items:center;justify-content:center;gap:12px;
+  padding:14px;border-radius:var(--radius-pill);
+  background:var(--red-light);
+  border:1px solid rgba(196,56,56,.15);
+}
+.match-label{font-size:13px;color:var(--text2);font-weight:600}
+.match-value{font-size:26px;font-weight:900;color:var(--red)}
+
+/* ===== WEBSITE ===== */
+.website{position:relative}
+
+.hero{margin-bottom:52px}
+.hero h1{
+  font-size:52px;font-weight:900;line-height:1.06;
+  letter-spacing:-.035em;margin-bottom:16px;
+}
+.hero h1 span{
+  background:linear-gradient(135deg,var(--bar-g1),var(--bar-g2));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.hero p{
+  font-size:17px;color:var(--text2);line-height:1.65;max-width:500px;font-weight:400;
+}
+
+.stats-row{display:flex;gap:16px;margin-bottom:48px}
+.stat-bubble{
+  flex:1;padding:24px 16px;text-align:center;
+  background:var(--surface);
+  backdrop-filter:blur(16px);
+  border:1px solid var(--surface-border);
+  border-radius:var(--radius-pill);
+  box-shadow:0 8px 28px var(--shadow);
+  transition:all .4s;
+}
+.stat-bubble:hover{
+  transform:translateY(-4px);
+  box-shadow:0 14px 40px var(--shadow-deep);
+}
+.stat-num{font-size:34px;font-weight:900;color:var(--red);margin-bottom:2px}
+.stat-label{font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.06em}
+
+.section-title{
+  font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--text3);margin-bottom:18px;
+}
+
+/* Chart */
+.chart-glass{
+  margin-bottom:44px;padding:28px;
+  background:var(--surface);
+  backdrop-filter:blur(16px);
+  border:1px solid var(--surface-border);
+  border-radius:var(--radius);
+  box-shadow:0 8px 28px var(--shadow);
+  transition:all .4s;
+}
+.chart{display:flex;align-items:flex-end;gap:14px;height:140px}
+.bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:8px;height:100%;justify-content:flex-end}
+.bar{
+  width:100%;border-radius:10px 10px 6px 6px;
+  background:linear-gradient(180deg,var(--bar-g2),var(--bar-g1));
+  transition:all .5s cubic-bezier(.23,1,.32,1);
+  position:relative;
+}
+.bar::after{
+  content:'';position:absolute;inset:2px;
+  border-radius:8px 8px 4px 4px;
+  background:linear-gradient(180deg,rgba(255,255,255,.25),transparent 60%);
+}
+.bar:hover{transform:scaleY(1.05);box-shadow:0 0 20px var(--red-glow)}
+.bar-label{font-size:10px;font-weight:700;color:var(--text3);letter-spacing:.04em}
+
+/* Pipeline Preview */
+.pipeline-glass{
+  margin-bottom:44px;padding:28px;
+  background:var(--surface);
+  backdrop-filter:blur(16px);
+  border:1px solid var(--surface-border);
+  border-radius:var(--radius);
+  box-shadow:0 8px 28px var(--shadow);
+  transition:all .4s;
+}
+.pipe-row{display:flex;gap:10px}
+.pipe-item{
+  flex:1;text-align:center;padding:16px 8px;
+  border-radius:var(--radius-sm);
+  position:relative;
+  transition:all .3s;
+}
+.pipe-item:nth-child(1){background:var(--pill-1)}
+.pipe-item:nth-child(2){background:var(--pill-2)}
+.pipe-item:nth-child(3){background:var(--pill-3)}
+.pipe-item:nth-child(4){background:var(--pill-4)}
+.pipe-item:hover{transform:scale(1.04)}
+.pipe-item-num{font-size:24px;font-weight:900;color:var(--text);margin-bottom:2px}
+.pipe-item-name{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text2)}
+.pipe-arrow{
+  display:flex;align-items:center;color:var(--text3);
+  font-size:18px;font-weight:300;
+  padding:0 2px;
+}
+
+/* Resume CTA */
+.resume-cta{
+  margin-bottom:44px;padding:32px;
+  background:linear-gradient(135deg,var(--pill-2),var(--pill-4));
+  border:1px solid var(--surface-border);
+  border-radius:var(--radius);
+  display:flex;align-items:center;justify-content:space-between;gap:24px;
+  box-shadow:0 8px 28px var(--shadow);
+  transition:all .4s;
+}
+.resume-cta h3{font-size:22px;font-weight:800;margin-bottom:4px}
+.resume-cta p{font-size:14px;color:var(--text2);font-weight:400}
+.btn-resume{
+  padding:14px 32px;border:none;
+  border-radius:var(--radius-pill);
+  background:linear-gradient(135deg,var(--bar-g1),var(--bar-g2));
+  color:#fff;font-family:'Albert Sans',sans-serif;
+  font-size:15px;font-weight:800;white-space:nowrap;cursor:pointer;
+  box-shadow:0 6px 20px var(--red-glow);
+  transition:all .3s;
+}
+.btn-resume:hover{transform:translateY(-2px);box-shadow:0 10px 30px var(--red-glow)}
+
+/* Features */
+.features{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.feat-card{
+  padding:24px;
+  background:var(--surface);
+  backdrop-filter:blur(16px);
+  border:1px solid var(--surface-border);
+  border-radius:var(--radius);
+  box-shadow:0 6px 20px var(--shadow);
+  transition:all .4s;
+}
+.feat-card:hover{
+  transform:translateY(-4px);
+  box-shadow:0 12px 36px var(--shadow-deep);
+  background:var(--surface-hover);
+}
+.feat-icon{
+  width:44px;height:44px;border-radius:14px;
+  background:linear-gradient(135deg,var(--pill-1),var(--pill-3));
+  display:flex;align-items:center;justify-content:center;
+  font-weight:900;font-size:18px;color:var(--red);
+  margin-bottom:14px;
+}
+.feat-card h4{font-size:16px;font-weight:800;margin-bottom:5px}
+.feat-card p{font-size:13px;color:var(--text2);line-height:1.55}
+
+@media(max-width:860px){
+  .layout{grid-template-columns:1fr;gap:32px}
+  .popup{position:static;max-width:400px;margin:0 auto}
+  .hero h1{font-size:36px}
+  .stats-row{flex-wrap:wrap}
+  .stat-bubble{min-width:calc(50% - 8px)}
+  .features{grid-template-columns:1fr}
+  .resume-cta{flex-direction:column;text-align:center}
+}
+</style>
+</head>
+<body>
+<div class="mesh-bg"></div>
+<div class="page">
+  <div class="topbar">
+    <div class="topbar-label">CogniFillz / Design XVII / Candy Gradient Mesh</div>
+    <button class="toggle">Dark</button>
+  </div>
+
+  <div class="layout">
+    <!-- LEFT: Extension Popup -->
+    <div class="popup">
+      <div class="popup-header">
+        <div class="logo-mark">CF</div>
+        <div>
+          <div class="brand">CogniFillz</div>
+          <div class="brand-sub">by Cranium Inc.</div>
+        </div>
+      </div>
+      <div class="popup-body">
+        <div class="pipeline-pills">
+          <div class="pill"><div class="pill-label">Applied</div><div class="pill-num">12</div></div>
+          <div class="pill"><div class="pill-label">Screen</div><div class="pill-num">4</div></div>
+          <div class="pill"><div class="pill-label">Interview</div><div class="pill-num">2</div></div>
+          <div class="pill"><div class="pill-label">Offer</div><div class="pill-num">1</div></div>
+        </div>
+
+        <div class="profile-row">
+          <div class="avatar">JD</div>
+          <div>
+            <div class="profile-name">Jane Doe</div>
+            <div class="profile-email">jane.doe@email.com</div>
+          </div>
+        </div>
+
+        <div class="status-bar">
+          <span><span class="status-dot"></span>8 fields detected</span>
+          <span style="font-weight:700;color:var(--red)">Ready</span>
+        </div>
+
+        <button class="btn-autofill">Autofill Application</button>
+
+        <div class="match-pill">
+          <span class="match-label">AI Resume Match</span>
+          <span class="match-value">87%</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: Website -->
+    <div class="website">
+      <div class="hero">
+        <h1>Your job hunt,<br>on <span>autopilot.</span></h1>
+        <p>One-click autofill, real-time application tracking, and AI-powered resume tailoring. Everything you need to land your next role, faster.</p>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat-bubble">
+          <div class="stat-num">87%</div>
+          <div class="stat-label">Match Rate</div>
+        </div>
+        <div class="stat-bubble">
+          <div class="stat-num">19</div>
+          <div class="stat-label">Active Apps</div>
+        </div>
+        <div class="stat-bubble">
+          <div class="stat-num">3</div>
+          <div class="stat-label">Interviews</div>
+        </div>
+      </div>
+
+      <div class="section-title">Applications Per Week</div>
+      <div class="chart-glass">
+        <div class="chart">
+          <div class="bar-col"><div class="bar" style="height:40%"></div><div class="bar-label">Wk 1</div></div>
+          <div class="bar-col"><div class="bar" style="height:65%"></div><div class="bar-label">Wk 2</div></div>
+          <div class="bar-col"><div class="bar" style="height:48%"></div><div class="bar-label">Wk 3</div></div>
+          <div class="bar-col"><div class="bar" style="height:88%"></div><div class="bar-label">Wk 4</div></div>
+          <div class="bar-col"><div class="bar" style="height:72%"></div><div class="bar-label">Wk 5</div></div>
+        </div>
+      </div>
+
+      <div class="section-title">Application Pipeline</div>
+      <div class="pipeline-glass">
+        <div class="pipe-row">
+          <div class="pipe-item"><div class="pipe-item-num">12</div><div class="pipe-item-name">Applied</div></div>
+          <div class="pipe-arrow">&rsaquo;</div>
+          <div class="pipe-item"><div class="pipe-item-num">4</div><div class="pipe-item-name">Screening</div></div>
+          <div class="pipe-arrow">&rsaquo;</div>
+          <div class="pipe-item"><div class="pipe-item-num">2</div><div class="pipe-item-name">Interview</div></div>
+          <div class="pipe-arrow">&rsaquo;</div>
+          <div class="pipe-item"><div class="pipe-item-num">1</div><div class="pipe-item-name">Offer</div></div>
+        </div>
+      </div>
+
+      <div class="resume-cta">
+        <div>
+          <h3>Tailor My Resume</h3>
+          <p>AI reshapes your resume to match each role perfectly.</p>
+        </div>
+        <button class="btn-resume">Get Started</button>
+      </div>
+
+      <div class="section-title">Features</div>
+      <div class="features">
+        <div class="feat-card">
+          <div class="feat-icon">F</div>
+          <h4>One-Click Fill</h4>
+          <p>Autofill any job application form instantly with your saved profile data.</p>
+        </div>
+        <div class="feat-card">
+          <div class="feat-icon">T</div>
+          <h4>Application Tracker</h4>
+          <p>Follow every application through the pipeline from submit to offer.</p>
+        </div>
+        <div class="feat-card">
+          <div class="feat-icon">A</div>
+          <h4>AI Resume Match</h4>
+          <p>See how well your resume matches each posting and optimize it with AI.</p>
+        </div>
+        <div class="feat-card">
+          <div class="feat-icon">G</div>
+          <h4>Trend Analytics</h4>
+          <p>Visualize your job hunt with weekly trends and conversion metrics.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.querySelector('.toggle').addEventListener('click', function() {
+  document.documentElement.classList.toggle('dark');
+  this.textContent = document.documentElement.classList.contains('dark') ? 'Light' : 'Dark';
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Design 16: Noir Cinematic</title>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,700&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#F5EDE4;
+  --bg-deep:#EDE3D8;
+  --surface:#FFFCF8;
+  --surface2:#F0E6DA;
+  --surface3:#E8DDD0;
+  --text:#1A1410;
+  --text2:#5A4A3E;
+  --text3:#8A7A6E;
+  --red:#C43838;
+  --red-glow:rgba(196,56,56,.35);
+  --red-soft:rgba(196,56,56,.08);
+  --red-hover:#A82E2E;
+  --border:rgba(26,20,16,.10);
+  --shadow:rgba(100,70,40,.12);
+  --shadow-deep:rgba(100,70,40,.22);
+  --shadow-cast:rgba(80,50,20,.18);
+  --spotlight:rgba(255,252,248,.7);
+  --spotlight2:rgba(245,237,228,.5);
+  --grain-opacity:.03;
+  --blind-color:rgba(26,20,16,.04);
+  --bar-glow:rgba(196,56,56,.15);
+  --card-bg:#FFFCF8;
+  --card-border:rgba(26,20,16,.08);
+  --popup-bg:#FFFDF9;
+  --popup-shadow:rgba(80,50,20,.20);
+}
+html.dark{
+  --bg:#0E0B09;
+  --bg-deep:#0A0807;
+  --surface:#1A1412;
+  --surface2:#221B16;
+  --surface3:#2A221B;
+  --text:#F0E8E0;
+  --text2:#B8A898;
+  --text3:#786858;
+  --red:#E04A42;
+  --red-glow:rgba(224,74,66,.45);
+  --red-soft:rgba(224,74,66,.08);
+  --red-hover:#C83C36;
+  --border:rgba(240,232,224,.07);
+  --shadow:rgba(0,0,0,.30);
+  --shadow-deep:rgba(0,0,0,.50);
+  --shadow-cast:rgba(0,0,0,.40);
+  --spotlight:rgba(40,32,26,.6);
+  --spotlight2:rgba(30,24,18,.4);
+  --grain-opacity:.05;
+  --blind-color:rgba(240,232,224,.025);
+  --bar-glow:rgba(224,74,66,.25);
+  --card-bg:#1A1412;
+  --card-border:rgba(240,232,224,.06);
+  --popup-bg:#1E1815;
+  --popup-shadow:rgba(0,0,0,.50);
+}
+body{
+  font-family:'DM Sans',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  -webkit-font-smoothing:antialiased;
+  min-height:100vh;
+  transition:background .5s,color .5s;
+  overflow-x:hidden;
+  position:relative;
+}
+
+body::before{
+  content:'';position:fixed;inset:0;
+  background:
+    radial-gradient(ellipse 600px 500px at 30% 20%, var(--spotlight), transparent),
+    radial-gradient(ellipse 500px 400px at 70% 60%, var(--spotlight2), transparent);
+  pointer-events:none;z-index:0;
+  transition:background .5s;
+}
+
+body::after{
+  content:'';position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size:150px;
+  opacity:var(--grain-opacity);
+  pointer-events:none;z-index:9998;
+  mix-blend-mode:multiply;
+}
+
+.venetian{
+  position:fixed;inset:0;
+  background:repeating-linear-gradient(
+    0deg,
+    var(--blind-color) 0px,
+    var(--blind-color) 3px,
+    transparent 3px,
+    transparent 18px
+  );
+  pointer-events:none;z-index:9997;
+}
+
+.page{
+  max-width:1220px;margin:0 auto;padding:40px 32px 80px;
+  position:relative;z-index:1;
+}
+
+.topbar{
+  display:flex;justify-content:space-between;align-items:center;
+  margin-bottom:48px;
+}
+.topbar-left{
+  font-family:'Bodoni Moda',serif;
+  font-size:11px;font-weight:500;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--text3);
+  font-style:italic;
+}
+.toggle{
+  background:var(--surface2);border:1px solid var(--border);
+  color:var(--text2);font-family:'DM Sans',sans-serif;
+  font-size:11px;font-weight:600;letter-spacing:.08em;
+  text-transform:uppercase;
+  padding:8px 18px;border-radius:4px;cursor:pointer;
+  transition:all .3s;
+}
+.toggle:hover{background:var(--red);color:#fff;border-color:var(--red)}
+
+.layout{
+  display:grid;
+  grid-template-columns:380px 1fr;
+  gap:48px;
+  align-items:start;
+}
+
+/* ===== EXTENSION POPUP (LEFT) ===== */
+.popup{
+  background:var(--popup-bg);
+  border:1px solid var(--card-border);
+  border-radius:12px;
+  box-shadow:
+    0 20px 60px var(--popup-shadow),
+    0 4px 12px var(--shadow),
+    8px 16px 40px var(--shadow-cast);
+  overflow:hidden;
+  position:sticky;top:40px;
+  transition:background .4s,box-shadow .4s,border-color .4s;
+}
+
+.popup-header{
+  background:var(--surface2);
+  padding:20px 24px;
+  display:flex;align-items:center;gap:14px;
+  border-bottom:1px solid var(--border);
+  position:relative;
+  transition:background .4s;
+}
+.popup-header::after{
+  content:'';position:absolute;bottom:0;left:24px;right:24px;
+  height:1px;
+  background:linear-gradient(90deg,transparent,var(--red-glow),transparent);
+}
+.logo-mark{
+  width:38px;height:38px;border-radius:8px;
+  background:var(--red);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Bodoni Moda',serif;font-weight:800;font-size:16px;
+  color:#fff;letter-spacing:-.02em;
+  box-shadow:0 4px 14px var(--red-glow);
+}
+.brand{
+  font-family:'Bodoni Moda',serif;font-size:20px;font-weight:700;
+  letter-spacing:-.01em;
+}
+.brand-sub{font-size:11px;color:var(--text3);font-weight:400;margin-top:1px;letter-spacing:.04em}
+
+.popup-body{padding:24px}
+
+.pipeline{
+  display:flex;gap:0;margin-bottom:24px;
+  border:1px solid var(--border);border-radius:8px;overflow:hidden;
+}
+.pipe-stage{
+  flex:1;text-align:center;padding:12px 6px;
+  border-right:1px solid var(--border);
+  position:relative;
+  transition:background .3s;
+}
+.pipe-stage:last-child{border-right:none}
+.pipe-stage:hover{background:var(--red-soft)}
+.pipe-label{
+  font-size:9px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--text3);margin-bottom:4px;
+}
+.pipe-count{
+  font-family:'Bodoni Moda',serif;font-size:22px;font-weight:700;
+  color:var(--text);
+}
+.pipe-stage.active .pipe-count{color:var(--red)}
+.pipe-stage.active::after{
+  content:'';position:absolute;bottom:0;left:20%;right:20%;height:2px;
+  background:var(--red);border-radius:2px;
+}
+
+.profile-card{
+  display:flex;align-items:center;gap:14px;
+  padding:16px;margin-bottom:20px;
+  background:var(--surface2);border-radius:8px;
+  border:1px solid var(--border);
+  transition:background .4s;
+}
+.avatar{
+  width:40px;height:40px;border-radius:50%;
+  background:linear-gradient(135deg, var(--red), var(--red-hover));
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Bodoni Moda',serif;font-weight:700;font-size:16px;
+  color:#fff;
+}
+.profile-name{font-weight:600;font-size:14px}
+.profile-email{font-size:12px;color:var(--text3);margin-top:1px}
+
+.status-line{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 16px;margin-bottom:20px;
+  background:var(--surface2);border-radius:8px;
+  border:1px solid var(--border);
+  font-size:13px;color:var(--text2);
+  transition:background .4s;
+}
+.status-dot{
+  width:8px;height:8px;border-radius:50%;
+  background:#4CAF50;
+  box-shadow:0 0 8px rgba(76,175,80,.4);
+  margin-right:8px;display:inline-block;
+}
+
+.btn-autofill{
+  width:100%;padding:15px;border:none;border-radius:8px;
+  background:var(--red);color:#fff;
+  font-family:'Bodoni Moda',serif;font-size:16px;font-weight:600;
+  letter-spacing:.02em;
+  cursor:pointer;margin-bottom:16px;
+  box-shadow:0 6px 20px var(--red-glow);
+  transition:all .3s;
+}
+.btn-autofill:hover{
+  background:var(--red-hover);
+  box-shadow:0 8px 28px var(--red-glow);
+  transform:translateY(-1px);
+}
+
+.match-indicator{
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  padding:12px;border-radius:8px;
+  background:var(--red-soft);
+  border:1px solid rgba(196,56,56,.12);
+}
+.match-label{font-size:12px;color:var(--text2);font-weight:500}
+.match-value{
+  font-family:'Bodoni Moda',serif;font-size:24px;font-weight:800;
+  color:var(--red);
+  text-shadow:0 0 20px var(--red-glow),0 0 40px var(--bar-glow);
+}
+
+/* ===== WEBSITE (RIGHT) ===== */
+.website{position:relative}
+
+.hero{margin-bottom:56px;position:relative}
+.hero::before{
+  content:'';position:absolute;top:-60px;left:-40px;
+  width:300px;height:300px;
+  background:radial-gradient(circle,var(--red-glow),transparent 70%);
+  pointer-events:none;opacity:.3;
+  border-radius:50%;
+}
+.hero h1{
+  font-family:'Bodoni Moda',serif;
+  font-size:52px;font-weight:900;line-height:1.05;
+  letter-spacing:-.03em;
+  margin-bottom:18px;
+  position:relative;
+}
+.hero h1 em{
+  font-style:italic;color:var(--red);
+  text-shadow:0 0 30px var(--red-glow);
+}
+.hero p{
+  font-size:17px;color:var(--text2);line-height:1.6;
+  max-width:520px;
+}
+
+.stats-row{
+  display:flex;gap:24px;margin-bottom:48px;
+}
+.stat-card{
+  flex:1;padding:24px 20px;
+  background:var(--card-bg);
+  border:1px solid var(--card-border);
+  border-radius:10px;
+  text-align:center;
+  box-shadow:0 8px 30px var(--shadow),0 2px 6px var(--shadow);
+  position:relative;overflow:hidden;
+  transition:all .4s;
+}
+.stat-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:var(--red);opacity:.5;
+}
+.stat-card:hover{
+  transform:translateY(-3px);
+  box-shadow:0 12px 40px var(--shadow-deep);
+}
+.stat-num{
+  font-family:'Bodoni Moda',serif;font-size:36px;font-weight:900;
+  color:var(--red);margin-bottom:4px;
+  text-shadow:0 0 15px var(--bar-glow);
+}
+.stat-label{font-size:12px;color:var(--text3);font-weight:500;text-transform:uppercase;letter-spacing:.08em}
+
+.section-title{
+  font-family:'Bodoni Moda',serif;
+  font-size:13px;font-weight:600;font-style:italic;
+  letter-spacing:.12em;text-transform:uppercase;
+  color:var(--text3);margin-bottom:20px;
+  display:flex;align-items:center;gap:16px;
+}
+.section-title::after{
+  content:'';flex:1;height:1px;
+  background:linear-gradient(90deg,var(--border),transparent);
+}
+
+/* Bar Chart */
+.chart-area{
+  margin-bottom:48px;
+  padding:28px 24px;
+  background:var(--card-bg);
+  border:1px solid var(--card-border);
+  border-radius:10px;
+  box-shadow:0 8px 30px var(--shadow);
+  transition:all .4s;
+}
+.chart{
+  display:flex;align-items:flex-end;gap:16px;
+  height:140px;padding-top:12px;
+}
+.bar-col{
+  flex:1;display:flex;flex-direction:column;
+  align-items:center;gap:8px;height:100%;
+  justify-content:flex-end;
+}
+.bar{
+  width:100%;border-radius:4px 4px 2px 2px;
+  background:var(--red);
+  position:relative;
+  box-shadow:0 0 12px var(--bar-glow),0 0 24px var(--bar-glow);
+  transition:height .6s cubic-bezier(.23,1,.32,1),box-shadow .3s;
+}
+.bar:hover{
+  box-shadow:0 0 20px var(--red-glow),0 0 40px var(--bar-glow);
+}
+.bar-label{
+  font-size:10px;font-weight:600;color:var(--text3);
+  text-transform:uppercase;letter-spacing:.06em;
+}
+
+/* Pipeline Preview */
+.pipeline-preview{
+  margin-bottom:48px;
+  padding:28px 24px;
+  background:var(--card-bg);
+  border:1px solid var(--card-border);
+  border-radius:10px;
+  box-shadow:0 8px 30px var(--shadow);
+  transition:all .4s;
+}
+.timeline{
+  display:flex;align-items:center;
+  position:relative;
+  padding:20px 0;
+}
+.timeline::before{
+  content:'';position:absolute;top:50%;left:0;right:0;
+  height:2px;background:var(--border);
+  transform:translateY(-50%);
+}
+.tl-node{
+  flex:1;display:flex;flex-direction:column;align-items:center;
+  position:relative;z-index:1;
+}
+.tl-dot{
+  width:36px;height:36px;border-radius:50%;
+  background:var(--surface2);border:2px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Bodoni Moda',serif;font-weight:700;font-size:13px;
+  color:var(--text2);margin-bottom:10px;
+  transition:all .3s;
+}
+.tl-node.active .tl-dot{
+  background:var(--red);border-color:var(--red);color:#fff;
+  box-shadow:0 0 16px var(--red-glow);
+}
+.tl-node.done .tl-dot{
+  background:var(--red);border-color:var(--red);color:#fff;
+  opacity:.6;
+}
+.tl-name{
+  font-size:11px;font-weight:600;color:var(--text3);
+  text-transform:uppercase;letter-spacing:.06em;
+}
+.tl-node.active .tl-name{color:var(--red);font-weight:700}
+.tl-connector{
+  position:absolute;top:50%;height:2px;
+  background:var(--red);opacity:.4;
+  transform:translateY(-50%);
+}
+
+/* Resume CTA */
+.resume-cta{
+  margin-bottom:48px;
+  padding:32px;
+  background:linear-gradient(135deg, var(--surface2), var(--surface3));
+  border:1px solid var(--card-border);
+  border-radius:10px;
+  display:flex;align-items:center;justify-content:space-between;
+  box-shadow:0 8px 30px var(--shadow);
+  position:relative;overflow:hidden;
+  transition:all .4s;
+}
+.resume-cta::before{
+  content:'';position:absolute;top:-50%;right:-20%;
+  width:300px;height:300px;
+  background:radial-gradient(circle,var(--red-glow),transparent 70%);
+  opacity:.2;pointer-events:none;
+}
+.resume-cta-text h3{
+  font-family:'Bodoni Moda',serif;font-size:22px;font-weight:700;
+  margin-bottom:6px;
+}
+.resume-cta-text p{font-size:14px;color:var(--text2)}
+.btn-resume{
+  padding:14px 28px;border:none;border-radius:8px;
+  background:var(--red);color:#fff;
+  font-family:'Bodoni Moda',serif;font-size:15px;font-weight:600;
+  cursor:pointer;white-space:nowrap;
+  box-shadow:0 4px 16px var(--red-glow);
+  transition:all .3s;
+}
+.btn-resume:hover{background:var(--red-hover);transform:translateY(-2px)}
+
+/* Feature Cards */
+.features{
+  display:grid;grid-template-columns:1fr 1fr;gap:16px;
+}
+.feat-card{
+  padding:24px;
+  background:var(--card-bg);
+  border:1px solid var(--card-border);
+  border-radius:10px;
+  box-shadow:0 6px 24px var(--shadow);
+  position:relative;overflow:hidden;
+  transition:all .4s;
+}
+.feat-card::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:2px;
+  background:var(--red);opacity:0;transition:opacity .3s;
+}
+.feat-card:hover::after{opacity:.6}
+.feat-card:hover{
+  transform:translateY(-3px);
+  box-shadow:0 10px 36px var(--shadow-deep);
+}
+.feat-icon{
+  width:40px;height:40px;border-radius:8px;
+  background:var(--red-soft);
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:14px;
+  font-family:'Bodoni Moda',serif;font-weight:800;
+  font-size:18px;color:var(--red);
+}
+.feat-card h4{
+  font-family:'Bodoni Moda',serif;font-size:16px;font-weight:700;
+  margin-bottom:6px;
+}
+.feat-card p{font-size:13px;color:var(--text2);line-height:1.5}
+
+@media(max-width:860px){
+  .layout{grid-template-columns:1fr;gap:36px}
+  .popup{position:static;max-width:400px;margin:0 auto}
+  .hero h1{font-size:36px}
+  .stats-row{flex-wrap:wrap}
+  .stat-card{min-width:calc(50% - 12px)}
+  .features{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<div class="venetian"></div>
+<div class="page">
+  <div class="topbar">
+    <div class="topbar-left">CogniFillz &mdash; Design XVI / Noir Cinematic</div>
+    <button class="toggle">Dark</button>
+  </div>
+
+  <div class="layout">
+    <!-- LEFT: Extension Popup -->
+    <div class="popup">
+      <div class="popup-header">
+        <div class="logo-mark">CF</div>
+        <div>
+          <div class="brand">CogniFillz</div>
+          <div class="brand-sub">by Cranium Inc.</div>
+        </div>
+      </div>
+      <div class="popup-body">
+        <div class="pipeline">
+          <div class="pipe-stage done"><div class="pipe-label">Applied</div><div class="pipe-count">12</div></div>
+          <div class="pipe-stage done"><div class="pipe-label">Screen</div><div class="pipe-count">4</div></div>
+          <div class="pipe-stage active"><div class="pipe-label">Interview</div><div class="pipe-count">2</div></div>
+          <div class="pipe-stage"><div class="pipe-label">Offer</div><div class="pipe-count">1</div></div>
+        </div>
+
+        <div class="profile-card">
+          <div class="avatar">JD</div>
+          <div>
+            <div class="profile-name">Jane Doe</div>
+            <div class="profile-email">jane.doe@email.com</div>
+          </div>
+        </div>
+
+        <div class="status-line">
+          <span><span class="status-dot"></span>8 fields detected</span>
+          <span style="font-weight:600;color:var(--red)">Ready</span>
+        </div>
+
+        <button class="btn-autofill">Autofill Application</button>
+
+        <div class="match-indicator">
+          <span class="match-label">AI Resume Match</span>
+          <span class="match-value">87%</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: Website -->
+    <div class="website">
+      <div class="hero">
+        <h1>Your job hunt,<br>on <em>autopilot.</em></h1>
+        <p>One-click autofill, real-time application tracking, and AI-powered resume tailoring. The case of the perfect application &mdash; solved.</p>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-num">87%</div>
+          <div class="stat-label">Match Rate</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">19</div>
+          <div class="stat-label">Active Apps</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">3</div>
+          <div class="stat-label">Interviews</div>
+        </div>
+      </div>
+
+      <div class="section-title">Applications Per Week</div>
+      <div class="chart-area">
+        <div class="chart">
+          <div class="bar-col"><div class="bar" style="height:40%"></div><div class="bar-label">Wk 1</div></div>
+          <div class="bar-col"><div class="bar" style="height:65%"></div><div class="bar-label">Wk 2</div></div>
+          <div class="bar-col"><div class="bar" style="height:50%"></div><div class="bar-label">Wk 3</div></div>
+          <div class="bar-col"><div class="bar" style="height:85%"></div><div class="bar-label">Wk 4</div></div>
+          <div class="bar-col"><div class="bar" style="height:70%"></div><div class="bar-label">Wk 5</div></div>
+        </div>
+      </div>
+
+      <div class="section-title">Application Pipeline</div>
+      <div class="pipeline-preview">
+        <div class="timeline">
+          <div class="tl-node done"><div class="tl-dot">12</div><div class="tl-name">Applied</div></div>
+          <div class="tl-node done"><div class="tl-dot">4</div><div class="tl-name">Screening</div></div>
+          <div class="tl-node active"><div class="tl-dot">2</div><div class="tl-name">Interview</div></div>
+          <div class="tl-node"><div class="tl-dot">1</div><div class="tl-name">Offer</div></div>
+        </div>
+      </div>
+
+      <div class="resume-cta">
+        <div class="resume-cta-text">
+          <h3>Tailor My Resume</h3>
+          <p>AI reshapes your resume to match each role perfectly.</p>
+        </div>
+        <button class="btn-resume">Get Started</button>
+      </div>
+
+      <div class="section-title">Features</div>
+      <div class="features">
+        <div class="feat-card">
+          <div class="feat-icon">F</div>
+          <h4>One-Click Fill</h4>
+          <p>Autofill any job application form instantly with your saved profile data.</p>
+        </div>
+        <div class="feat-card">
+          <div class="feat-icon">T</div>
+          <h4>Application Tracker</h4>
+          <p>Follow every application through the pipeline from submit to offer.</p>
+        </div>
+        <div class="feat-card">
+          <div class="feat-icon">A</div>
+          <h4>AI Resume Match</h4>
+          <p>See how well your resume matches each posting and optimize it with AI.</p>
+        </div>
+        <div class="feat-card">
+          <div class="feat-icon">G</div>
+          <h4>Trend Analytics</h4>
+          <p>Visualize your job hunt with weekly trends and conversion metrics.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.querySelector('.toggle').addEventListener('click', function() {
+  document.documentElement.classList.toggle('dark');
+  this.textContent = document.documentElement.classList.contains('dark') ? 'Light' : 'Dark';
+});
+</script>
+</body>
+</html>
