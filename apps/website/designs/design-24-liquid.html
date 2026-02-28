@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Design 24: Liquid Flow</title>
+<link href="https://fonts.googleapis.com/css2?family=Commissioner:wght@200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#F5EDE4;
+  --bg2:#EDE3D8;
+  --surface:rgba(255,253,248,.85);
+  --surface-solid:#FFFDF8;
+  --surface2:rgba(240,230,218,.7);
+  --text:#1A1210;
+  --text2:#5A4838;
+  --text3:#9A8878;
+  --red:#C43838;
+  --red-hover:#A82E2E;
+  --red-glow:rgba(196,56,56,.15);
+  --red-wash:rgba(196,56,56,.06);
+  --border:rgba(180,140,100,.12);
+  --shadow:0 8px 32px rgba(120,60,20,.06);
+  --shadow-lg:0 16px 48px rgba(120,60,20,.10);
+  --blob1:rgba(196,56,56,.06);
+  --blob2:rgba(196,120,56,.05);
+  --blob3:rgba(180,140,80,.04);
+  --pipeline-applied:#C43838;
+  --pipeline-screening:#D07840;
+  --pipeline-interview:#B89030;
+  --pipeline-offer:#5A8A3A;
+}
+html.dark{
+  --bg:#1A1412;
+  --bg2:#221A16;
+  --surface:rgba(42,32,26,.85);
+  --surface-solid:#2A201A;
+  --surface2:rgba(50,38,30,.7);
+  --text:#F0E8E0;
+  --text2:#C0AA90;
+  --text3:#8A7868;
+  --red:#E04A42;
+  --red-hover:#C83C36;
+  --red-glow:rgba(224,74,66,.12);
+  --red-wash:rgba(224,74,66,.05);
+  --border:rgba(200,160,120,.10);
+  --shadow:0 8px 32px rgba(0,0,0,.20);
+  --shadow-lg:0 16px 48px rgba(0,0,0,.30);
+  --blob1:rgba(224,74,66,.06);
+  --blob2:rgba(200,120,60,.05);
+  --blob3:rgba(160,120,60,.04);
+}
+
+body{
+  font-family:'Commissioner',sans-serif;
+  color:var(--text);
+  background:var(--bg);
+  -webkit-font-smoothing:antialiased;
+  min-height:100vh;
+  overflow-x:hidden;
+  transition:background .6s,color .6s;
+}
+
+/* Morphing blobs */
+@keyframes morph1{
+  0%,100%{border-radius:40% 60% 65% 35% / 55% 35% 60% 40%}
+  25%{border-radius:55% 45% 40% 60% / 40% 60% 35% 65%}
+  50%{border-radius:35% 65% 55% 45% / 65% 40% 55% 45%}
+  75%{border-radius:60% 40% 45% 55% / 45% 55% 40% 60%}
+}
+@keyframes morph2{
+  0%,100%{border-radius:60% 40% 30% 70% / 60% 30% 70% 40%}
+  25%{border-radius:30% 70% 60% 40% / 40% 60% 30% 70%}
+  50%{border-radius:50% 50% 40% 60% / 70% 30% 50% 50%}
+  75%{border-radius:40% 60% 70% 30% / 30% 70% 40% 60%}
+}
+@keyframes morph3{
+  0%,100%{border-radius:70% 30% 50% 50% / 40% 60% 30% 70%}
+  33%{border-radius:40% 60% 60% 40% / 70% 30% 60% 40%}
+  66%{border-radius:50% 50% 30% 70% / 50% 50% 70% 30%}
+}
+@keyframes float{
+  0%,100%{transform:translate(0,0)}
+  50%{transform:translate(10px,-15px)}
+}
+@keyframes float2{
+  0%,100%{transform:translate(0,0)}
+  50%{transform:translate(-12px,10px)}
+}
+
+.bg-blobs{
+  position:fixed;inset:0;z-index:0;pointer-events:none;
+  overflow:hidden;
+}
+.bg-blob{
+  position:absolute;
+  transition:all .6s;
+}
+.bg-blob-1{
+  width:400px;height:400px;
+  background:var(--blob1);
+  top:-100px;right:-50px;
+  animation:morph1 10s ease-in-out infinite, float 14s ease-in-out infinite;
+}
+.bg-blob-2{
+  width:350px;height:350px;
+  background:var(--blob2);
+  bottom:-80px;left:-60px;
+  animation:morph2 9s ease-in-out infinite, float2 12s ease-in-out infinite;
+}
+.bg-blob-3{
+  width:250px;height:250px;
+  background:var(--blob3);
+  top:40%;left:30%;
+  animation:morph3 8s ease-in-out infinite, float 16s ease-in-out infinite;
+}
+
+.layout{
+  display:flex;gap:48px;
+  max-width:1200px;margin:48px auto;padding:0 32px;
+  align-items:flex-start;
+  position:relative;z-index:1;
+}
+
+/* ========== EXTENSION (LEFT) ========== */
+.extension{
+  width:380px;flex-shrink:0;
+  position:sticky;top:48px;
+}
+.ext-frame{
+  background:var(--surface);
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  border:1px solid var(--border);
+  border-radius:32px;
+  box-shadow:var(--shadow-lg);
+  overflow:hidden;
+  transition:all .6s;
+  position:relative;
+}
+/* Flowing top decoration */
+.ext-top-wave{
+  height:6px;
+  background:linear-gradient(90deg, var(--red), var(--pipeline-screening), var(--red));
+  opacity:.6;
+  border-radius:32px 32px 0 0;
+}
+
+.ext-header{
+  display:flex;align-items:center;gap:10px;
+  padding:20px 24px 14px;
+}
+.logo-mark{
+  width:40px;height:40px;
+  background:var(--red);
+  color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  font-weight:800;font-size:14px;
+  letter-spacing:1px;
+  animation:morph1 10s ease-in-out infinite;
+  transition:background .6s;
+}
+.brand{
+  font-weight:800;font-size:20px;
+  flex:1;
+  color:var(--text);
+  letter-spacing:-.3px;
+}
+.toggle{
+  background:var(--surface2);
+  backdrop-filter:blur(10px);
+  border:1px solid var(--border);
+  color:var(--text2);
+  font-family:'Commissioner',sans-serif;
+  font-size:12px;font-weight:600;
+  padding:6px 16px;
+  border-radius:20px;
+  cursor:pointer;
+  transition:all .3s;
+}
+.toggle:hover{background:var(--red);color:#fff;border-color:var(--red)}
+
+.ext-body{padding:8px 24px 28px}
+
+/* Fluid pipeline */
+.pipeline-flow{
+  display:flex;gap:8px;
+  margin-bottom:20px;
+  position:relative;
+}
+.flow-stage{
+  flex:1;
+  text-align:center;
+  padding:14px 6px 12px;
+  background:var(--surface2);
+  backdrop-filter:blur(8px);
+  border:1px solid var(--border);
+  transition:all .6s;
+  position:relative;
+  overflow:hidden;
+}
+.flow-stage:nth-child(1){border-radius:40% 20% 20% 40% / 30% 30% 30% 30%;animation:morph1 12s ease-in-out infinite}
+.flow-stage:nth-child(2){border-radius:20% 35% 35% 20% / 35% 25% 25% 35%;animation:morph2 11s ease-in-out infinite}
+.flow-stage:nth-child(3){border-radius:30% 25% 25% 30% / 25% 35% 35% 25%;animation:morph3 10s ease-in-out infinite}
+.flow-stage:nth-child(4){border-radius:20% 40% 40% 20% / 30% 30% 30% 30%;animation:morph1 13s ease-in-out infinite}
+.flow-stage::after{
+  content:'';position:absolute;
+  bottom:0;left:0;right:0;height:3px;
+}
+.flow-stage:nth-child(1)::after{background:var(--pipeline-applied)}
+.flow-stage:nth-child(2)::after{background:var(--pipeline-screening)}
+.flow-stage:nth-child(3)::after{background:var(--pipeline-interview)}
+.flow-stage:nth-child(4)::after{background:var(--pipeline-offer)}
+.flow-num{
+  font-weight:900;font-size:22px;
+  color:var(--text);
+  display:block;line-height:1;
+}
+.flow-label{
+  font-size:9px;font-weight:600;
+  text-transform:uppercase;
+  letter-spacing:.06em;
+  color:var(--text3);
+  display:block;margin-top:4px;
+}
+
+.profile{
+  display:flex;align-items:center;gap:12px;
+  margin-bottom:16px;
+  padding:14px 16px;
+  background:var(--surface2);
+  backdrop-filter:blur(8px);
+  border:1px solid var(--border);
+  border-radius:20px;
+  transition:all .6s;
+}
+.avatar{
+  width:40px;height:40px;
+  background:var(--red);
+  color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  font-weight:800;font-size:14px;
+  border-radius:40% 60% 60% 40% / 60% 40% 40% 60%;
+  animation:morph2 8s ease-in-out infinite;
+}
+.profile-name{font-weight:700;font-size:14px}
+.profile-email{font-size:12px;color:var(--text3)}
+
+.btn{
+  display:block;width:100%;
+  padding:14px;
+  background:var(--red);color:#fff;
+  border:none;cursor:pointer;
+  font-family:'Commissioner',sans-serif;
+  font-size:15px;font-weight:700;
+  text-align:center;text-decoration:none;
+  border-radius:16px;
+  transition:all .3s;
+  margin-bottom:16px;
+  box-shadow:0 4px 16px var(--red-glow);
+}
+.btn:hover{background:var(--red-hover);transform:translateY(-2px);box-shadow:0 8px 24px var(--red-glow)}
+
+.match-section{
+  display:flex;align-items:center;gap:14px;
+  padding:14px 16px;
+  background:var(--surface2);
+  backdrop-filter:blur(8px);
+  border:1px solid var(--border);
+  border-radius:16px;
+  transition:all .6s;
+}
+.match-pct{
+  font-weight:900;font-size:30px;
+  color:var(--red);
+  line-height:1;
+}
+.match-label{
+  font-size:10px;font-weight:600;
+  text-transform:uppercase;
+  letter-spacing:.06em;
+  color:var(--text3);
+}
+.match-track{
+  flex:1;height:8px;
+  background:var(--red-wash);
+  border-radius:10px;
+  overflow:hidden;
+}
+.match-fill{
+  width:87%;height:100%;
+  background:linear-gradient(90deg, var(--red), var(--pipeline-screening));
+  border-radius:10px;
+  transition:width .8s ease;
+}
+
+/* ========== WEBSITE (RIGHT) ========== */
+.website{
+  flex:1;min-width:0;
+}
+
+.hero{
+  margin-bottom:40px;
+  padding:56px 48px;
+  background:var(--surface);
+  backdrop-filter:blur(20px);
+  border:1px solid var(--border);
+  border-radius:36px;
+  box-shadow:var(--shadow-lg);
+  transition:all .6s;
+  position:relative;
+  overflow:hidden;
+}
+/* Flowing gradient wash */
+.hero::before{
+  content:'';position:absolute;
+  top:-50%;right:-30%;
+  width:500px;height:500px;
+  background:var(--blob1);
+  animation:morph1 10s ease-in-out infinite, float 14s ease-in-out infinite;
+}
+.hero::after{
+  content:'';position:absolute;
+  bottom:-40%;left:-20%;
+  width:350px;height:350px;
+  background:var(--blob2);
+  animation:morph2 9s ease-in-out infinite, float2 12s ease-in-out infinite;
+}
+.hero h1{
+  font-size:clamp(36px,5vw,54px);
+  font-weight:900;
+  letter-spacing:-1px;
+  line-height:1.1;
+  margin-bottom:16px;
+  color:var(--text);
+  position:relative;z-index:1;
+}
+.hero h1 span{
+  color:var(--red);
+  display:block;
+  font-weight:300;
+  font-style:italic;
+}
+.hero-sub{
+  font-size:16px;color:var(--text2);
+  line-height:1.8;max-width:460px;
+  position:relative;z-index:1;
+}
+
+/* Wave divider */
+.wave-divider{
+  height:24px;margin:0 0 32px;
+  display:flex;align-items:center;
+  gap:8px;
+}
+.wave-divider::before{
+  content:'';flex:1;height:2px;
+  background:linear-gradient(90deg, transparent, var(--red-glow), transparent);
+  border-radius:2px;
+}
+.wave-dot{
+  width:6px;height:6px;
+  background:var(--red);
+  border-radius:50%;
+  opacity:.4;
+}
+
+/* Stats */
+.stats{
+  display:flex;gap:16px;
+  margin-bottom:32px;
+}
+.stat{
+  flex:1;
+  background:var(--surface);
+  backdrop-filter:blur(16px);
+  border:1px solid var(--border);
+  padding:24px 18px;
+  text-align:center;
+  border-radius:24px;
+  box-shadow:var(--shadow);
+  transition:all .6s;
+  position:relative;
+  overflow:hidden;
+}
+.stat::before{
+  content:'';position:absolute;
+  top:-20px;right:-20px;
+  width:60px;height:60px;
+  background:var(--blob1);
+  border-radius:50%;
+}
+.stat-val{
+  font-weight:900;font-size:40px;
+  color:var(--red);
+  display:block;line-height:1;
+  position:relative;z-index:1;
+  letter-spacing:-1px;
+}
+.stat-label{
+  font-size:11px;font-weight:600;
+  text-transform:uppercase;
+  letter-spacing:.06em;
+  color:var(--text3);
+  margin-top:6px;
+  position:relative;z-index:1;
+}
+
+/* Chart */
+.chart-card{
+  background:var(--surface);
+  backdrop-filter:blur(16px);
+  border:1px solid var(--border);
+  padding:28px 24px;
+  margin-bottom:32px;
+  border-radius:28px;
+  box-shadow:var(--shadow);
+  transition:all .6s;
+}
+.chart-card h3{
+  font-weight:700;font-size:15px;
+  color:var(--text2);
+  margin-bottom:24px;
+  letter-spacing:-.3px;
+}
+.chart{
+  display:flex;gap:14px;
+  align-items:flex-end;
+  height:140px;
+  padding-bottom:24px;
+  position:relative;
+}
+/* Subtle wave baseline */
+.chart::after{
+  content:'';position:absolute;
+  bottom:24px;left:0;right:0;
+  height:2px;
+  background:linear-gradient(90deg, transparent, var(--border), transparent);
+  border-radius:2px;
+}
+.bar-wrap{
+  flex:1;display:flex;flex-direction:column;
+  align-items:center;height:100%;justify-content:flex-end;
+  position:relative;z-index:1;
+}
+.bar{
+  width:70%;
+  background:linear-gradient(to top, var(--red), rgba(196,56,56,.5));
+  border-radius:40% 40% 8px 8px;
+  position:relative;
+  transition:all .4s;
+}
+.bar:hover{
+  width:80%;
+  filter:brightness(1.1);
+}
+.bar-label{
+  font-size:10px;font-weight:600;
+  color:var(--text3);
+  margin-top:8px;
+}
+
+/* Pipeline (flowing river) */
+.pipeline-section{margin-bottom:32px}
+.pipeline-section h3{
+  font-weight:700;font-size:15px;
+  color:var(--text2);
+  margin-bottom:20px;
+  letter-spacing:-.3px;
+}
+.pipeline-river{
+  display:flex;gap:0;
+  position:relative;
+  background:var(--surface2);
+  backdrop-filter:blur(8px);
+  border:1px solid var(--border);
+  border-radius:28px;
+  overflow:hidden;
+  transition:all .6s;
+}
+.river-stage{
+  flex:1;
+  text-align:center;
+  padding:24px 12px;
+  position:relative;
+  transition:all .6s;
+}
+.river-stage::after{
+  content:'';position:absolute;
+  top:20%;bottom:20%;right:0;
+  width:1px;
+  background:var(--border);
+}
+.river-stage:last-child::after{display:none}
+.river-stone{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:48px;height:48px;
+  font-weight:900;font-size:22px;
+  color:#fff;
+  margin-bottom:8px;
+  animation:morph1 10s ease-in-out infinite;
+}
+.river-stage:nth-child(1) .river-stone{background:var(--pipeline-applied)}
+.river-stage:nth-child(2) .river-stone{background:var(--pipeline-screening);animation:morph2 11s ease-in-out infinite}
+.river-stage:nth-child(3) .river-stone{background:var(--pipeline-interview);animation:morph3 9s ease-in-out infinite}
+.river-stage:nth-child(4) .river-stone{background:var(--pipeline-offer);animation:morph1 12s ease-in-out infinite}
+.river-name{
+  font-size:10px;font-weight:600;
+  text-transform:uppercase;
+  letter-spacing:.06em;
+  color:var(--text3);
+  display:block;
+}
+
+/* CTA */
+.cta-row{
+  display:flex;gap:16px;
+  margin-bottom:36px;
+  align-items:center;
+}
+.cta-row .btn{
+  width:auto;display:inline-block;
+  padding:14px 32px;margin-bottom:0;
+}
+.btn-outline{
+  display:inline-block;
+  padding:13px 28px;
+  border:2px solid var(--red);
+  color:var(--red);
+  font-family:'Commissioner',sans-serif;
+  font-size:14px;font-weight:700;
+  text-decoration:none;
+  border-radius:16px;
+  transition:all .3s;
+}
+.btn-outline:hover{background:var(--red);color:#fff}
+
+/* Feature cards */
+.features{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:16px;
+  margin-bottom:44px;
+}
+.feat{
+  background:var(--surface);
+  backdrop-filter:blur(16px);
+  border:1px solid var(--border);
+  padding:28px 24px;
+  border-radius:24px;
+  box-shadow:var(--shadow);
+  transition:all .6s;
+  position:relative;
+  overflow:hidden;
+}
+.feat::before{
+  content:'';position:absolute;
+  top:-30px;right:-30px;
+  width:80px;height:80px;
+  background:var(--blob1);
+  border-radius:50%;
+  animation:morph2 10s ease-in-out infinite;
+}
+.feat:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg)}
+.feat-icon{
+  width:44px;height:44px;
+  display:flex;align-items:center;justify-content:center;
+  background:var(--red);
+  color:#fff;
+  font-weight:800;font-size:15px;
+  margin-bottom:16px;
+  animation:morph1 10s ease-in-out infinite;
+  transition:background .6s;
+}
+.feat h4{
+  font-size:17px;font-weight:800;
+  color:var(--text);
+  margin-bottom:8px;
+  letter-spacing:-.3px;
+  position:relative;z-index:1;
+}
+.feat p{
+  font-size:13px;color:var(--text3);
+  line-height:1.7;
+  position:relative;z-index:1;
+}
+
+.footer{
+  padding-top:24px;
+  text-align:center;
+  font-size:12px;color:var(--text3);
+  font-weight:500;
+  position:relative;
+}
+.footer::before{
+  content:'';display:block;
+  height:2px;margin-bottom:24px;
+  background:linear-gradient(90deg, transparent, var(--red-glow), var(--border), var(--red-glow), transparent);
+  border-radius:2px;
+}
+
+@media(max-width:860px){
+  .layout{flex-direction:column;align-items:center}
+  .extension{position:static;width:100%;max-width:400px}
+  .website{width:100%}
+}
+</style>
+</head>
+<body>
+
+<div class="bg-blobs">
+  <div class="bg-blob bg-blob-1"></div>
+  <div class="bg-blob bg-blob-2"></div>
+  <div class="bg-blob bg-blob-3"></div>
+</div>
+
+<div class="layout">
+  <!-- LEFT: Extension Popup -->
+  <div class="extension">
+    <div class="ext-frame">
+      <div class="ext-top-wave"></div>
+      <div class="ext-header">
+        <div class="logo-mark">CF</div>
+        <span class="brand">CogniFillz</span>
+        <button class="toggle" onclick="document.documentElement.classList.toggle('dark');this.textContent=document.documentElement.classList.contains('dark')?'Light':'Dark'">Dark</button>
+      </div>
+
+      <div class="ext-body">
+        <div class="pipeline-flow">
+          <div class="flow-stage"><span class="flow-num">12</span><span class="flow-label">Applied</span></div>
+          <div class="flow-stage"><span class="flow-num">4</span><span class="flow-label">Screen</span></div>
+          <div class="flow-stage"><span class="flow-num">2</span><span class="flow-label">Interview</span></div>
+          <div class="flow-stage"><span class="flow-num">1</span><span class="flow-label">Offer</span></div>
+        </div>
+
+        <div class="profile">
+          <div class="avatar">JD</div>
+          <div>
+            <div class="profile-name">Jane Doe</div>
+            <div class="profile-email">jane@email.com</div>
+          </div>
+        </div>
+
+        <button class="btn">Autofill Application</button>
+
+        <div class="match-section">
+          <div>
+            <div class="match-pct">87%</div>
+            <div class="match-label">AI Resume Match</div>
+          </div>
+          <div class="match-track"><div class="match-fill"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT: Website -->
+  <div class="website">
+    <div class="hero">
+      <h1>Your job hunt,<br><span>on autopilot.</span></h1>
+      <p class="hero-sub">One-click autofill, application tracking, and AI-powered resume tailoring. Smooth, fluid, effortless.</p>
+    </div>
+
+    <div class="wave-divider"><div class="wave-dot"></div></div>
+
+    <div class="stats">
+      <div class="stat">
+        <span class="stat-val">87%</span>
+        <span class="stat-label">Match Rate</span>
+      </div>
+      <div class="stat">
+        <span class="stat-val">19</span>
+        <span class="stat-label">Active Apps</span>
+      </div>
+      <div class="stat">
+        <span class="stat-val">3</span>
+        <span class="stat-label">Interviews</span>
+      </div>
+    </div>
+
+    <div class="chart-card">
+      <h3>Weekly Applications</h3>
+      <div class="chart">
+        <div class="bar-wrap"><div class="bar" style="height:45%"></div><span class="bar-label">Mon</span></div>
+        <div class="bar-wrap"><div class="bar" style="height:70%"></div><span class="bar-label">Tue</span></div>
+        <div class="bar-wrap"><div class="bar" style="height:55%"></div><span class="bar-label">Wed</span></div>
+        <div class="bar-wrap"><div class="bar" style="height:90%"></div><span class="bar-label">Thu</span></div>
+        <div class="bar-wrap"><div class="bar" style="height:35%"></div><span class="bar-label">Fri</span></div>
+      </div>
+    </div>
+
+    <div class="pipeline-section">
+      <h3>Application Pipeline</h3>
+      <div class="pipeline-river">
+        <div class="river-stage"><div class="river-stone">12</div><span class="river-name">Applied</span></div>
+        <div class="river-stage"><div class="river-stone">4</div><span class="river-name">Screening</span></div>
+        <div class="river-stage"><div class="river-stone">2</div><span class="river-name">Interview</span></div>
+        <div class="river-stage"><div class="river-stone">1</div><span class="river-name">Offer</span></div>
+      </div>
+    </div>
+
+    <div class="wave-divider"><div class="wave-dot"></div></div>
+
+    <div class="cta-row">
+      <a href="#" class="btn">Tailor My Resume</a>
+      <a href="#" class="btn-outline">View All Applications</a>
+    </div>
+
+    <div class="features">
+      <div class="feat">
+        <div class="feat-icon">01</div>
+        <h4>One-Click Fill</h4>
+        <p>Autofill entire job applications with a single click. Your data, instantly placed.</p>
+      </div>
+      <div class="feat">
+        <div class="feat-icon">02</div>
+        <h4>Application Tracker</h4>
+        <p>Monitor every application through pipeline stages from applied to offer.</p>
+      </div>
+      <div class="feat">
+        <div class="feat-icon">03</div>
+        <h4>AI Resume Match</h4>
+        <p>Tailored resumes scored against job descriptions for maximum relevance.</p>
+      </div>
+      <div class="feat">
+        <div class="feat-icon">04</div>
+        <h4>Trend Analytics</h4>
+        <p>Visualize your job hunt with charts, stats, and weekly trend reports.</p>
+      </div>
+    </div>
+
+    <div class="footer">Crafted by Cranium Inc.</div>
+  </div>
+</div>
+
+</body>
+</html>

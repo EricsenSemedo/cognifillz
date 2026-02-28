@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Design 22: Ticket / Boarding Pass</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;500;600;700;800;900&family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#F5EDE4;
+  --bg2:#EDE3D8;
+  --surface:#FFFDF9;
+  --surface2:#F0E6DA;
+  --text:#1A1210;
+  --text2:#5A4A3E;
+  --text3:#8A7A6E;
+  --red:#C43838;
+  --red-hover:#A82E2E;
+  --red-light:rgba(196,56,56,.07);
+  --border:rgba(120,90,60,.15);
+  --border-dash:rgba(120,90,60,.25);
+  --shadow:0 3px 12px rgba(60,40,20,.08);
+  --shadow-lg:0 8px 32px rgba(60,40,20,.12);
+  --perf:#C43838;
+  --perf-line:rgba(196,56,56,.15);
+  --barcode:rgba(100,80,60,.12);
+  --pipeline-applied:#C43838;
+  --pipeline-screening:#D08040;
+  --pipeline-interview:#B89030;
+  --pipeline-offer:#5A8A3A;
+}
+html.dark{
+  --bg:#1A1412;
+  --bg2:#221A16;
+  --surface:#2A201A;
+  --surface2:#342A22;
+  --text:#F0E8E0;
+  --text2:#C0B0A0;
+  --text3:#8A7A6A;
+  --red:#E04A42;
+  --red-hover:#C83C36;
+  --red-light:rgba(224,74,66,.08);
+  --border:rgba(200,180,160,.12);
+  --border-dash:rgba(200,180,160,.20);
+  --shadow:0 3px 12px rgba(0,0,0,.25);
+  --shadow-lg:0 8px 32px rgba(0,0,0,.35);
+  --perf:#E04A42;
+  --perf-line:rgba(224,74,66,.15);
+  --barcode:rgba(200,180,160,.10);
+}
+
+body{
+  font-family:'Lato',sans-serif;
+  color:var(--text);
+  background:var(--bg);
+  -webkit-font-smoothing:antialiased;
+  min-height:100vh;
+  overflow-x:hidden;
+  transition:background .4s,color .4s;
+}
+
+h1,h2,h3,.brand,.stat-val,.ticket-num,.stage-num{
+  font-family:'Barlow Condensed',sans-serif;
+}
+
+.layout{
+  display:flex;gap:48px;
+  max-width:1200px;margin:48px auto;padding:0 32px;
+  align-items:flex-start;
+}
+
+/* ========== EXTENSION (LEFT) ========== */
+.extension{
+  width:380px;flex-shrink:0;
+  position:sticky;top:48px;
+}
+.ext-frame{
+  background:var(--surface);
+  border:2px solid var(--border);
+  border-radius:16px 16px 4px 4px;
+  box-shadow:var(--shadow-lg);
+  overflow:hidden;
+  position:relative;
+  transition:all .4s;
+}
+
+/* Boarding pass header */
+.ext-header{
+  display:flex;align-items:center;gap:10px;
+  padding:16px 20px;
+  background:var(--red);
+  color:#fff;
+  position:relative;
+}
+.logo-mark{
+  width:36px;height:36px;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Barlow Condensed',sans-serif;
+  font-weight:900;font-size:14px;
+  border:2px solid rgba(255,255,255,.6);
+  position:relative;
+  letter-spacing:1px;
+}
+/* QR-code style decorative square */
+.logo-mark::before{
+  content:'';position:absolute;
+  top:2px;left:2px;right:2px;bottom:2px;
+  border:1px solid rgba(255,255,255,.3);
+}
+.logo-mark::after{
+  content:'';position:absolute;
+  top:6px;left:6px;
+  width:6px;height:6px;
+  background:rgba(255,255,255,.5);
+}
+.brand{
+  font-weight:800;font-size:20px;
+  letter-spacing:2px;text-transform:uppercase;
+  flex:1;
+}
+.toggle{
+  background:rgba(255,255,255,.15);
+  border:1px solid rgba(255,255,255,.3);
+  color:#fff;
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:12px;font-weight:600;
+  letter-spacing:1px;text-transform:uppercase;
+  padding:4px 12px;
+  cursor:pointer;
+  transition:all .2s;
+}
+.toggle:hover{background:rgba(255,255,255,.25)}
+
+/* Dotted tear line */
+.tear-line{
+  position:relative;
+  height:24px;
+  display:flex;align-items:center;
+  overflow:hidden;
+}
+.tear-line::before{
+  content:'';
+  position:absolute;
+  top:50%;left:0;right:0;
+  border-top:2px dashed var(--border-dash);
+}
+.tear-circle{
+  position:absolute;
+  width:20px;height:20px;
+  background:var(--bg);
+  border-radius:50%;
+  top:50%;transform:translateY(-50%);
+  z-index:2;
+}
+.tear-circle.left{left:-10px}
+.tear-circle.right{right:-10px}
+
+.ext-body{padding:16px 20px 20px}
+
+/* Pipeline as ticket stubs */
+.pipeline-stubs{
+  display:flex;gap:6px;
+  margin-bottom:16px;
+}
+.stub{
+  flex:1;
+  text-align:center;
+  padding:10px 4px 8px;
+  border:1px solid var(--border);
+  border-left:3px dashed var(--border-dash);
+  position:relative;
+  background:var(--surface2);
+  transition:all .4s;
+}
+.stub::before,
+.stub::after{
+  content:'';position:absolute;
+  width:8px;height:8px;
+  background:var(--surface);
+  border-radius:50%;
+  left:-5px;
+  z-index:1;
+}
+.stub::before{top:-4px}
+.stub::after{bottom:-4px}
+.stub:nth-child(1){border-left-color:var(--pipeline-applied)}
+.stub:nth-child(2){border-left-color:var(--pipeline-screening)}
+.stub:nth-child(3){border-left-color:var(--pipeline-interview)}
+.stub:nth-child(4){border-left-color:var(--pipeline-offer)}
+.stub-num{
+  font-family:'Barlow Condensed',sans-serif;
+  font-weight:900;font-size:22px;
+  color:var(--text);
+  display:block;
+  transition:color .4s;
+}
+.stub-label{
+  font-size:9px;font-weight:700;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+  color:var(--text3);
+  display:block;margin-top:2px;
+}
+
+.profile{
+  display:flex;align-items:center;gap:12px;
+  margin-bottom:14px;
+  padding:12px;
+  border:1px solid var(--border);
+  background:var(--surface2);
+  transition:all .4s;
+}
+.avatar{
+  width:38px;height:38px;
+  background:var(--red);color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Barlow Condensed',sans-serif;
+  font-weight:800;font-size:14px;
+  letter-spacing:1px;
+}
+.profile-name{font-weight:700;font-size:14px}
+.profile-email{font-size:12px;color:var(--text3)}
+
+.btn{
+  display:block;width:100%;
+  padding:12px;
+  background:var(--red);color:#fff;
+  border:none;cursor:pointer;
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:15px;font-weight:700;
+  letter-spacing:2px;text-transform:uppercase;
+  text-align:center;text-decoration:none;
+  transition:all .2s;
+  margin-bottom:14px;
+}
+.btn:hover{background:var(--red-hover);transform:translateY(-1px)}
+
+.match-section{
+  padding:12px;
+  border:1px solid var(--border);
+  background:var(--surface2);
+  display:flex;align-items:center;gap:14px;
+  transition:all .4s;
+}
+.match-pct{
+  font-family:'Barlow Condensed',sans-serif;
+  font-weight:900;font-size:32px;
+  color:var(--red);
+  line-height:1;
+}
+.match-label{
+  font-size:10px;font-weight:700;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+  color:var(--text3);
+}
+.match-track{
+  flex:1;height:6px;
+  background:var(--perf-line);
+  border-radius:3px;
+  overflow:hidden;
+}
+.match-fill{
+  width:87%;height:100%;
+  background:var(--red);
+  border-radius:3px;
+  transition:width .8s ease;
+}
+
+/* Barcode decoration */
+.barcode{
+  display:flex;align-items:flex-end;justify-content:center;gap:1px;
+  height:28px;
+  margin-top:14px;
+  opacity:.5;
+}
+.barcode span{
+  display:block;
+  background:var(--text);
+  height:100%;
+  transition:background .4s;
+}
+
+/* ========== WEBSITE (RIGHT) ========== */
+.website{
+  flex:1;min-width:0;
+}
+
+.hero{
+  margin-bottom:40px;
+  padding:48px 40px;
+  background:var(--surface);
+  border:2px solid var(--border);
+  position:relative;
+  box-shadow:var(--shadow-lg);
+  transition:all .4s;
+}
+/* Perforated top edge */
+.hero::before{
+  content:'';position:absolute;
+  top:-1px;left:24px;right:24px;
+  height:0;
+  border-top:2px dashed var(--border-dash);
+}
+.hero h1{
+  font-size:clamp(36px,5vw,56px);
+  font-weight:900;
+  letter-spacing:-1px;
+  text-transform:uppercase;
+  line-height:1;
+  margin-bottom:16px;
+  color:var(--text);
+}
+.hero h1 span{
+  color:var(--red);
+  display:block;
+  font-weight:300;
+  font-style:italic;
+  letter-spacing:2px;
+}
+.hero-sub{
+  font-size:15px;color:var(--text2);
+  line-height:1.7;max-width:500px;
+}
+/* Corner stamp */
+.stamp{
+  position:absolute;
+  top:20px;right:24px;
+  border:2px solid var(--red);
+  color:var(--red);
+  font-family:'Barlow Condensed',sans-serif;
+  font-weight:800;font-size:11px;
+  letter-spacing:2px;text-transform:uppercase;
+  padding:6px 14px;
+  transform:rotate(-3deg);
+  opacity:.8;
+}
+
+/* Stats as ticket price displays */
+.stats{
+  display:flex;gap:16px;
+  margin-bottom:32px;
+}
+.stat-ticket{
+  flex:1;
+  background:var(--surface);
+  border:2px solid var(--border);
+  padding:20px 16px;
+  position:relative;
+  box-shadow:var(--shadow);
+  transition:all .4s;
+  overflow:hidden;
+}
+/* Perforation on left edge */
+.stat-ticket::before{
+  content:'';position:absolute;
+  top:8px;bottom:8px;left:-1px;
+  border-left:2px dashed var(--border-dash);
+}
+/* Cut-out circles */
+.stat-ticket::after{
+  content:'';position:absolute;
+  top:50%;left:-8px;transform:translateY(-50%);
+  width:16px;height:16px;
+  background:var(--bg);
+  border-radius:50%;
+  box-shadow:0 0 0 2px var(--border);
+}
+.stat-val{
+  font-weight:900;font-size:36px;
+  letter-spacing:-1px;
+  color:var(--red);
+  display:block;line-height:1;
+}
+.stat-label{
+  font-size:10px;font-weight:700;
+  text-transform:uppercase;
+  letter-spacing:.1em;
+  color:var(--text3);
+  margin-top:6px;
+}
+.stat-prefix{
+  font-size:11px;font-weight:600;
+  text-transform:uppercase;
+  letter-spacing:.1em;
+  color:var(--text3);
+  display:block;margin-bottom:2px;
+}
+
+/* Chart section */
+.chart-card{
+  background:var(--surface);
+  border:2px solid var(--border);
+  padding:28px 24px;
+  margin-bottom:32px;
+  box-shadow:var(--shadow);
+  position:relative;
+  transition:all .4s;
+}
+.chart-card::before{
+  content:'';position:absolute;
+  top:-1px;left:20px;right:20px;
+  border-top:2px dashed var(--border-dash);
+}
+.chart-card h3{
+  font-weight:800;font-size:14px;
+  text-transform:uppercase;
+  letter-spacing:3px;
+  color:var(--text2);
+  margin-bottom:24px;
+}
+.chart{
+  display:flex;gap:12px;
+  align-items:flex-end;
+  height:140px;
+  padding-bottom:24px;
+  border-bottom:1px solid var(--border);
+  position:relative;
+}
+.bar-wrap{
+  flex:1;
+  display:flex;flex-direction:column;
+  align-items:center;
+  height:100%;
+  justify-content:flex-end;
+}
+.bar{
+  width:100%;
+  background:var(--red);
+  opacity:.85;
+  position:relative;
+  transition:all .3s;
+}
+.bar::after{
+  content:'';position:absolute;
+  top:0;left:0;right:0;
+  height:3px;
+  background:rgba(255,255,255,.3);
+}
+.bar:hover{opacity:1;transform:scaleY(1.02);transform-origin:bottom}
+.bar-label{
+  font-size:10px;font-weight:700;
+  text-transform:uppercase;
+  letter-spacing:.06em;
+  color:var(--text3);
+  margin-top:8px;
+}
+
+/* Pipeline web */
+.pipeline-section{margin-bottom:32px}
+.pipeline-section h3{
+  font-family:'Barlow Condensed',sans-serif;
+  font-weight:800;font-size:14px;
+  text-transform:uppercase;
+  letter-spacing:3px;
+  color:var(--text2);
+  margin-bottom:20px;
+}
+.pipeline-tickets{
+  display:flex;gap:12px;
+}
+.ticket-stage{
+  flex:1;
+  background:var(--surface);
+  border:2px solid var(--border);
+  padding:20px 12px 16px;
+  text-align:center;
+  position:relative;
+  box-shadow:var(--shadow);
+  transition:all .4s;
+}
+.ticket-stage::before{
+  content:'';position:absolute;
+  top:8px;bottom:8px;right:-1px;
+  border-right:2px dashed var(--border-dash);
+}
+/* Cut-outs right side */
+.ticket-stage::after{
+  content:'';position:absolute;
+  top:50%;right:-9px;transform:translateY(-50%);
+  width:16px;height:16px;
+  background:var(--bg);
+  border-radius:50%;
+  box-shadow:0 0 0 2px var(--border);
+}
+.ticket-stage:last-child::before,
+.ticket-stage:last-child::after{display:none}
+.ticket-num{
+  font-weight:900;font-size:30px;
+  display:block;
+  line-height:1;
+}
+.ticket-stage:nth-child(1) .ticket-num{color:var(--pipeline-applied)}
+.ticket-stage:nth-child(2) .ticket-num{color:var(--pipeline-screening)}
+.ticket-stage:nth-child(3) .ticket-num{color:var(--pipeline-interview)}
+.ticket-stage:nth-child(4) .ticket-num{color:var(--pipeline-offer)}
+.ticket-stage-label{
+  font-size:10px;font-weight:700;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+  color:var(--text3);
+  margin-top:6px;
+  display:block;
+}
+/* Small barcode inside ticket */
+.ticket-barcode{
+  display:flex;align-items:flex-end;justify-content:center;gap:1px;
+  height:14px;margin-top:10px;
+  opacity:.3;
+}
+.ticket-barcode span{
+  display:block;
+  background:var(--text);
+  height:100%;
+  transition:background .4s;
+}
+
+/* CTA */
+.cta-row{
+  display:flex;gap:16px;
+  margin-bottom:36px;
+  align-items:center;
+}
+.btn-outline{
+  display:inline-block;
+  padding:12px 28px;
+  border:2px solid var(--red);
+  color:var(--red);
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:14px;font-weight:700;
+  letter-spacing:2px;text-transform:uppercase;
+  text-decoration:none;
+  transition:all .2s;
+}
+.btn-outline:hover{background:var(--red);color:#fff}
+.cta-row .btn{
+  width:auto;display:inline-block;
+  padding:12px 28px;
+  margin-bottom:0;
+}
+
+/* Feature cards */
+.features{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:16px;
+  margin-bottom:40px;
+}
+.feat{
+  background:var(--surface);
+  border:2px solid var(--border);
+  padding:24px 20px;
+  position:relative;
+  box-shadow:var(--shadow);
+  transition:all .4s;
+  overflow:hidden;
+}
+/* Dashed left edge */
+.feat::before{
+  content:'';position:absolute;
+  top:12px;bottom:12px;left:-1px;
+  border-left:2px dashed var(--border-dash);
+}
+.feat::after{
+  content:'';position:absolute;
+  top:50%;left:-6px;transform:translateY(-50%);
+  width:12px;height:12px;
+  background:var(--bg);
+  border-radius:50%;
+  box-shadow:0 0 0 2px var(--border);
+}
+.feat-icon{
+  width:40px;height:40px;
+  display:flex;align-items:center;justify-content:center;
+  border:2px solid var(--red);
+  color:var(--red);
+  font-family:'Barlow Condensed',sans-serif;
+  font-weight:900;font-size:16px;
+  margin-bottom:14px;
+  transform:rotate(-3deg);
+}
+.feat h4{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:18px;font-weight:800;
+  text-transform:uppercase;
+  letter-spacing:1px;
+  margin-bottom:8px;
+  color:var(--text);
+}
+.feat p{
+  font-size:13px;color:var(--text3);
+  line-height:1.6;
+}
+
+.footer{
+  padding-top:24px;
+  border-top:2px dashed var(--border-dash);
+  text-align:center;
+  font-size:11px;
+  font-weight:700;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  color:var(--text3);
+  position:relative;
+}
+.footer::before,
+.footer::after{
+  content:'';position:absolute;
+  top:-9px;
+  width:16px;height:16px;
+  background:var(--bg);
+  border-radius:50%;
+  box-shadow:0 0 0 2px var(--border);
+}
+.footer::before{left:-8px}
+.footer::after{right:-8px}
+
+@media(max-width:860px){
+  .layout{flex-direction:column;align-items:center}
+  .extension{position:static;width:100%;max-width:400px}
+  .website{width:100%}
+}
+</style>
+</head>
+<body>
+
+<div class="layout">
+  <!-- LEFT: Extension Popup (Boarding Pass) -->
+  <div class="extension">
+    <div class="ext-frame">
+      <div class="ext-header">
+        <div class="logo-mark">CF</div>
+        <span class="brand">CogniFillz</span>
+        <button class="toggle" onclick="document.documentElement.classList.toggle('dark');this.textContent=document.documentElement.classList.contains('dark')?'Light':'Dark'">Dark</button>
+      </div>
+
+      <div class="tear-line">
+        <div class="tear-circle left"></div>
+        <div class="tear-circle right"></div>
+      </div>
+
+      <div class="ext-body">
+        <div class="pipeline-stubs">
+          <div class="stub"><span class="stub-num">12</span><span class="stub-label">Applied</span></div>
+          <div class="stub"><span class="stub-num">4</span><span class="stub-label">Screen</span></div>
+          <div class="stub"><span class="stub-num">2</span><span class="stub-label">Interview</span></div>
+          <div class="stub"><span class="stub-num">1</span><span class="stub-label">Offer</span></div>
+        </div>
+
+        <div class="profile">
+          <div class="avatar">JD</div>
+          <div>
+            <div class="profile-name">Jane Doe</div>
+            <div class="profile-email">jane@email.com</div>
+          </div>
+        </div>
+
+        <button class="btn">Autofill Application</button>
+
+        <div class="match-section">
+          <div>
+            <div class="match-pct">87%</div>
+            <div class="match-label">AI Resume Match</div>
+          </div>
+          <div class="match-track"><div class="match-fill"></div></div>
+        </div>
+
+        <div class="barcode">
+          <span style="width:2px"></span><span style="width:1px"></span><span style="width:3px"></span><span style="width:1px"></span><span style="width:2px"></span><span style="width:1px"></span><span style="width:4px"></span><span style="width:1px"></span><span style="width:2px"></span><span style="width:3px"></span><span style="width:1px"></span><span style="width:2px"></span><span style="width:1px"></span><span style="width:3px"></span><span style="width:2px"></span><span style="width:1px"></span><span style="width:4px"></span><span style="width:1px"></span><span style="width:2px"></span><span style="width:1px"></span><span style="width:3px"></span><span style="width:1px"></span><span style="width:2px"></span><span style="width:4px"></span><span style="width:1px"></span><span style="width:2px"></span><span style="width:1px"></span><span style="width:3px"></span><span style="width:1px"></span><span style="width:2px"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT: Website -->
+  <div class="website">
+    <div class="hero">
+      <div class="stamp">Boarding Now</div>
+      <h1>Your job hunt,<br><span>on autopilot.</span></h1>
+      <p class="hero-sub">One-click autofill, application tracking, and AI-powered resume tailoring. Destination: your next career.</p>
+    </div>
+
+    <div class="stats">
+      <div class="stat-ticket">
+        <span class="stat-prefix">Match Rate</span>
+        <span class="stat-val">87%</span>
+        <span class="stat-label">Resume Score</span>
+      </div>
+      <div class="stat-ticket">
+        <span class="stat-prefix">Active</span>
+        <span class="stat-val">19</span>
+        <span class="stat-label">Applications</span>
+      </div>
+      <div class="stat-ticket">
+        <span class="stat-prefix">Scheduled</span>
+        <span class="stat-val">3</span>
+        <span class="stat-label">Interviews</span>
+      </div>
+    </div>
+
+    <div class="chart-card">
+      <h3>Weekly Applications</h3>
+      <div class="chart">
+        <div class="bar-wrap"><div class="bar" style="height:45%"></div><span class="bar-label">Mon</span></div>
+        <div class="bar-wrap"><div class="bar" style="height:70%"></div><span class="bar-label">Tue</span></div>
+        <div class="bar-wrap"><div class="bar" style="height:55%"></div><span class="bar-label">Wed</span></div>
+        <div class="bar-wrap"><div class="bar" style="height:90%"></div><span class="bar-label">Thu</span></div>
+        <div class="bar-wrap"><div class="bar" style="height:35%"></div><span class="bar-label">Fri</span></div>
+      </div>
+    </div>
+
+    <div class="pipeline-section">
+      <h3>Application Pipeline</h3>
+      <div class="pipeline-tickets">
+        <div class="ticket-stage">
+          <span class="ticket-num">12</span>
+          <span class="ticket-stage-label">Applied</span>
+          <div class="ticket-barcode"><span style="width:2px"></span><span style="width:1px"></span><span style="width:3px"></span><span style="width:1px"></span><span style="width:2px"></span><span style="width:1px"></span><span style="width:3px"></span><span style="width:2px"></span><span style="width:1px"></span><span style="width:2px"></span></div>
+        </div>
+        <div class="ticket-stage">
+          <span class="ticket-num">4</span>
+          <span class="ticket-stage-label">Screening</span>
+          <div class="ticket-barcode"><span style="width:1px"></span><span style="width:2px"></span><span style="width:1px"></span><span style="width:3px"></span><span style="width:1px"></span><span style="width:2px"></span><span style="width:1px"></span><span style="width:3px"></span><span style="width:2px"></span><span style="width:1px"></span></div>
+        </div>
+        <div class="ticket-stage">
+          <span class="ticket-num">2</span>
+          <span class="ticket-stage-label">Interview</span>
+          <div class="ticket-barcode"><span style="width:3px"></span><span style="width:1px"></span><span style="width:2px"></span><span style="width:1px"></span><span style="width:2px"></span><span style="width:3px"></span><span style="width:1px"></span><span style="width:2px"></span><span style="width:1px"></span><span style="width:2px"></span></div>
+        </div>
+        <div class="ticket-stage">
+          <span class="ticket-num">1</span>
+          <span class="ticket-stage-label">Offer</span>
+          <div class="ticket-barcode"><span style="width:2px"></span><span style="width:1px"></span><span style="width:3px"></span><span style="width:2px"></span><span style="width:1px"></span><span style="width:2px"></span><span style="width:3px"></span><span style="width:1px"></span><span style="width:2px"></span><span style="width:1px"></span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cta-row">
+      <a href="#" class="btn">Tailor My Resume</a>
+      <a href="#" class="btn-outline">View All Applications</a>
+    </div>
+
+    <div class="features">
+      <div class="feat">
+        <div class="feat-icon">01</div>
+        <h4>One-Click Fill</h4>
+        <p>Autofill entire job applications with a single click. Your data, instantly placed.</p>
+      </div>
+      <div class="feat">
+        <div class="feat-icon">02</div>
+        <h4>Application Tracker</h4>
+        <p>Monitor every application through pipeline stages from applied to offer.</p>
+      </div>
+      <div class="feat">
+        <div class="feat-icon">03</div>
+        <h4>AI Resume Match</h4>
+        <p>Tailored resumes scored against job descriptions for maximum relevance.</p>
+      </div>
+      <div class="feat">
+        <div class="feat-icon">04</div>
+        <h4>Trend Analytics</h4>
+        <p>Visualize your job hunt with charts, stats, and weekly trend reports.</p>
+      </div>
+    </div>
+
+    <div class="footer">Crafted by Cranium Inc.</div>
+  </div>
+</div>
+
+</body>
+</html>
