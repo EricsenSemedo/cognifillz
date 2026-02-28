@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Design 21: Botanical / Organic</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,700;0,9..144,900;1,9..144,400;1,9..144,700&family=Hanken+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#F5EDE4;
+  --bg2:#EDE5DA;
+  --surface:#FFFBF5;
+  --surface2:#F5EDE4;
+  --text:#1A2018;
+  --text2:#4A5448;
+  --text3:#7A8A78;
+  --red:#C43838;
+  --red-hover:#A82E2E;
+  --red-light:rgba(196,56,56,.06);
+  --green:#7A8B6F;
+  --green-light:rgba(122,139,111,.08);
+  --green-dark:#5A6B50;
+  --border:rgba(90,107,80,.12);
+  --shadow:0 4px 16px rgba(60,50,30,.06);
+  --shadow-lg:0 12px 40px rgba(60,50,30,.08);
+  --vine:rgba(122,139,111,.2);
+  --leaf:rgba(122,139,111,.08);
+  --pipeline-applied:#C43838;
+  --pipeline-screening:#D4864A;
+  --pipeline-interview:#B8963A;
+  --pipeline-offer:#6A8A4A;
+}
+html.dark{
+  --bg:#141A14;
+  --bg2:#1A2218;
+  --surface:#1E281E;
+  --surface2:#243024;
+  --text:#F0E8E0;
+  --text2:#B8C8B0;
+  --text3:#688860;
+  --red:#E04A42;
+  --red-hover:#C83C36;
+  --red-light:rgba(224,74,66,.08);
+  --green:#8A9B80;
+  --green-light:rgba(138,155,128,.10);
+  --green-dark:#6A8060;
+  --border:rgba(138,155,128,.12);
+  --shadow:0 4px 16px rgba(0,0,0,.20);
+  --shadow-lg:0 12px 40px rgba(0,0,0,.25);
+  --vine:rgba(138,155,128,.15);
+  --leaf:rgba(138,155,128,.06);
+}
+
+body{
+  font-family:'Hanken Grotesk',sans-serif;
+  color:var(--text);
+  background:var(--bg);
+  -webkit-font-smoothing:antialiased;
+  min-height:100vh;
+  overflow-x:hidden;
+  transition:background .5s,color .5s;
+}
+
+h1,h2,h3,.brand,.stat-val{font-family:'Fraunces',serif}
+
+/* Vine SVG decoration */
+.vine-bg{
+  position:fixed;inset:0;z-index:0;pointer-events:none;
+  opacity:.5;transition:opacity .5s;
+}
+
+/* Organic blob shapes */
+.blob{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:30% 70% 70% 30% / 30% 30% 70% 70%;
+  box-shadow:var(--shadow);
+  transition:all .5s;
+}
+.blob-alt{
+  border-radius:60% 40% 30% 70% / 60% 30% 70% 40%;
+}
+.blob-3{
+  border-radius:40% 60% 60% 40% / 50% 40% 60% 50%;
+}
+
+/* Leaf shape decorations */
+.leaf{
+  position:absolute;
+  width:24px;height:36px;
+  background:var(--green);
+  border-radius:50% 0 50% 0;
+  opacity:.15;
+  transition:all .5s;
+}
+.leaf-r{
+  border-radius:0 50% 0 50%;
+}
+
+/* Organic card */
+.card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:24px;
+  box-shadow:var(--shadow);
+  transition:all .5s;
+  position:relative;
+}
+
+/* Button */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  font-family:'Fraunces',serif;
+  font-weight:700;font-size:15px;
+  color:#fff;
+  background:var(--red);
+  border:none;
+  border-radius:60px;
+  padding:14px 32px;
+  cursor:pointer;
+  box-shadow:0 4px 12px rgba(196,56,56,.15);
+  transition:all .3s;
+  text-decoration:none;
+  letter-spacing:.01em;
+}
+.btn:hover{
+  background:var(--red-hover);
+  transform:translateY(-2px);
+  box-shadow:0 6px 20px rgba(196,56,56,.2);
+}
+.btn-outline{
+  background:transparent;
+  color:var(--green-dark);
+  border:2px solid var(--green);
+  box-shadow:none;
+}
+.btn-outline:hover{
+  background:var(--green-light);
+  transform:translateY(-2px);
+}
+
+/* ========= LEFT: EXTENSION ========= */
+.layout{
+  position:relative;z-index:1;
+  display:flex;gap:56px;
+  max-width:1220px;
+  margin:0 auto;
+  padding:56px 32px;
+  align-items:flex-start;
+}
+
+.extension{
+  width:380px;flex-shrink:0;
+  position:sticky;top:48px;
+}
+.ext-frame{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:28px;
+  box-shadow:var(--shadow-lg);
+  overflow:hidden;
+  transition:all .5s;
+  position:relative;
+}
+/* Leaf decorations on ext frame */
+.ext-frame::before{
+  content:'';position:absolute;top:-8px;right:30px;
+  width:20px;height:30px;
+  background:var(--green);
+  border-radius:50% 0 50% 0;
+  opacity:.2;transform:rotate(-30deg);
+  transition:all .5s;
+}
+.ext-frame::after{
+  content:'';position:absolute;top:-5px;right:55px;
+  width:14px;height:22px;
+  background:var(--green);
+  border-radius:0 50% 0 50%;
+  opacity:.15;transform:rotate(15deg);
+  transition:all .5s;
+}
+
+.ext-header{
+  display:flex;align-items:center;gap:12px;
+  padding:20px 24px;
+  border-bottom:1px solid var(--border);
+}
+.logo-mark{
+  width:38px;height:38px;
+  background:var(--red);
+  color:#fff;
+  font-family:'Fraunces',serif;
+  font-weight:900;font-size:15px;
+  display:flex;align-items:center;justify-content:center;
+  border-radius:50% 30% 50% 30%;
+  box-shadow:0 2px 8px rgba(196,56,56,.15);
+}
+.brand{font-size:20px;font-weight:700;letter-spacing:-.02em;color:var(--text)}
+
+.toggle{
+  margin-left:auto;
+  font-family:'Hanken Grotesk',sans-serif;
+  font-size:12px;font-weight:600;
+  color:var(--text3);
+  background:var(--surface2);
+  border:1px solid var(--border);
+  border-radius:60px;
+  padding:6px 16px;
+  cursor:pointer;
+  transition:all .3s;
+}
+.toggle:hover{color:var(--text);border-color:var(--green)}
+
+.ext-body{padding:24px}
+
+/* Pipeline as growing vine */
+.pipeline-vine{
+  display:flex;align-items:center;
+  gap:0;margin-bottom:28px;
+  position:relative;
+  padding:8px 0;
+}
+.vine-line{
+  position:absolute;
+  top:50%;left:20px;right:20px;
+  height:3px;
+  background:var(--vine);
+  border-radius:2px;
+  z-index:0;
+}
+.vine-line::after{
+  content:'';position:absolute;
+  top:-4px;left:25%;
+  width:10px;height:10px;
+  background:var(--green);
+  border-radius:50% 0 50% 0;
+  opacity:.25;transform:rotate(-45deg);
+}
+.bud{
+  flex:1;
+  text-align:center;
+  position:relative;z-index:1;
+}
+.bud-dot{
+  width:36px;height:36px;
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Fraunces',serif;
+  font-weight:900;font-size:14px;
+  color:#fff;
+  margin:0 auto 6px;
+  box-shadow:0 2px 6px rgba(0,0,0,.1);
+}
+.bud:nth-child(1) .bud-dot{background:var(--pipeline-applied)}
+.bud:nth-child(2) .bud-dot{background:var(--pipeline-screening)}
+.bud:nth-child(3) .bud-dot{background:var(--pipeline-interview)}
+.bud:nth-child(4) .bud-dot{background:var(--pipeline-offer)}
+.bud-label{
+  font-size:10px;font-weight:600;
+  color:var(--text3);
+  text-transform:uppercase;
+  letter-spacing:.04em;
+}
+
+/* Profile */
+.profile{
+  display:flex;align-items:center;gap:14px;
+  padding:16px 18px;
+  background:var(--surface2);
+  border:1px solid var(--border);
+  border-radius:20px;
+  margin-bottom:20px;
+  position:relative;
+}
+.avatar{
+  width:44px;height:44px;
+  background:var(--green);
+  color:#fff;
+  font-family:'Fraunces',serif;
+  font-weight:700;font-size:18px;
+  display:flex;align-items:center;justify-content:center;
+  border-radius:50% 30% 50% 30%;
+}
+.profile-name{font-weight:700;font-size:15px;color:var(--text)}
+.profile-email{font-size:12px;color:var(--text3);margin-top:2px}
+
+/* Status */
+.status-row{
+  display:flex;align-items:center;gap:10px;
+  margin-bottom:20px;
+  font-size:13px;color:var(--text2);
+}
+.status-dot{
+  width:10px;height:10px;
+  background:var(--pipeline-offer);
+  border-radius:50% 0 50% 0;
+  box-shadow:0 0 6px rgba(106,138,74,.4);
+}
+
+.autofill-btn{width:100%;padding:16px;font-size:16px;margin-bottom:16px}
+
+/* Match */
+.match-bar{
+  background:var(--surface2);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:16px 18px;
+  display:flex;align-items:center;gap:14px;
+}
+.match-pct{
+  font-family:'Fraunces',serif;
+  font-weight:900;font-size:30px;
+  color:var(--red);
+  line-height:1;
+}
+.match-label{font-size:12px;color:var(--text3);font-weight:600}
+.match-track{
+  flex:1;height:8px;
+  background:var(--bg2);
+  border-radius:20px;
+  overflow:hidden;
+}
+.match-fill{
+  height:100%;width:87%;
+  background:linear-gradient(90deg,var(--green),var(--red));
+  border-radius:20px;
+}
+
+/* ========= RIGHT: WEBSITE ========= */
+.website{flex:1;min-width:0}
+
+.hero{margin-bottom:48px;position:relative}
+.hero h1{
+  font-size:52px;font-weight:900;
+  line-height:1.08;
+  letter-spacing:-.03em;
+  color:var(--text);
+  margin-bottom:16px;
+}
+.hero h1 span{color:var(--red);font-style:italic}
+.hero-sub{
+  font-size:17px;color:var(--text2);
+  line-height:1.7;
+  max-width:480px;
+}
+/* Leaf decoration near hero */
+.hero::after{
+  content:'';position:absolute;top:-10px;right:0;
+  width:50px;height:75px;
+  background:var(--green);
+  border-radius:50% 0 50% 0;
+  opacity:.08;transform:rotate(-20deg);
+}
+
+/* Stats */
+.stats{
+  display:flex;gap:18px;
+  margin-bottom:40px;
+}
+.stat{
+  flex:1;
+  padding:24px 20px;
+  text-align:center;
+}
+.stat-val{
+  font-size:36px;font-weight:900;
+  color:var(--red);
+  line-height:1;
+}
+.stat-label{
+  font-size:12px;font-weight:600;
+  color:var(--text3);
+  text-transform:uppercase;
+  letter-spacing:.06em;
+  margin-top:8px;
+}
+
+/* Chart with organic rounded bars */
+.chart-section{padding:28px;margin-bottom:40px}
+.chart-section h3{
+  font-family:'Fraunces',serif;
+  font-size:16px;font-weight:700;
+  color:var(--text2);
+  margin-bottom:20px;
+}
+.chart{
+  display:flex;align-items:flex-end;gap:16px;
+  height:140px;
+}
+.bar-wrap{
+  flex:1;display:flex;flex-direction:column;align-items:center;gap:8px;
+}
+.bar{
+  width:100%;
+  background:linear-gradient(180deg,var(--red),var(--green));
+  border-radius:40px 40px 8px 8px;
+  transition:all .5s;
+}
+.bar-label{
+  font-size:10px;font-weight:600;
+  color:var(--text3);
+  text-transform:uppercase;
+  letter-spacing:.04em;
+}
+
+/* Pipeline vine (website version) */
+.pipeline-section{margin-bottom:40px;position:relative}
+.pipeline-section h3{
+  font-family:'Fraunces',serif;
+  font-size:16px;font-weight:700;
+  color:var(--text2);
+  margin-bottom:20px;
+}
+.pipeline-vine-web{
+  display:flex;gap:12px;
+  position:relative;
+}
+.pipeline-vine-web::before{
+  content:'';position:absolute;
+  top:50%;left:0;right:0;
+  height:4px;
+  background:var(--vine);
+  border-radius:4px;
+  z-index:0;
+}
+.vine-stage{
+  flex:1;
+  text-align:center;
+  padding:20px 8px;
+  border-radius:30% 70% 70% 30% / 30% 30% 70% 70%;
+  position:relative;z-index:1;
+  color:#fff;
+}
+.vine-stage:nth-child(1){background:var(--pipeline-applied)}
+.vine-stage:nth-child(2){background:var(--pipeline-screening);border-radius:60% 40% 30% 70% / 60% 30% 70% 40%}
+.vine-stage:nth-child(3){background:var(--pipeline-interview);border-radius:40% 60% 60% 40% / 50% 40% 60% 50%}
+.vine-stage:nth-child(4){background:var(--pipeline-offer);border-radius:70% 30% 30% 70% / 70% 70% 30% 30%}
+.vine-stage-name{
+  font-size:11px;font-weight:700;
+  text-transform:uppercase;
+  letter-spacing:.06em;
+  opacity:.85;
+}
+.vine-stage-count{
+  font-family:'Fraunces',serif;
+  font-weight:900;font-size:26px;
+  display:block;margin-top:4px;
+}
+
+/* CTA */
+.cta-row{
+  margin-bottom:44px;
+  display:flex;gap:16px;align-items:center;
+}
+
+/* Feature cards */
+.features{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:18px;
+}
+.feat{
+  padding:28px 24px;
+  position:relative;
+  overflow:hidden;
+}
+.feat::before{
+  content:'';position:absolute;
+  top:-15px;right:-10px;
+  width:40px;height:60px;
+  background:var(--green);
+  border-radius:50% 0 50% 0;
+  opacity:.06;
+  transform:rotate(25deg);
+}
+.feat-icon{
+  width:44px;height:44px;
+  background:var(--green);
+  color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  border-radius:50% 30% 50% 30%;
+  margin-bottom:16px;
+  font-family:'Fraunces',serif;
+  font-weight:900;font-size:16px;
+}
+.feat h4{
+  font-family:'Fraunces',serif;
+  font-size:18px;font-weight:700;
+  color:var(--text);
+  margin-bottom:8px;
+}
+.feat p{
+  font-size:13px;color:var(--text3);
+  line-height:1.6;
+}
+
+.footer{
+  margin-top:52px;padding-top:28px;
+  border-top:1px solid var(--border);
+  text-align:center;
+  font-size:12px;color:var(--text3);font-weight:500;
+  position:relative;
+}
+.footer::before{
+  content:'';position:absolute;
+  top:-6px;left:50%;transform:translateX(-50%);
+  width:12px;height:12px;
+  background:var(--green);
+  border-radius:50% 0 50% 0;
+  opacity:.3;
+}
+
+/* Vine decoration SVG between sections */
+.vine-decor{
+  height:40px;
+  display:flex;align-items:center;justify-content:center;
+  margin:0 0 20px;
+  position:relative;
+}
+.vine-decor::before{
+  content:'';
+  width:80px;height:2px;
+  background:var(--vine);
+  border-radius:2px;
+}
+.vine-decor::after{
+  content:'';position:absolute;
+  width:8px;height:12px;
+  background:var(--green);
+  border-radius:50% 0 50% 0;
+  opacity:.3;
+  transform:rotate(-45deg);
+}
+
+@media(max-width:860px){
+  .layout{flex-direction:column;align-items:center}
+  .extension{position:static;width:100%;max-width:400px}
+  .website{width:100%}
+}
+</style>
+</head>
+<body>
+
+<div class="layout">
+  <!-- LEFT: Extension -->
+  <div class="extension">
+    <div class="ext-frame">
+      <div class="ext-header">
+        <div class="logo-mark">CF</div>
+        <span class="brand">CogniFillz</span>
+        <button class="toggle" onclick="document.documentElement.classList.toggle('dark');this.textContent=document.documentElement.classList.contains('dark')?'Light':'Dark'">Dark</button>
+      </div>
+
+      <div class="ext-body">
+        <div class="pipeline-vine">
+          <div class="vine-line"></div>
+          <div class="bud"><div class="bud-dot">12</div><span class="bud-label">Applied</span></div>
+          <div class="bud"><div class="bud-dot">4</div><span class="bud-label">Screen</span></div>
+          <div class="bud"><div class="bud-dot">2</div><span class="bud-label">Interview</span></div>
+          <div class="bud"><div class="bud-dot">1</div><span class="bud-label">Offer</span></div>
+        </div>
+
+        <div class="profile">
+          <div class="avatar">JD</div>
+          <div>
+            <div class="profile-name">Jane Doe</div>
+            <div class="profile-email">jane@email.com</div>
+          </div>
+        </div>
+
+        <div class="status-row">
+          <span class="status-dot"></span>
+          Ready to autofill &middot; 8 fields detected
+        </div>
+
+        <button class="btn autofill-btn">Autofill Application</button>
+
+        <div class="match-bar">
+          <div>
+            <div class="match-pct">87%</div>
+            <div class="match-label">AI Resume Match</div>
+          </div>
+          <div class="match-track"><div class="match-fill"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT: Website -->
+  <div class="website">
+    <div class="hero">
+      <h1>Your job hunt,<br><span>on autopilot.</span></h1>
+      <p class="hero-sub">One-click autofill, application tracking, and AI-powered resume tailoring &mdash; naturally growing your career forward.</p>
+    </div>
+
+    <div class="stats">
+      <div class="stat blob">
+        <div class="stat-val">87%</div>
+        <div class="stat-label">Match Rate</div>
+      </div>
+      <div class="stat blob blob-alt">
+        <div class="stat-val">19</div>
+        <div class="stat-label">Active Apps</div>
+      </div>
+      <div class="stat blob blob-3">
+        <div class="stat-val">3</div>
+        <div class="stat-label">Interviews</div>
+      </div>
+    </div>
+
+    <div class="chart-section card">
+      <h3>Weekly Applications</h3>
+      <div class="chart">
+        <div class="bar-wrap"><div class="bar" style="height:45%"></div><span class="bar-label">Mon</span></div>
+        <div class="bar-wrap"><div class="bar" style="height:70%"></div><span class="bar-label">Tue</span></div>
+        <div class="bar-wrap"><div class="bar" style="height:55%"></div><span class="bar-label">Wed</span></div>
+        <div class="bar-wrap"><div class="bar" style="height:90%"></div><span class="bar-label">Thu</span></div>
+        <div class="bar-wrap"><div class="bar" style="height:35%"></div><span class="bar-label">Fri</span></div>
+      </div>
+    </div>
+
+    <div class="pipeline-section">
+      <h3>Application Pipeline</h3>
+      <div class="pipeline-vine-web">
+        <div class="vine-stage"><span class="vine-stage-name">Applied</span><span class="vine-stage-count">12</span></div>
+        <div class="vine-stage"><span class="vine-stage-name">Screening</span><span class="vine-stage-count">4</span></div>
+        <div class="vine-stage"><span class="vine-stage-name">Interview</span><span class="vine-stage-count">2</span></div>
+        <div class="vine-stage"><span class="vine-stage-name">Offer</span><span class="vine-stage-count">1</span></div>
+      </div>
+    </div>
+
+    <div class="cta-row">
+      <a href="#" class="btn">Tailor My Resume</a>
+      <a href="#" class="btn btn-outline">Learn More</a>
+    </div>
+
+    <div class="features">
+      <div class="feat blob">
+        <div class="feat-icon">1</div>
+        <h4>One-Click Fill</h4>
+        <p>Autofill entire job applications with a single click. Your data, instantly placed.</p>
+      </div>
+      <div class="feat blob blob-alt">
+        <div class="feat-icon">2</div>
+        <h4>Application Tracker</h4>
+        <p>Monitor every application through pipeline stages from applied to offer.</p>
+      </div>
+      <div class="feat blob blob-3">
+        <div class="feat-icon">3</div>
+        <h4>AI Resume Match</h4>
+        <p>Tailored resumes scored against job descriptions for maximum relevance.</p>
+      </div>
+      <div class="feat blob">
+        <div class="feat-icon">4</div>
+        <h4>Trend Analytics</h4>
+        <p>Visualize your job hunt with charts, stats, and weekly trend reports.</p>
+      </div>
+    </div>
+
+    <div class="footer">Crafted by Cranium Inc.</div>
+  </div>
+</div>
+</body>
+</html>
