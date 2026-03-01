@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Design 1: Brutalist</title>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#111;--surface:#1a1a1a;--border:#333;
+  --text:#e0e0e0;--text2:#888;
+  --pop:#DBFF00;--pop-dim:rgba(219,255,0,.1);
+}
+body{font-family:'Space Mono',monospace;background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased}
+
+.page{max-width:1100px;margin:0 auto;padding:40px 24px 80px}
+.page-title{font-family:'Archivo Black',sans-serif;font-size:14px;text-transform:uppercase;letter-spacing:.15em;color:var(--text2);border-bottom:2px solid var(--border);padding-bottom:12px;margin-bottom:48px;display:flex;justify-content:space-between;align-items:baseline}
+.page-title span{color:var(--pop);font-family:'Space Mono',monospace;font-size:11px}
+.columns{display:grid;grid-template-columns:380px 1fr;gap:48px;align-items:start}
+
+/* ── POPUP MOCKUP ──────────────────────── */
+.popup{
+  width:380px;background:var(--bg);
+  border:3px solid var(--pop);
+  position:relative;
+  overflow:hidden;
+}
+.popup::before{
+  content:'';position:absolute;top:0;right:0;
+  width:120px;height:120px;
+  background:var(--pop);opacity:.04;
+  transform:rotate(45deg) translate(30px,-60px);
+}
+.popup-header{
+  padding:16px 20px;
+  border-bottom:2px solid var(--border);
+  display:flex;align-items:center;gap:12px;
+}
+.popup-logo{
+  width:36px;height:36px;
+  border:2px solid var(--pop);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Archivo Black',sans-serif;font-size:12px;color:var(--pop);
+}
+.popup-brand{font-family:'Archivo Black',sans-serif;font-size:16px;text-transform:uppercase;letter-spacing:.08em}
+.popup-brand small{display:block;font-family:'Space Mono',monospace;font-size:9px;color:var(--text2);letter-spacing:.12em;font-weight:400;margin-top:2px}
+.popup-status{margin-left:auto;font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:var(--pop);border:1px solid var(--pop);padding:2px 8px}
+
+.popup-tabs{display:flex;border-bottom:2px solid var(--border)}
+.popup-tab{
+  flex:1;padding:10px;text-align:center;
+  font-family:'Archivo Black',sans-serif;font-size:10px;
+  text-transform:uppercase;letter-spacing:.12em;
+  color:var(--text2);background:transparent;border:none;cursor:pointer;
+  border-bottom:3px solid transparent;margin-bottom:-2px;
+}
+.popup-tab.active{color:var(--pop);border-bottom-color:var(--pop)}
+
+.popup-body{padding:20px}
+
+.profile-row{display:flex;align-items:center;gap:14px;margin-bottom:20px}
+.profile-av{
+  width:44px;height:44px;
+  background:var(--pop);color:var(--bg);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Archivo Black',sans-serif;font-size:15px;
+}
+.profile-name{font-family:'Archivo Black',sans-serif;font-size:15px;text-transform:uppercase}
+.profile-meta{font-size:11px;color:var(--text2);margin-top:3px}
+
+.fields-label{font-size:9px;text-transform:uppercase;letter-spacing:.14em;color:var(--text2);margin-bottom:10px;display:flex;justify-content:space-between}
+.fields-label b{color:var(--pop)}
+
+.field-row{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:8px 12px;margin-bottom:4px;
+  border:1px solid var(--border);
+  font-size:11px;
+  transition:border-color .15s;
+}
+.field-row:hover{border-color:var(--pop)}
+.field-code{font-weight:700;color:var(--pop);font-size:10px;letter-spacing:.05em}
+.field-pct{color:var(--text2)}
+
+.empty-fields{text-align:center;padding:28px 0;color:var(--text2);font-size:11px}
+.empty-fields div{font-family:'Archivo Black',sans-serif;font-size:20px;color:var(--border);margin-bottom:8px}
+
+.popup-actions{margin-top:16px;display:flex;flex-direction:column;gap:6px}
+.btn-brut{
+  padding:12px;border:2px solid var(--pop);background:var(--pop);
+  color:var(--bg);font-family:'Archivo Black',sans-serif;
+  font-size:11px;text-transform:uppercase;letter-spacing:.1em;
+  cursor:pointer;transition:all .15s;text-align:center;
+}
+.btn-brut:hover{background:transparent;color:var(--pop)}
+.btn-brut-ghost{
+  padding:10px;border:1px solid var(--border);background:transparent;
+  color:var(--text2);font-family:'Space Mono',monospace;
+  font-size:10px;text-transform:uppercase;letter-spacing:.08em;
+  cursor:pointer;transition:all .15s;text-align:center;
+}
+.btn-brut-ghost:hover{border-color:var(--text);color:var(--text)}
+
+/* ── HERO SECTION ──────────────────────── */
+.hero{position:relative}
+.hero-overline{
+  font-size:10px;text-transform:uppercase;letter-spacing:.18em;
+  color:var(--text2);margin-bottom:32px;
+  padding-left:24px;border-left:3px solid var(--pop);
+}
+.hero-title{
+  font-family:'Archivo Black',sans-serif;
+  font-size:clamp(36px,5.5vw,64px);
+  text-transform:uppercase;line-height:.95;
+  letter-spacing:-.02em;margin-bottom:24px;
+}
+.hero-title .accent{color:var(--pop)}
+.hero-sub{font-size:14px;color:var(--text2);max-width:420px;line-height:1.7;margin-bottom:40px}
+.hero-cta{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:48px}
+.hero-btn{
+  padding:14px 32px;border:3px solid var(--pop);background:var(--pop);
+  color:var(--bg);font-family:'Archivo Black',sans-serif;
+  font-size:12px;text-transform:uppercase;letter-spacing:.08em;
+  cursor:pointer;text-decoration:none;transition:all .15s;
+}
+.hero-btn:hover{background:transparent;color:var(--pop)}
+.hero-btn-ghost{
+  padding:14px 32px;border:1px solid var(--border);background:transparent;
+  color:var(--text2);font-family:'Space Mono',monospace;
+  font-size:11px;text-transform:uppercase;letter-spacing:.06em;
+  text-decoration:none;transition:all .15s;
+}
+.hero-btn-ghost:hover{border-color:var(--text);color:var(--text)}
+
+.stats{display:flex;gap:32px}
+.stat-val{font-family:'Archivo Black',sans-serif;font-size:28px;color:var(--pop)}
+.stat-lbl{font-size:9px;text-transform:uppercase;letter-spacing:.14em;color:var(--text2);margin-top:4px}
+
+.divider{height:2px;background:var(--border);margin:48px 0}
+
+.features-title{font-family:'Archivo Black',sans-serif;font-size:10px;text-transform:uppercase;letter-spacing:.15em;color:var(--text2);margin-bottom:24px}
+.feat-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.feat-card{border:1px solid var(--border);padding:24px;transition:all .15s}
+.feat-card:hover{border-color:var(--pop)}
+.feat-num{font-family:'Archivo Black',sans-serif;font-size:24px;color:var(--pop);opacity:.3;margin-bottom:12px}
+.feat-card h4{font-family:'Archivo Black',sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:.04em;margin-bottom:8px}
+.feat-card p{font-size:12px;color:var(--text2);line-height:1.6}
+
+@media(max-width:860px){.columns{grid-template-columns:1fr}.popup{margin:0 auto}}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="page-title">
+    Design 01 / Brutalist
+    <span>CogniFillz Concept</span>
+  </div>
+  <div class="columns">
+    <div class="popup">
+      <div class="popup-header">
+        <div class="popup-logo">CF</div>
+        <div class="popup-brand">CogniFillz<small>Cranium Inc.</small></div>
+        <div class="popup-status">Ready</div>
+      </div>
+      <div class="popup-tabs">
+        <button class="popup-tab active">Profile</button>
+        <button class="popup-tab">Analyze</button>
+      </div>
+      <div class="popup-body">
+        <div class="profile-row">
+          <div class="profile-av">JD</div>
+          <div>
+            <div class="profile-name">Jane Doe</div>
+            <div class="profile-meta">jane@email.com</div>
+          </div>
+        </div>
+        <div class="fields-label"><span>Detected Fields</span><b>0</b></div>
+        <div class="empty-fields">
+          <div>//</div>
+          Navigate to a job application<br>to detect fillable fields
+        </div>
+        <div class="popup-actions">
+          <button class="btn-brut">Autofill Application</button>
+          <button class="btn-brut-ghost">Edit Profile</button>
+        </div>
+      </div>
+    </div>
+    <div class="hero">
+      <div class="hero-overline">Open Source / Local AI / Free Forever</div>
+      <h1 class="hero-title">
+        Job<br>applications,<br>
+        <span class="accent">filled in<br>seconds.</span>
+      </h1>
+      <p class="hero-sub">
+        CogniFillz uses local AI to autofill job forms across LinkedIn, Indeed, Greenhouse and 50+ platforms. Your data never leaves your machine.
+      </p>
+      <div class="hero-cta">
+        <a href="#" class="hero-btn">Install Extension</a>
+        <a href="#" class="hero-btn-ghost">View on GitHub</a>
+      </div>
+      <div class="stats">
+        <div><div class="stat-val">100%</div><div class="stat-lbl">Private</div></div>
+        <div><div class="stat-val">5+</div><div class="stat-lbl">Browsers</div></div>
+        <div><div class="stat-val">$0</div><div class="stat-lbl">Forever</div></div>
+      </div>
+      <div class="divider"></div>
+      <div class="features-title">Features</div>
+      <div class="feat-grid">
+        <div class="feat-card"><div class="feat-num">01</div><h4>Instant Autofill</h4><p>One click to fill 50+ ATS platforms. Greenhouse, Lever, Workday.</p></div>
+        <div class="feat-card"><div class="feat-num">02</div><h4>Local Privacy</h4><p>All AI runs on your machine. Zero cloud. Zero tracking.</p></div>
+        <div class="feat-card"><div class="feat-num">03</div><h4>AI Matching</h4><p>Instant match score via your local LLM.</p></div>
+        <div class="feat-card"><div class="feat-num">04</div><h4>Free Forever</h4><p>Open source. No subs. No credits. No catch.</p></div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

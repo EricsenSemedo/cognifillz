@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CogniFillz — Smart Job Application Autofill</title>
+  <meta name="description" content="AI-powered job application autofill with local processing. One-click form filling, application tracking, and AI resume tailoring across every major browser.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Righteous&family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="brick-bg"></div>
+
+  <nav class="nav" id="nav">
+    <div class="nav-inner">
+      <a href="#" class="nav-logo">
+        <span class="nav-logo-mark">CF</span>
+        <span class="nav-logo-text">CogniFillz</span>
+      </a>
+      <div class="nav-links" id="nav-links">
+        <a href="#features">Features</a>
+        <a href="#how-it-works">How It Works</a>
+        <a href="#browsers">Browsers</a>
+        <button class="theme-btn" id="theme-btn" aria-label="Toggle dark mode"></button>
+        <a href="https://github.com/EricsenSemedo/cognifillz" class="nav-cta" target="_blank" rel="noopener">GitHub</a>
+      </div>
+      <button class="nav-toggle" id="nav-toggle" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+    <div class="nav-mobile" id="nav-mobile">
+      <a href="#features">Features</a>
+      <a href="#how-it-works">How It Works</a>
+      <a href="#browsers">Browsers</a>
+      <button class="theme-btn theme-btn-mobile" id="theme-btn-mobile" aria-label="Toggle dark mode"></button>
+      <a href="https://github.com/EricsenSemedo/cognifillz" target="_blank" rel="noopener">GitHub</a>
+    </div>
+  </nav>
+
+  <section class="hero">
+    <div class="hero-content">
+      <h1 class="hero-title anim" data-anim="fade-up">
+        Your job hunt,<br>
+        <span class="hero-accent neon">on autopilot.</span>
+      </h1>
+      <p class="hero-sub anim" data-anim="fade-up" data-delay="1">
+        One-click autofill for every application form. Track your full pipeline from applied to offer. Let local AI tailor your resume to each role and score your match &mdash; all processed on your machine, never in the cloud.
+      </p>
+      <div class="hero-actions anim" data-anim="fade-up" data-delay="2">
+        <a href="#browsers" class="btn btn-filled">Install Extension</a>
+        <a href="#how-it-works" class="btn">See How It Works</a>
+      </div>
+      <div class="hero-stats anim" data-anim="fade-up" data-delay="3">
+        <div class="stat">
+          <span class="stat-val neon">87%</span>
+          <span class="stat-label">Match Rate</span>
+        </div>
+        <div class="stat-rule"></div>
+        <div class="stat">
+          <span class="stat-val neon">19</span>
+          <span class="stat-label">Active Apps</span>
+        </div>
+        <div class="stat-rule"></div>
+        <div class="stat">
+          <span class="stat-val neon">3</span>
+          <span class="stat-label">Interviews</span>
+        </div>
+      </div>
+    </div>
+    <div class="hero-visual anim" data-anim="fade-in" data-delay="2">
+      <div class="hero-mockup">
+        <div class="mockup-bar">
+          <span class="mockup-dot mockup-dot-r"></span>
+          <span class="mockup-dot mockup-dot-y"></span>
+          <span class="mockup-dot mockup-dot-g"></span>
+          <span class="mockup-url">linkedin.com/jobs/apply</span>
+        </div>
+        <div class="mockup-body">
+          <div class="mockup-field mockup-filled">
+            <span class="mockup-label">First Name</span>
+            <span class="mockup-value">Jane</span>
+            <span class="mockup-check">&#10003;</span>
+          </div>
+          <div class="mockup-field mockup-filled" style="animation-delay:.12s">
+            <span class="mockup-label">Last Name</span>
+            <span class="mockup-value">Doe</span>
+            <span class="mockup-check">&#10003;</span>
+          </div>
+          <div class="mockup-field mockup-filled" style="animation-delay:.24s">
+            <span class="mockup-label">Email</span>
+            <span class="mockup-value">jane@email.com</span>
+            <span class="mockup-check">&#10003;</span>
+          </div>
+          <div class="mockup-field mockup-filling" style="animation-delay:.36s">
+            <span class="mockup-label">LinkedIn</span>
+            <span class="mockup-cursor"></span>
+          </div>
+          <div class="mockup-field">
+            <span class="mockup-label">Phone</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="features" id="features">
+    <div class="section-inner">
+      <div class="section-header anim" data-anim="fade-up">
+        <span class="section-tag">Features</span>
+        <h2 class="section-title">Everything you need.<br><span class="text-accent neon">Nothing you don't.</span></h2>
+      </div>
+      <div class="feature-grid">
+        <div class="feature-card card anim" data-anim="fade-up" data-delay="0">
+          <div class="feature-icon">01</div>
+          <h3>One-Click Fill</h3>
+          <p>Detect and fill entire job application forms instantly. Works across LinkedIn, Indeed, Greenhouse, Lever, Workday, and 50+ ATS platforms.</p>
+        </div>
+        <div class="feature-card card anim" data-anim="fade-up" data-delay="1">
+          <div class="feature-icon">02</div>
+          <h3>Application Tracker</h3>
+          <p>Monitor every application through your pipeline &mdash; from applied to screening to interview to offer. Never lose track of where you stand.</p>
+        </div>
+        <div class="feature-card card anim" data-anim="fade-up" data-delay="2">
+          <div class="feature-icon">03</div>
+          <h3>AI Resume Match</h3>
+          <p>Your local LLM scores your resume against any job description in seconds. Get actionable insights to boost your match rate before you apply.</p>
+        </div>
+        <div class="feature-card card anim" data-anim="fade-up" data-delay="3">
+          <div class="feature-icon">04</div>
+          <h3>Trend Analytics</h3>
+          <p>Visualize your job search with weekly application charts, pipeline breakdowns, and response-rate trends so you can iterate your strategy.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="how" id="how-it-works">
+    <div class="section-inner">
+      <div class="section-header anim" data-anim="fade-up">
+        <span class="section-tag">How It Works</span>
+        <h2 class="section-title">Three steps to<br><span class="text-accent neon">never type again.</span></h2>
+      </div>
+      <div class="steps">
+        <div class="step card anim" data-anim="fade-up" data-delay="0">
+          <div class="step-num">01</div>
+          <div class="step-content">
+            <h3>Create Your Profile</h3>
+            <p>Enter your details once &mdash; name, contact, experience, skills. Everything stays stored locally in your browser's secure storage.</p>
+          </div>
+        </div>
+        <div class="step-connector anim" data-anim="fade-in" data-delay="1">
+          <div class="connector-line"></div>
+        </div>
+        <div class="step card anim" data-anim="fade-up" data-delay="1">
+          <div class="step-num">02</div>
+          <div class="step-content">
+            <h3>Visit Any Job Page</h3>
+            <p>CogniFillz detects fillable fields automatically on LinkedIn, Indeed, Greenhouse, and dozens more. Your local AI scores the role against your resume in real time.</p>
+          </div>
+        </div>
+        <div class="step-connector anim" data-anim="fade-in" data-delay="2">
+          <div class="connector-line"></div>
+        </div>
+        <div class="step card anim" data-anim="fade-up" data-delay="2">
+          <div class="step-num">03</div>
+          <div class="step-content">
+            <h3>One Click, Done</h3>
+            <p>Hit Autofill, review the populated fields, tailor your resume if needed, and submit. Your application is tracked automatically.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="browsers" id="browsers">
+    <div class="section-inner">
+      <div class="section-header anim" data-anim="fade-up">
+        <span class="section-tag">Browser Support</span>
+        <h2 class="section-title">Works where<br><span class="text-accent neon">you work.</span></h2>
+      </div>
+      <div class="browser-grid">
+        <div class="browser-card card browser-recommended anim" data-anim="fade-up" data-delay="0">
+          <div class="browser-badge">Recommended</div>
+          <div class="browser-icon-box"><span class="browser-letter">Z</span></div>
+          <h4>Zen Browser</h4>
+          <p>Best privacy. Full extension support via .xpi sideloading.</p>
+        </div>
+        <div class="browser-card card anim" data-anim="fade-up" data-delay="1">
+          <div class="browser-icon-box"><span class="browser-letter">Fx</span></div>
+          <h4>Firefox</h4>
+          <p>Full support. Load .xpi or install as temporary add-on.</p>
+        </div>
+        <div class="browser-card card anim" data-anim="fade-up" data-delay="1">
+          <div class="browser-icon-box"><span class="browser-letter">Cr</span></div>
+          <h4>Chrome</h4>
+          <p>Full support. Load unpacked from dist/chrome directory.</p>
+        </div>
+        <div class="browser-card card anim" data-anim="fade-up" data-delay="2">
+          <div class="browser-icon-box"><span class="browser-letter">Ed</span></div>
+          <h4>Edge</h4>
+          <p>Chromium-based. Full support via unpacked extension.</p>
+        </div>
+        <div class="browser-card card anim" data-anim="fade-up" data-delay="2">
+          <div class="browser-icon-box"><span class="browser-letter">Br</span></div>
+          <h4>Brave</h4>
+          <p>Chromium-based. Full support via unpacked extension.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta">
+    <div class="section-inner">
+      <div class="cta-content anim" data-anim="fade-up">
+        <h2 class="cta-title neon">Stop typing.<br>Start shipping applications.</h2>
+        <p class="cta-sub">Open source. Local AI. Free forever. Your data never leaves your machine.</p>
+        <div class="cta-actions">
+          <a href="https://github.com/EricsenSemedo/cognifillz" class="btn btn-filled" target="_blank" rel="noopener">Get Started on GitHub</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="section-inner">
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <span class="footer-mark">CF</span>
+          <span class="footer-name">CogniFillz</span>
+          <span class="footer-sep">/</span>
+          <span class="footer-by">Cranium Inc.</span>
+        </div>
+        <div class="footer-links">
+          <a href="https://github.com/EricsenSemedo/cognifillz" target="_blank" rel="noopener">GitHub</a>
+          <a href="https://github.com/EricsenSemedo/cognifillz/blob/main/LICENSE" target="_blank" rel="noopener">MIT License</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="main.js"></script>
+</body>
+</html>

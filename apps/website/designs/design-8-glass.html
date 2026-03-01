@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Design 8: Glassmorphism</title>
+<link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#F5EDE4;
+  --glass:rgba(255,255,255,.55);
+  --glass2:rgba(255,255,255,.35);
+  --glass-border:rgba(255,255,255,.5);
+  --glass-border2:rgba(255,255,255,.3);
+  --surface:rgba(255,255,255,.7);
+  --text:#2D1F16;
+  --text2:#6B5B50;
+  --text3:#9A8A7A;
+  --red:#C43838;
+  --red-soft:rgba(196,56,56,.1);
+  --red-glow:rgba(196,56,56,.25);
+  --shadow:0 8px 32px rgba(120,80,50,.08);
+  --shadow-lg:0 12px 48px rgba(120,80,50,.1);
+  --blur:16px;
+  --radius:18px;
+}
+html.dark{
+  --bg:#1A1412;
+  --glass:rgba(50,40,35,.5);
+  --glass2:rgba(50,40,35,.35);
+  --glass-border:rgba(255,220,190,.1);
+  --glass-border2:rgba(255,220,190,.06);
+  --surface:rgba(50,40,35,.6);
+  --text:#F0E6DC;
+  --text2:#B0A090;
+  --text3:#605040;
+  --red:#E04A42;
+  --red-soft:rgba(224,74,66,.15);
+  --red-glow:rgba(224,74,66,.35);
+  --shadow:0 8px 32px rgba(0,0,0,.2);
+  --shadow-lg:0 12px 48px rgba(0,0,0,.25);
+}
+body{
+  font-family:'Urbanist',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  -webkit-font-smoothing:antialiased;
+  min-height:100vh;
+  transition:background .5s,color .5s;
+  position:relative;
+  overflow-x:hidden;
+}
+
+/* Gradient mesh background */
+.mesh{
+  position:fixed;top:0;left:0;right:0;bottom:0;
+  z-index:0;overflow:hidden;pointer-events:none;
+  transition:opacity .5s;
+}
+.mesh-orb{
+  position:absolute;border-radius:50%;
+  filter:blur(80px);
+  transition:all .8s;
+}
+.mesh-orb.o1{
+  width:500px;height:500px;
+  background:rgba(196,56,56,.12);
+  top:-100px;right:-80px;
+}
+.mesh-orb.o2{
+  width:400px;height:400px;
+  background:rgba(245,200,160,.15);
+  bottom:-50px;left:-60px;
+}
+.mesh-orb.o3{
+  width:300px;height:300px;
+  background:rgba(196,56,56,.06);
+  top:40%;left:30%;
+}
+html.dark .mesh-orb.o1{background:rgba(224,74,66,.15)}
+html.dark .mesh-orb.o2{background:rgba(180,120,80,.08)}
+html.dark .mesh-orb.o3{background:rgba(224,74,66,.08)}
+
+.page{max-width:1120px;margin:0 auto;padding:48px 32px 96px;position:relative;z-index:1}
+.page-title{
+  font-size:13px;font-weight:500;color:var(--text3);
+  margin-bottom:56px;display:flex;justify-content:space-between;align-items:center;
+  letter-spacing:.04em;
+}
+.toggle{
+  background:var(--glass);
+  backdrop-filter:blur(var(--blur));-webkit-backdrop-filter:blur(var(--blur));
+  border:1px solid var(--glass-border);
+  border-radius:100px;padding:8px 24px;
+  font-family:'Urbanist',sans-serif;font-size:13px;font-weight:600;
+  color:var(--text2);cursor:pointer;
+  box-shadow:var(--shadow);
+  transition:all .35s;
+}
+.toggle:hover{
+  background:var(--glass2);
+  box-shadow:var(--shadow-lg),0 0 20px var(--red-glow);
+  color:var(--text);
+}
+.columns{display:grid;grid-template-columns:380px 1fr;gap:56px;align-items:start}
+
+/* POPUP */
+.popup{
+  width:380px;
+  background:var(--glass);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border:1px solid var(--glass-border);
+  border-radius:24px;
+  box-shadow:var(--shadow-lg);
+  overflow:hidden;
+  transition:all .5s;
+}
+.popup-header{
+  padding:24px 26px 20px;
+  display:flex;align-items:center;gap:14px;
+  border-bottom:1px solid var(--glass-border2);
+  position:relative;
+}
+.popup-logo{
+  width:42px;height:42px;border-radius:14px;
+  background:linear-gradient(135deg,var(--red),#D64444);
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 4px 16px var(--red-glow);
+  position:relative;
+}
+.popup-logo::after{
+  content:'';position:absolute;inset:0;border-radius:14px;
+  background:linear-gradient(135deg,rgba(255,255,255,.2),transparent 50%);
+}
+.popup-logo svg{width:20px;height:20px;position:relative;z-index:1}
+.popup-brand{font-size:20px;font-weight:700;letter-spacing:-.02em}
+.popup-brand small{
+  display:block;font-size:10px;color:var(--text3);font-weight:500;
+  letter-spacing:.06em;text-transform:uppercase;margin-top:1px;
+}
+.popup-tabs{
+  display:flex;padding:0 26px;gap:6px;
+  border-bottom:1px solid var(--glass-border2);
+  padding-top:6px;padding-bottom:6px;
+}
+.popup-tab{
+  padding:10px 18px;
+  font-family:'Urbanist',sans-serif;font-size:12px;font-weight:600;
+  color:var(--text3);background:transparent;border:none;cursor:pointer;
+  border-radius:10px;
+  transition:all .25s;
+}
+.popup-tab:hover{background:var(--glass2);color:var(--text2)}
+.popup-tab.active{
+  background:var(--red-soft);color:var(--red);
+}
+.popup-body{padding:22px 26px 26px}
+
+.profile-row{
+  display:flex;align-items:center;gap:16px;
+  margin-bottom:22px;padding:16px 18px;
+  background:var(--glass2);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  border:1px solid var(--glass-border2);
+  border-radius:var(--radius);
+  box-shadow:0 4px 16px rgba(120,80,50,.04);
+  transition:all .4s;
+}
+.profile-av{
+  width:48px;height:48px;border-radius:14px;
+  background:linear-gradient(135deg,var(--red),#D64444);
+  display:flex;align-items:center;justify-content:center;
+  font-size:16px;font-weight:700;color:#FFF;
+  box-shadow:0 4px 12px var(--red-glow);
+  position:relative;
+}
+.profile-av::after{
+  content:'';position:absolute;inset:0;border-radius:14px;
+  background:linear-gradient(135deg,rgba(255,255,255,.25),transparent 50%);
+}
+.profile-name{font-size:16px;font-weight:700;letter-spacing:-.01em}
+.profile-meta{font-size:11px;color:var(--text3);margin-top:3px;font-weight:500}
+
+.section-hdr{
+  font-size:11px;font-weight:700;text-transform:uppercase;
+  letter-spacing:.1em;color:var(--text3);margin-bottom:14px;
+  display:flex;align-items:center;gap:10px;
+}
+.section-pill{
+  background:var(--red-soft);color:var(--red);
+  padding:3px 14px;border-radius:100px;
+  font-size:10px;font-weight:700;
+  border:1px solid rgba(196,56,56,.15);
+}
+
+.empty-state{
+  text-align:center;padding:32px 20px;
+  background:var(--glass2);
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  border:1px solid var(--glass-border2);
+  border-radius:var(--radius);
+  color:var(--text3);font-size:13px;font-weight:500;line-height:1.7;
+}
+.empty-icon{
+  width:52px;height:52px;margin:0 auto 14px;
+  background:var(--glass);border:1px solid var(--glass-border2);
+  border-radius:16px;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 4px 12px rgba(120,80,50,.04);
+}
+.empty-icon svg{width:22px;height:22px;color:var(--text3)}
+
+.popup-actions{margin-top:22px;display:flex;flex-direction:column;gap:10px}
+.btn-fill{
+  padding:15px;border:none;border-radius:14px;
+  background:linear-gradient(135deg,var(--red),#D64444);
+  color:#FFF;font-family:'Urbanist',sans-serif;font-size:14px;font-weight:700;
+  cursor:pointer;transition:all .35s;text-align:center;
+  box-shadow:0 4px 16px var(--red-glow);
+  position:relative;overflow:hidden;
+}
+.btn-fill::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(255,255,255,.15),transparent 50%);
+}
+.btn-fill:hover{
+  transform:translateY(-2px);
+  box-shadow:0 8px 24px var(--red-glow),0 0 40px rgba(196,56,56,.1);
+}
+.btn-outline{
+  padding:13px;
+  border:1px solid var(--glass-border);
+  border-radius:14px;
+  background:var(--glass2);
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  color:var(--text2);
+  font-family:'Urbanist',sans-serif;font-size:13px;font-weight:600;
+  cursor:pointer;transition:all .3s;text-align:center;
+}
+.btn-outline:hover{
+  background:var(--glass);
+  border-color:var(--glass-border);
+  color:var(--text);
+  box-shadow:0 4px 16px rgba(120,80,50,.06);
+}
+
+/* HERO */
+.hero{padding-top:16px}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--glass);
+  backdrop-filter:blur(var(--blur));-webkit-backdrop-filter:blur(var(--blur));
+  border:1px solid var(--glass-border);
+  color:var(--red);
+  padding:8px 22px;border-radius:100px;
+  font-size:12px;font-weight:700;letter-spacing:.03em;
+  margin-bottom:32px;
+  box-shadow:var(--shadow);
+}
+.hero-badge-dot{
+  width:6px;height:6px;border-radius:50%;
+  background:var(--red);
+  box-shadow:0 0 8px var(--red-glow);
+}
+.hero-title{
+  font-size:clamp(38px,5.5vw,60px);
+  font-weight:800;line-height:1.08;
+  letter-spacing:-.03em;margin-bottom:20px;
+}
+.hero-title span{
+  color:var(--red);
+  text-shadow:0 0 40px var(--red-glow);
+}
+.hero-sub{
+  font-size:16px;color:var(--text2);max-width:440px;
+  line-height:1.7;margin-bottom:36px;font-weight:400;
+}
+.hero-cta{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:56px}
+.hero-btn{
+  padding:16px 36px;border:none;border-radius:100px;
+  background:linear-gradient(135deg,var(--red),#D64444);
+  color:#FFF;font-family:'Urbanist',sans-serif;font-size:14px;font-weight:700;
+  cursor:pointer;text-decoration:none;transition:all .35s;
+  box-shadow:0 4px 16px var(--red-glow);
+  position:relative;overflow:hidden;
+}
+.hero-btn::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(255,255,255,.15),transparent 50%);
+}
+.hero-btn:hover{
+  transform:translateY(-2px);
+  box-shadow:0 8px 24px var(--red-glow),0 0 40px rgba(196,56,56,.1);
+}
+.hero-btn-o{
+  padding:16px 36px;
+  border:1px solid var(--glass-border);
+  border-radius:100px;
+  background:var(--glass);
+  backdrop-filter:blur(var(--blur));-webkit-backdrop-filter:blur(var(--blur));
+  color:var(--text2);
+  font-family:'Urbanist',sans-serif;font-size:14px;font-weight:600;
+  text-decoration:none;transition:all .3s;
+  box-shadow:var(--shadow);
+}
+.hero-btn-o:hover{
+  background:var(--glass2);color:var(--text);
+  box-shadow:var(--shadow-lg);
+}
+
+.stats{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:56px}
+.stat{
+  background:var(--glass);
+  backdrop-filter:blur(var(--blur));-webkit-backdrop-filter:blur(var(--blur));
+  border:1px solid var(--glass-border);
+  border-radius:var(--radius);
+  padding:24px 28px;flex:1;min-width:110px;text-align:center;
+  box-shadow:var(--shadow);
+  transition:all .35s;
+  position:relative;overflow:hidden;
+}
+.stat::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(255,255,255,.08),transparent 50%);
+  pointer-events:none;
+}
+.stat:hover{
+  transform:translateY(-4px);
+  box-shadow:var(--shadow-lg),0 0 30px rgba(196,56,56,.06);
+}
+.stat-val{
+  font-size:38px;font-weight:800;color:var(--red);
+  letter-spacing:-.02em;position:relative;
+  text-shadow:0 0 30px var(--red-glow);
+}
+.stat-lbl{
+  font-size:11px;font-weight:600;text-transform:uppercase;
+  letter-spacing:.08em;color:var(--text3);margin-top:6px;
+  position:relative;
+}
+
+.feat-hdr{
+  font-size:22px;font-weight:700;margin-bottom:24px;letter-spacing:-.02em;
+}
+.feat-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.feat-card{
+  background:var(--glass);
+  backdrop-filter:blur(var(--blur));-webkit-backdrop-filter:blur(var(--blur));
+  border:1px solid var(--glass-border);
+  border-radius:var(--radius);
+  padding:26px 22px;
+  box-shadow:var(--shadow);
+  transition:all .35s;
+  position:relative;overflow:hidden;
+}
+.feat-card::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(255,255,255,.1),transparent 40%);
+  pointer-events:none;
+}
+.feat-card:hover{
+  transform:translateY(-4px);
+  box-shadow:var(--shadow-lg),0 0 30px rgba(196,56,56,.06);
+  border-color:rgba(196,56,56,.2);
+}
+.feat-icon{
+  width:44px;height:44px;border-radius:12px;
+  background:var(--red-soft);
+  border:1px solid rgba(196,56,56,.12);
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:16px;position:relative;
+}
+.feat-icon svg{width:20px;height:20px;color:var(--red)}
+.feat-card h4{font-size:15px;font-weight:700;margin-bottom:8px;letter-spacing:-.01em;position:relative}
+.feat-card p{font-size:12px;color:var(--text2);line-height:1.7;font-weight:400;position:relative}
+
+@media(max-width:860px){.columns{grid-template-columns:1fr}.popup{margin:0 auto}}
+</style>
+</head>
+<body>
+<div class="mesh">
+  <div class="mesh-orb o1"></div>
+  <div class="mesh-orb o2"></div>
+  <div class="mesh-orb o3"></div>
+</div>
+<div class="page">
+  <div class="page-title">
+    Design 08 / Glassmorphism
+    <button class="toggle">Light / Dark</button>
+  </div>
+  <div class="columns">
+    <div class="popup">
+      <div class="popup-header">
+        <div class="popup-logo">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#FFF" stroke-width="2.5" stroke-linecap="round"><path d="M12 4v16M8 8l4-4 4 4"/></svg>
+        </div>
+        <div class="popup-brand">CogniFillz<small>by Cranium Inc.</small></div>
+      </div>
+      <div class="popup-tabs">
+        <button class="popup-tab active">Profile</button>
+        <button class="popup-tab">Analyze</button>
+        <button class="popup-tab">Settings</button>
+      </div>
+      <div class="popup-body">
+        <div class="profile-row">
+          <div class="profile-av">JD</div>
+          <div>
+            <div class="profile-name">Jane Doe</div>
+            <div class="profile-meta">jane@email.com &middot; San Francisco</div>
+          </div>
+        </div>
+        <div class="section-hdr">Detected Fields <span class="section-pill">0 found</span></div>
+        <div class="empty-state">
+          <div class="empty-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg>
+          </div>
+          Navigate to a job application<br>to detect fillable fields
+        </div>
+        <div class="popup-actions">
+          <button class="btn-fill">Autofill Application</button>
+          <button class="btn-outline">Edit Profile</button>
+        </div>
+      </div>
+    </div>
+    <div class="hero">
+      <div class="hero-badge"><span class="hero-badge-dot"></span> Open Source &middot; Local AI &middot; Free Forever</div>
+      <h1 class="hero-title">Job applications,<br><span>filled in seconds.</span></h1>
+      <p class="hero-sub">CogniFillz uses local AI to autofill job forms across LinkedIn, Indeed, Greenhouse and 50+ platforms. Your data never leaves your machine.</p>
+      <div class="hero-cta">
+        <a href="#" class="hero-btn">Install Extension</a>
+        <a href="#" class="hero-btn-o">View on GitHub</a>
+      </div>
+      <div class="stats">
+        <div class="stat"><div class="stat-val">100%</div><div class="stat-lbl">Private</div></div>
+        <div class="stat"><div class="stat-val">5+</div><div class="stat-lbl">Browsers</div></div>
+        <div class="stat"><div class="stat-val">$0</div><div class="stat-lbl">Forever</div></div>
+      </div>
+      <div class="feat-hdr">Features</div>
+      <div class="feat-grid">
+        <div class="feat-card">
+          <div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
+          <h4>Instant Autofill</h4>
+          <p>One click to fill 50+ ATS platforms including Greenhouse, Lever, and Workday.</p>
+        </div>
+        <div class="feat-card">
+          <div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></div>
+          <h4>Local-First Privacy</h4>
+          <p>All AI runs on your machine. Zero cloud uploads, zero tracking.</p>
+        </div>
+        <div class="feat-card">
+          <div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M12 20V10M6 20V4M18 20v-4"/></svg></div>
+          <h4>AI Job Matching</h4>
+          <p>Instant match score powered by your local LLM. Smart and private.</p>
+        </div>
+        <div class="feat-card">
+          <div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 000-7.78z"/></svg></div>
+          <h4>Free Forever</h4>
+          <p>Open source. No subscriptions. No premium tiers. Community-driven.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+document.querySelector('.toggle').addEventListener('click',()=>{
+  document.documentElement.classList.toggle('dark');
+});
+</script>
+</body>
+</html>

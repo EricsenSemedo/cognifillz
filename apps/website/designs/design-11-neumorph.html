@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Design 11: Neumorphism</title>
+<link href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --base:#EDE5DA;
+  --bg:#EDE5DA;
+  --text:#2A1E14;
+  --text2:#6B5A4A;
+  --text3:#9A8A78;
+  --red:#C43838;
+  --red-hover:#AA3030;
+  --red-light:rgba(196,56,56,.1);
+  --light-shadow:rgba(255,255,255,.7);
+  --dark-shadow:rgba(160,130,100,.3);
+  --neu-out:
+    6px 6px 14px var(--dark-shadow),
+    -6px -6px 14px var(--light-shadow);
+  --neu-out-sm:
+    4px 4px 10px var(--dark-shadow),
+    -4px -4px 10px var(--light-shadow);
+  --neu-in:
+    inset 3px 3px 8px var(--dark-shadow),
+    inset -3px -3px 8px var(--light-shadow);
+  --neu-in-sm:
+    inset 2px 2px 5px var(--dark-shadow),
+    inset -2px -2px 5px var(--light-shadow);
+  --neu-flat:
+    3px 3px 8px var(--dark-shadow),
+    -3px -3px 8px var(--light-shadow);
+  --radius:18px;
+  --radius-sm:12px;
+}
+html.dark{
+  --base:#1E1915;
+  --bg:#1E1915;
+  --text:#E8DDD0;
+  --text2:#A09080;
+  --text3:#5A4A3A;
+  --red:#E04A42;
+  --red-hover:#C83C36;
+  --red-light:rgba(224,74,66,.1);
+  --light-shadow:rgba(50,42,34,.6);
+  --dark-shadow:rgba(0,0,0,.5);
+  --neu-out:
+    6px 6px 14px var(--dark-shadow),
+    -6px -6px 14px var(--light-shadow);
+  --neu-out-sm:
+    4px 4px 10px var(--dark-shadow),
+    -4px -4px 10px var(--light-shadow);
+  --neu-in:
+    inset 3px 3px 8px var(--dark-shadow),
+    inset -3px -3px 8px var(--light-shadow);
+  --neu-in-sm:
+    inset 2px 2px 5px var(--dark-shadow),
+    inset -2px -2px 5px var(--light-shadow);
+  --neu-flat:
+    3px 3px 8px var(--dark-shadow),
+    -3px -3px 8px var(--light-shadow);
+}
+body{
+  font-family:'Red Hat Display',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  -webkit-font-smoothing:antialiased;
+  min-height:100vh;
+  transition:background .5s,color .5s;
+  overflow-x:hidden;
+}
+
+.page{max-width:1120px;margin:0 auto;padding:48px 32px 96px;position:relative}
+.page-title{
+  font-size:13px;font-weight:600;color:var(--text3);
+  margin-bottom:56px;display:flex;justify-content:space-between;align-items:center;
+  letter-spacing:.04em;
+}
+.toggle{
+  background:var(--base);
+  border:none;
+  border-radius:var(--radius-sm);padding:10px 28px;
+  font-family:'Red Hat Display',sans-serif;font-size:13px;font-weight:700;
+  color:var(--text2);cursor:pointer;
+  box-shadow:var(--neu-out-sm);
+  transition:all .2s;
+}
+.toggle:hover{color:var(--red)}
+.toggle:active{
+  box-shadow:var(--neu-in-sm);
+}
+.columns{display:grid;grid-template-columns:380px 1fr;gap:56px;align-items:start}
+
+/* POPUP */
+.popup{
+  width:380px;
+  background:var(--base);
+  border-radius:24px;
+  box-shadow:var(--neu-out);
+  overflow:hidden;
+  transition:all .5s;
+}
+.popup-inner{
+  padding:0;
+}
+
+.popup-header{
+  padding:26px 28px 20px;
+  display:flex;align-items:center;gap:14px;
+}
+.popup-logo{
+  width:46px;height:46px;border-radius:14px;
+  background:var(--red);
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:
+    3px 3px 8px rgba(150,30,30,.3),
+    -2px -2px 6px rgba(255,100,90,.15);
+}
+.popup-logo svg{width:20px;height:20px}
+.popup-brand{font-size:21px;font-weight:800;letter-spacing:-.01em}
+.popup-brand small{
+  display:block;
+  font-size:10px;color:var(--text3);font-weight:600;
+  letter-spacing:.06em;text-transform:uppercase;margin-top:2px;
+}
+
+.popup-tabs{
+  display:flex;padding:4px 20px;gap:4px;
+  margin:0 28px 0;
+  background:var(--base);
+  border-radius:14px;
+  box-shadow:var(--neu-in-sm);
+}
+.popup-tab{
+  flex:1;padding:11px 12px;
+  font-family:'Red Hat Display',sans-serif;font-size:11px;font-weight:700;
+  color:var(--text3);background:transparent;border:none;cursor:pointer;
+  border-radius:10px;
+  transition:all .2s;
+}
+.popup-tab:hover{color:var(--text2)}
+.popup-tab.active{
+  background:var(--base);
+  color:var(--red);
+  box-shadow:var(--neu-out-sm);
+}
+
+.popup-body{padding:24px 28px 28px}
+
+.profile-row{
+  display:flex;align-items:center;gap:16px;
+  margin-bottom:24px;padding:18px 20px;
+  background:var(--base);
+  border-radius:var(--radius);
+  box-shadow:var(--neu-out-sm);
+  transition:all .3s;
+}
+.profile-av{
+  width:50px;height:50px;border-radius:50%;
+  background:var(--red);
+  display:flex;align-items:center;justify-content:center;
+  font-size:17px;font-weight:800;color:#FFF;
+  box-shadow:
+    3px 3px 8px rgba(150,30,30,.3),
+    -2px -2px 6px rgba(255,100,90,.15);
+}
+.profile-name{font-size:17px;font-weight:800}
+.profile-meta{font-size:11px;color:var(--text3);margin-top:3px;font-weight:500}
+
+.section-hdr{
+  font-size:10px;font-weight:700;text-transform:uppercase;
+  letter-spacing:.1em;color:var(--text3);margin-bottom:14px;
+  display:flex;align-items:center;gap:10px;
+}
+.section-pill{
+  background:var(--base);color:var(--red);
+  padding:4px 16px;border-radius:100px;
+  font-size:10px;font-weight:700;
+  box-shadow:var(--neu-out-sm);
+}
+
+.empty-state{
+  text-align:center;padding:32px 20px;
+  background:var(--base);
+  border-radius:var(--radius);
+  box-shadow:var(--neu-in);
+  color:var(--text3);font-size:13px;font-weight:500;line-height:1.7;
+}
+.empty-icon{
+  width:54px;height:54px;margin:0 auto 14px;
+  background:var(--base);
+  border-radius:16px;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:var(--neu-out-sm);
+}
+.empty-icon svg{width:22px;height:22px;color:var(--text3)}
+
+.popup-actions{margin-top:24px;display:flex;flex-direction:column;gap:12px}
+.btn-fill{
+  padding:16px;border:none;border-radius:var(--radius-sm);
+  background:var(--red);
+  color:#FFF;font-family:'Red Hat Display',sans-serif;font-size:14px;font-weight:700;
+  cursor:pointer;transition:all .15s;text-align:center;
+  box-shadow:
+    4px 4px 10px rgba(150,30,30,.3),
+    -3px -3px 8px rgba(255,100,90,.1);
+}
+.btn-fill:hover{
+  box-shadow:
+    6px 6px 14px rgba(150,30,30,.35),
+    -4px -4px 10px rgba(255,100,90,.12);
+}
+.btn-fill:active{
+  box-shadow:
+    inset 3px 3px 8px rgba(100,20,20,.3),
+    inset -3px -3px 8px rgba(255,100,90,.1);
+}
+.btn-outline{
+  padding:14px;
+  border:none;
+  border-radius:var(--radius-sm);
+  background:var(--base);
+  color:var(--text2);
+  font-family:'Red Hat Display',sans-serif;font-size:13px;font-weight:600;
+  cursor:pointer;transition:all .15s;text-align:center;
+  box-shadow:var(--neu-out-sm);
+}
+.btn-outline:hover{color:var(--text)}
+.btn-outline:active{
+  box-shadow:var(--neu-in-sm);
+}
+
+/* HERO */
+.hero{padding-top:8px}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:10px;
+  background:var(--base);
+  color:var(--red);
+  padding:10px 24px;border-radius:100px;
+  font-size:12px;font-weight:700;letter-spacing:.02em;
+  margin-bottom:32px;
+  box-shadow:var(--neu-out-sm);
+}
+.hero-badge-dot{
+  width:7px;height:7px;border-radius:50%;
+  background:var(--red);
+  box-shadow:0 0 6px rgba(196,56,56,.4);
+}
+.hero-title{
+  font-size:clamp(38px,5.5vw,58px);
+  font-weight:900;line-height:1.1;
+  letter-spacing:-.03em;margin-bottom:20px;
+}
+.hero-title span{color:var(--red)}
+.hero-sub{
+  font-size:15px;color:var(--text2);max-width:440px;
+  line-height:1.8;margin-bottom:40px;font-weight:500;
+}
+
+.stats{display:flex;gap:18px;flex-wrap:wrap;margin-bottom:56px}
+.stat{
+  background:var(--base);
+  border-radius:var(--radius);
+  padding:28px 24px;flex:1;min-width:110px;text-align:center;
+  box-shadow:var(--neu-out);
+  transition:all .2s;
+}
+.stat:hover{
+  box-shadow:
+    8px 8px 18px var(--dark-shadow),
+    -8px -8px 18px var(--light-shadow);
+}
+.stat-val{
+  font-size:44px;font-weight:900;color:var(--red);
+  letter-spacing:-.02em;
+}
+.stat-lbl{
+  font-size:10px;font-weight:700;text-transform:uppercase;
+  letter-spacing:.1em;color:var(--text3);margin-top:8px;
+}
+
+.feat-hdr{font-size:23px;font-weight:800;margin-bottom:24px;letter-spacing:-.01em}
+.feat-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.feat-card{
+  background:var(--base);
+  border-radius:var(--radius);
+  padding:28px 22px;
+  box-shadow:var(--neu-out);
+  transition:all .25s;
+}
+.feat-card:hover{
+  box-shadow:
+    8px 8px 18px var(--dark-shadow),
+    -8px -8px 18px var(--light-shadow);
+}
+.feat-icon{
+  width:48px;height:48px;border-radius:14px;
+  background:var(--base);
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:16px;
+  box-shadow:var(--neu-out-sm);
+}
+.feat-icon svg{width:20px;height:20px;color:var(--red)}
+.feat-card h4{font-size:16px;font-weight:800;margin-bottom:8px}
+.feat-card p{font-size:12px;color:var(--text2);line-height:1.7;font-weight:500}
+
+/* Neumorphic progress bar accent */
+.neu-accent{
+  height:4px;
+  background:var(--base);
+  border-radius:2px;
+  box-shadow:var(--neu-in-sm);
+  margin:20px 28px;
+  position:relative;
+  overflow:hidden;
+}
+.neu-accent::after{
+  content:'';position:absolute;top:0;left:0;
+  width:65%;height:100%;
+  background:linear-gradient(90deg,var(--red),rgba(196,56,56,.4));
+  border-radius:2px;
+}
+
+@media(max-width:860px){.columns{grid-template-columns:1fr}.popup{margin:0 auto}}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="page-title">
+    Design 11 / Neumorphism
+    <button class="toggle" id="themeToggle">Dark</button>
+  </div>
+  <div class="columns">
+    <div class="popup">
+      <div class="popup-header">
+        <div class="popup-logo">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#FFF" stroke-width="2.5" stroke-linecap="round"><path d="M12 4v16M8 8l4-4 4 4"/></svg>
+        </div>
+        <div class="popup-brand">CogniFillz<small>by Cranium Inc.</small></div>
+      </div>
+      <div class="popup-tabs">
+        <button class="popup-tab active">Profile</button>
+        <button class="popup-tab">Analyze</button>
+        <button class="popup-tab">Settings</button>
+      </div>
+      <div class="neu-accent"></div>
+      <div class="popup-body">
+        <div class="profile-row">
+          <div class="profile-av">JD</div>
+          <div>
+            <div class="profile-name">Jane Doe</div>
+            <div class="profile-meta">jane@email.com</div>
+          </div>
+        </div>
+        <div class="section-hdr">Detected Fields <span class="section-pill">0 found</span></div>
+        <div class="empty-state">
+          <div class="empty-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg>
+          </div>
+          Navigate to a job application<br>to detect fillable fields
+        </div>
+        <div class="popup-actions">
+          <button class="btn-fill">Autofill Application</button>
+          <button class="btn-outline">Edit Profile</button>
+        </div>
+      </div>
+    </div>
+    <div class="hero">
+      <div class="hero-badge"><span class="hero-badge-dot"></span> Open Source &middot; Local AI &middot; Free Forever</div>
+      <h1 class="hero-title">Job applications,<br><span>filled in seconds.</span></h1>
+      <p class="hero-sub">CogniFillz uses local AI to autofill job forms across LinkedIn, Indeed, Greenhouse and 50+ platforms. Your data never leaves your machine.</p>
+      <div class="stats">
+        <div class="stat"><div class="stat-val">100%</div><div class="stat-lbl">Private</div></div>
+        <div class="stat"><div class="stat-val">5+</div><div class="stat-lbl">Browsers</div></div>
+        <div class="stat"><div class="stat-val">$0</div><div class="stat-lbl">Forever</div></div>
+      </div>
+      <div class="feat-hdr">Features</div>
+      <div class="feat-grid">
+        <div class="feat-card">
+          <div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
+          <h4>Instant Autofill</h4>
+          <p>One click to fill 50+ ATS platforms including Greenhouse, Lever, and Workday.</p>
+        </div>
+        <div class="feat-card">
+          <div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></div>
+          <h4>Local Privacy</h4>
+          <p>All AI runs on your machine. Zero cloud uploads, zero tracking.</p>
+        </div>
+        <div class="feat-card">
+          <div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M12 20V10M6 20V4M18 20v-4"/></svg></div>
+          <h4>AI Matching</h4>
+          <p>Instant match score powered by your local LLM. Smart and private.</p>
+        </div>
+        <div class="feat-card">
+          <div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 000-7.78z"/></svg></div>
+          <h4>Free Forever</h4>
+          <p>Open source. No subscriptions. No premium tiers. Community-driven.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+(function(){
+  var btn=document.getElementById('themeToggle');
+  btn.addEventListener('click',function(){
+    document.documentElement.classList.toggle('dark');
+    btn.textContent=document.documentElement.classList.contains('dark')?'Light':'Dark';
+  });
+})();
+</script>
+</body>
+</html>

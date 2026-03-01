@@ -1,0 +1,9 @@
+{
+  "name": "@cognifillz/website",
+  "version": "0.1.0",
+  "private": true,
+  "description": "CogniFillz marketing landing page",
+  "scripts": {
+    "dev": "npx serve . -l 3000"
+  }
+}

@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Design 23: Mediterranean Mosaic</title>
+<link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600&family=Source+Sans+3:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#F5EDE4;
+  --bg2:#EDE3D6;
+  --surface:#FFFCF7;
+  --surface2:#F3E9DD;
+  --text:#2A1A10;
+  --text2:#6A4E3A;
+  --text3:#9A7E68;
+  --red:#C43838;
+  --red-hover:#A82E2E;
+  --red-light:rgba(196,56,56,.06);
+  --red-warm:#B8432F;
+  --terra:#A65A3A;
+  --terra-light:rgba(166,90,58,.08);
+  --cream:#FBF3E8;
+  --gold:#C49A30;
+  --gold-light:rgba(196,154,48,.08);
+  --border:rgba(140,90,50,.15);
+  --shadow:0 4px 16px rgba(80,40,10,.07);
+  --shadow-lg:0 12px 36px rgba(80,40,10,.10);
+  --tile-line:rgba(196,56,56,.12);
+  --tile-fill:rgba(196,56,56,.04);
+  --pipeline-applied:#C43838;
+  --pipeline-screening:#C47030;
+  --pipeline-interview:#B89028;
+  --pipeline-offer:#6A8840;
+}
+html.dark{
+  --bg:#1C1412;
+  --bg2:#241A16;
+  --surface:#2E221C;
+  --surface2:#382A22;
+  --text:#F0E8E0;
+  --text2:#C4AA90;
+  --text3:#8A7060;
+  --red:#E04A42;
+  --red-hover:#C83C36;
+  --red-light:rgba(224,74,66,.07);
+  --red-warm:#D05A3E;
+  --terra:#C87050;
+  --terra-light:rgba(200,112,80,.08);
+  --cream:#2E221C;
+  --gold:#D4AA40;
+  --gold-light:rgba(212,170,64,.08);
+  --border:rgba(200,160,120,.12);
+  --shadow:0 4px 16px rgba(0,0,0,.25);
+  --shadow-lg:0 12px 36px rgba(0,0,0,.30);
+  --tile-line:rgba(224,74,66,.10);
+  --tile-fill:rgba(224,74,66,.03);
+}
+
+body{
+  font-family:'Source Sans 3',sans-serif;
+  color:var(--text);
+  background:var(--bg);
+  -webkit-font-smoothing:antialiased;
+  min-height:100vh;
+  overflow-x:hidden;
+  transition:background .5s,color .5s;
+}
+
+h1,h2,h3,.brand,.stat-val,.stage-count{
+  font-family:'Crimson Pro',serif;
+}
+
+/* Tile pattern background */
+.tile-pattern{
+  position:fixed;inset:0;z-index:0;pointer-events:none;
+  opacity:.4;
+  background:
+    repeating-linear-gradient(45deg, var(--tile-line) 0px, var(--tile-line) 1px, transparent 1px, transparent 20px),
+    repeating-linear-gradient(-45deg, var(--tile-line) 0px, var(--tile-line) 1px, transparent 1px, transparent 20px);
+  transition:opacity .5s;
+}
+
+.layout{
+  display:flex;gap:48px;
+  max-width:1200px;margin:48px auto;padding:0 32px;
+  align-items:flex-start;
+  position:relative;z-index:1;
+}
+
+/* Ornamental dividers */
+.ornament{
+  display:flex;align-items:center;justify-content:center;
+  gap:8px;
+  margin:24px 0;
+  color:var(--terra);
+  opacity:.5;
+}
+.ornament::before,.ornament::after{
+  content:'';flex:1;height:1px;
+  background:linear-gradient(90deg, transparent, var(--terra), transparent);
+}
+.ornament-diamond{
+  width:8px;height:8px;
+  background:var(--terra);
+  transform:rotate(45deg);
+}
+
+/* ========== EXTENSION (LEFT) ========== */
+.extension{
+  width:380px;flex-shrink:0;
+  position:sticky;top:48px;
+}
+.ext-frame{
+  background:var(--surface);
+  border:2px solid var(--border);
+  border-radius:4px;
+  box-shadow:var(--shadow-lg);
+  overflow:hidden;
+  transition:all .5s;
+  position:relative;
+}
+/* Top ornamental border */
+.ext-frame::before{
+  content:'';position:absolute;
+  top:0;left:0;right:0;height:4px;
+  background:repeating-linear-gradient(90deg, var(--red) 0px, var(--red) 8px, transparent 8px, transparent 12px, var(--terra) 12px, var(--terra) 16px, transparent 16px, transparent 20px);
+}
+
+.ext-header{
+  display:flex;align-items:center;gap:10px;
+  padding:20px 20px 14px;
+  border-bottom:1px solid var(--border);
+}
+.logo-mark{
+  width:38px;height:38px;
+  background:var(--red);
+  color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Crimson Pro',serif;
+  font-weight:800;font-size:16px;
+  font-style:italic;
+  border-radius:2px;
+  position:relative;
+}
+/* Ornamental corners */
+.logo-mark::before,.logo-mark::after{
+  content:'';position:absolute;
+  width:6px;height:6px;
+  border:1px solid rgba(255,255,255,.4);
+}
+.logo-mark::before{top:2px;left:2px;border-right:0;border-bottom:0}
+.logo-mark::after{bottom:2px;right:2px;border-left:0;border-top:0}
+.brand{
+  font-weight:700;font-size:22px;
+  font-style:italic;
+  flex:1;
+  color:var(--text);
+}
+.toggle{
+  background:var(--surface2);
+  border:1px solid var(--border);
+  color:var(--text2);
+  font-family:'Source Sans 3',sans-serif;
+  font-size:12px;font-weight:600;
+  padding:5px 14px;
+  border-radius:2px;
+  cursor:pointer;
+  transition:all .2s;
+}
+.toggle:hover{background:var(--red);color:#fff;border-color:var(--red)}
+
+.ext-body{padding:18px 20px 22px}
+
+/* Mosaic-framed pipeline */
+.pipeline-mosaic{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:8px;
+  margin-bottom:18px;
+}
+.mosaic-stage{
+  text-align:center;
+  padding:14px 6px 12px;
+  background:var(--surface2);
+  border:1px solid var(--border);
+  position:relative;
+  transition:all .5s;
+}
+/* Corner accents */
+.mosaic-stage::before,.mosaic-stage::after{
+  content:'';position:absolute;
+  width:8px;height:8px;
+}
+.mosaic-stage::before{
+  top:2px;left:2px;
+  border-top:2px solid var(--terra);
+  border-left:2px solid var(--terra);
+  opacity:.4;
+}
+.mosaic-stage::after{
+  bottom:2px;right:2px;
+  border-bottom:2px solid var(--terra);
+  border-right:2px solid var(--terra);
+  opacity:.4;
+}
+.mosaic-stage:nth-child(1){border-top:3px solid var(--pipeline-applied)}
+.mosaic-stage:nth-child(2){border-top:3px solid var(--pipeline-screening)}
+.mosaic-stage:nth-child(3){border-top:3px solid var(--pipeline-interview)}
+.mosaic-stage:nth-child(4){border-top:3px solid var(--pipeline-offer)}
+.stage-count{
+  font-weight:800;font-size:24px;
+  display:block;
+  color:var(--text);
+  line-height:1;
+}
+.stage-label{
+  font-size:9px;font-weight:600;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+  color:var(--text3);
+  display:block;margin-top:4px;
+}
+
+.profile{
+  display:flex;align-items:center;gap:12px;
+  margin-bottom:16px;
+  padding:14px;
+  border:1px solid var(--border);
+  background:var(--surface2);
+  transition:all .5s;
+}
+.avatar{
+  width:40px;height:40px;
+  background:var(--terra);
+  color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Crimson Pro',serif;
+  font-weight:700;font-size:15px;
+  font-style:italic;
+  border-radius:2px;
+}
+.profile-name{font-weight:600;font-size:14px}
+.profile-email{font-size:12px;color:var(--text3)}
+
+.btn{
+  display:block;width:100%;
+  padding:13px;
+  background:var(--red);color:#fff;
+  border:none;cursor:pointer;
+  font-family:'Crimson Pro',serif;
+  font-size:16px;font-weight:700;
+  font-style:italic;
+  text-align:center;text-decoration:none;
+  transition:all .2s;
+  margin-bottom:16px;
+  border-radius:2px;
+}
+.btn:hover{background:var(--red-hover);transform:translateY(-1px)}
+
+.match-section{
+  display:flex;align-items:center;gap:14px;
+  padding:14px;
+  border:1px solid var(--border);
+  background:var(--surface2);
+  transition:all .5s;
+  position:relative;
+}
+.match-section::before{
+  content:'';position:absolute;
+  top:3px;left:3px;
+  width:6px;height:6px;
+  border-top:1.5px solid var(--terra);
+  border-left:1.5px solid var(--terra);
+  opacity:.4;
+}
+.match-section::after{
+  content:'';position:absolute;
+  bottom:3px;right:3px;
+  width:6px;height:6px;
+  border-bottom:1.5px solid var(--terra);
+  border-right:1.5px solid var(--terra);
+  opacity:.4;
+}
+.match-pct{
+  font-family:'Crimson Pro',serif;
+  font-weight:800;font-size:30px;
+  font-style:italic;
+  color:var(--red);
+  line-height:1;
+}
+.match-label{
+  font-size:10px;font-weight:600;
+  text-transform:uppercase;
+  letter-spacing:.06em;
+  color:var(--text3);
+}
+.match-track{
+  flex:1;height:6px;
+  background:var(--terra-light);
+  border:1px solid var(--border);
+  overflow:hidden;
+}
+.match-fill{
+  width:87%;height:100%;
+  background:var(--red);
+}
+
+/* Bottom ornamental border */
+.ext-bottom-border{
+  height:4px;
+  background:repeating-linear-gradient(90deg, var(--red) 0px, var(--red) 8px, transparent 8px, transparent 12px, var(--terra) 12px, var(--terra) 16px, transparent 16px, transparent 20px);
+}
+
+/* ========== WEBSITE (RIGHT) ========== */
+.website{
+  flex:1;min-width:0;
+}
+
+/* Section header with tile pattern */
+.section-header{
+  padding:12px 20px;
+  margin-bottom:24px;
+  position:relative;
+  background:
+    linear-gradient(var(--surface2), var(--surface2)),
+    repeating-linear-gradient(45deg, var(--tile-fill) 0px, var(--tile-fill) 1px, transparent 1px, transparent 8px),
+    repeating-linear-gradient(-45deg, var(--tile-fill) 0px, var(--tile-fill) 1px, transparent 1px, transparent 8px);
+  border:1px solid var(--border);
+}
+.section-header::before,.section-header::after{
+  content:'';position:absolute;width:10px;height:10px;
+}
+.section-header::before{top:3px;left:3px;border-top:2px solid var(--terra);border-left:2px solid var(--terra);opacity:.5}
+.section-header::after{bottom:3px;right:3px;border-bottom:2px solid var(--terra);border-right:2px solid var(--terra);opacity:.5}
+.section-header h3{
+  font-family:'Crimson Pro',serif;
+  font-weight:700;font-size:18px;
+  font-style:italic;
+  color:var(--text2);
+}
+
+.hero{
+  margin-bottom:40px;
+  padding:52px 44px;
+  background:var(--surface);
+  border:2px solid var(--border);
+  position:relative;
+  box-shadow:var(--shadow-lg);
+  transition:all .5s;
+  overflow:hidden;
+}
+/* Tile pattern header strip */
+.hero::before{
+  content:'';position:absolute;
+  top:0;left:0;right:0;height:6px;
+  background:repeating-linear-gradient(90deg,
+    var(--red) 0px, var(--red) 6px,
+    var(--bg) 6px, var(--bg) 8px,
+    var(--terra) 8px, var(--terra) 14px,
+    var(--bg) 14px, var(--bg) 16px,
+    var(--gold) 16px, var(--gold) 20px,
+    var(--bg) 20px, var(--bg) 22px
+  );
+}
+/* Corner ornaments */
+.hero-corner{
+  position:absolute;
+  width:24px;height:24px;
+}
+.hero-corner::before,.hero-corner::after{
+  content:'';position:absolute;
+}
+.hero-corner::before{
+  width:100%;height:100%;
+  border:2px solid var(--terra);
+  opacity:.3;
+}
+.hero-corner::after{
+  width:8px;height:8px;
+  background:var(--terra);
+  opacity:.15;
+  transform:rotate(45deg);
+}
+.hero-corner.tl{top:16px;left:16px}
+.hero-corner.tl::after{top:6px;left:6px}
+.hero-corner.tr{top:16px;right:16px}
+.hero-corner.tr::before{border-left:0;border-bottom:0}
+.hero-corner.tr::after{top:6px;right:6px}
+.hero-corner.bl{bottom:16px;left:16px}
+.hero-corner.bl::before{border-right:0;border-top:0}
+.hero-corner.bl::after{bottom:6px;left:6px}
+.hero-corner.br{bottom:16px;right:16px}
+.hero-corner.br::before{border-left:0;border-top:0}
+.hero-corner.br::after{bottom:6px;right:6px}
+
+.hero h1{
+  font-size:clamp(36px,5vw,52px);
+  font-weight:800;
+  font-style:italic;
+  line-height:1.1;
+  margin-bottom:16px;
+  color:var(--text);
+}
+.hero h1 span{
+  color:var(--red);
+}
+.hero-sub{
+  font-size:16px;color:var(--text2);
+  line-height:1.8;max-width:480px;
+}
+
+/* Stats */
+.stats{
+  display:flex;gap:16px;
+  margin-bottom:32px;
+}
+.stat{
+  flex:1;
+  background:var(--surface);
+  border:1px solid var(--border);
+  padding:22px 18px;
+  text-align:center;
+  box-shadow:var(--shadow);
+  transition:all .5s;
+  position:relative;
+}
+/* Patterned border top */
+.stat::before{
+  content:'';position:absolute;
+  top:0;left:0;right:0;height:3px;
+  background:var(--red);
+}
+.stat-val{
+  font-weight:800;font-size:38px;
+  font-style:italic;
+  color:var(--red);
+  display:block;line-height:1;
+}
+.stat-label{
+  font-size:11px;font-weight:600;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+  color:var(--text3);
+  margin-top:6px;
+}
+
+/* Chart */
+.chart-card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  padding:28px 24px;
+  margin-bottom:32px;
+  box-shadow:var(--shadow);
+  transition:all .5s;
+  position:relative;
+}
+.chart-card::before{
+  content:'';position:absolute;
+  top:0;left:0;right:0;height:3px;
+  background:repeating-linear-gradient(90deg,
+    var(--terra) 0px, var(--terra) 6px,
+    transparent 6px, transparent 10px
+  );
+  opacity:.5;
+}
+.chart{
+  display:flex;gap:14px;
+  align-items:flex-end;
+  height:140px;
+  padding-bottom:24px;
+  border-bottom:1px solid var(--border);
+}
+.bar-wrap{
+  flex:1;display:flex;flex-direction:column;
+  align-items:center;height:100%;justify-content:flex-end;
+}
+.bar{
+  width:100%;
+  background:linear-gradient(to top, var(--red), var(--terra));
+  border-radius:2px 2px 0 0;
+  position:relative;
+  transition:all .3s;
+}
+.bar:hover{filter:brightness(1.1);transform:scaleY(1.03);transform-origin:bottom}
+.bar-label{
+  font-size:10px;font-weight:600;
+  text-transform:uppercase;
+  letter-spacing:.04em;
+  color:var(--text3);
+  margin-top:8px;
+}
+
+/* Pipeline (mosaic framed) */
+.pipeline-section{margin-bottom:32px}
+.pipeline-web{
+  display:flex;gap:12px;
+}
+.pipe-tile{
+  flex:1;
+  background:var(--surface);
+  border:1px solid var(--border);
+  padding:22px 12px 18px;
+  text-align:center;
+  box-shadow:var(--shadow);
+  transition:all .5s;
+  position:relative;
+}
+/* Corner accents */
+.pipe-tile::before{
+  content:'';position:absolute;
+  top:3px;left:3px;
+  width:10px;height:10px;
+  border-top:2px solid var(--terra);
+  border-left:2px solid var(--terra);
+  opacity:.35;
+}
+.pipe-tile::after{
+  content:'';position:absolute;
+  bottom:3px;right:3px;
+  width:10px;height:10px;
+  border-bottom:2px solid var(--terra);
+  border-right:2px solid var(--terra);
+  opacity:.35;
+}
+.pipe-count{
+  font-family:'Crimson Pro',serif;
+  font-weight:800;font-size:32px;
+  font-style:italic;
+  display:block;line-height:1;
+}
+.pipe-tile:nth-child(1) .pipe-count{color:var(--pipeline-applied)}
+.pipe-tile:nth-child(2) .pipe-count{color:var(--pipeline-screening)}
+.pipe-tile:nth-child(3) .pipe-count{color:var(--pipeline-interview)}
+.pipe-tile:nth-child(4) .pipe-count{color:var(--pipeline-offer)}
+.pipe-name{
+  font-size:10px;font-weight:600;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+  color:var(--text3);
+  display:block;margin-top:6px;
+}
+/* Connecting mosaic bridge */
+.pipe-bridge{
+  display:flex;align-items:center;
+  width:12px;flex-shrink:0;
+}
+.pipe-bridge::before{
+  content:'';width:100%;height:2px;
+  background:repeating-linear-gradient(90deg, var(--terra) 0px, var(--terra) 3px, transparent 3px, transparent 5px);
+  opacity:.4;
+}
+
+/* CTA */
+.cta-row{
+  display:flex;gap:16px;
+  margin-bottom:36px;
+  align-items:center;
+}
+.cta-row .btn{
+  width:auto;display:inline-block;
+  padding:13px 30px;margin-bottom:0;
+}
+.btn-outline{
+  display:inline-block;
+  padding:12px 28px;
+  border:2px solid var(--red);
+  color:var(--red);
+  font-family:'Crimson Pro',serif;
+  font-size:15px;font-weight:700;
+  font-style:italic;
+  text-decoration:none;
+  border-radius:2px;
+  transition:all .2s;
+}
+.btn-outline:hover{background:var(--red);color:#fff}
+
+/* Feature cards with ornamental corners */
+.features{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:16px;
+  margin-bottom:44px;
+}
+.feat{
+  background:var(--surface);
+  border:1px solid var(--border);
+  padding:28px 22px;
+  box-shadow:var(--shadow);
+  transition:all .5s;
+  position:relative;
+}
+.feat::before{
+  content:'';position:absolute;
+  top:4px;left:4px;
+  width:12px;height:12px;
+  border-top:2px solid var(--terra);
+  border-left:2px solid var(--terra);
+  opacity:.4;
+}
+.feat::after{
+  content:'';position:absolute;
+  bottom:4px;right:4px;
+  width:12px;height:12px;
+  border-bottom:2px solid var(--terra);
+  border-right:2px solid var(--terra);
+  opacity:.4;
+}
+.feat-num{
+  font-family:'Crimson Pro',serif;
+  font-weight:800;font-size:28px;
+  font-style:italic;
+  color:var(--red);
+  opacity:.4;
+  margin-bottom:10px;
+  display:block;
+}
+.feat h4{
+  font-family:'Crimson Pro',serif;
+  font-size:20px;font-weight:700;
+  font-style:italic;
+  color:var(--text);
+  margin-bottom:8px;
+}
+.feat p{
+  font-size:13px;color:var(--text3);
+  line-height:1.7;
+}
+
+.footer{
+  padding-top:20px;
+  text-align:center;
+  font-size:12px;
+  color:var(--text3);
+  font-weight:500;
+  position:relative;
+}
+.footer::before{
+  content:'';
+  display:block;
+  height:4px;
+  margin-bottom:20px;
+  background:repeating-linear-gradient(90deg,
+    var(--red) 0px, var(--red) 6px,
+    transparent 6px, transparent 8px,
+    var(--terra) 8px, var(--terra) 14px,
+    transparent 14px, transparent 16px
+  );
+  opacity:.4;
+}
+
+@media(max-width:860px){
+  .layout{flex-direction:column;align-items:center}
+  .extension{position:static;width:100%;max-width:400px}
+  .website{width:100%}
+}
+</style>
+</head>
+<body>
+
+<div class="tile-pattern"></div>
+
+<div class="layout">
+  <!-- LEFT: Extension Popup -->
+  <div class="extension">
+    <div class="ext-frame">
+      <div class="ext-header">
+        <div class="logo-mark">CF</div>
+        <span class="brand">CogniFillz</span>
+        <button class="toggle" onclick="document.documentElement.classList.toggle('dark');this.textContent=document.documentElement.classList.contains('dark')?'Light':'Dark'">Dark</button>
+      </div>
+
+      <div class="ext-body">
+        <div class="pipeline-mosaic">
+          <div class="mosaic-stage"><span class="stage-count">12</span><span class="stage-label">Applied</span></div>
+          <div class="mosaic-stage"><span class="stage-count">4</span><span class="stage-label">Screen</span></div>
+          <div class="mosaic-stage"><span class="stage-count">2</span><span class="stage-label">Interview</span></div>
+          <div class="mosaic-stage"><span class="stage-count">1</span><span class="stage-label">Offer</span></div>
+        </div>
+
+        <div class="profile">
+          <div class="avatar">JD</div>
+          <div>
+            <div class="profile-name">Jane Doe</div>
+            <div class="profile-email">jane@email.com</div>
+          </div>
+        </div>
+
+        <button class="btn">Autofill Application</button>
+
+        <div class="match-section">
+          <div>
+            <div class="match-pct">87%</div>
+            <div class="match-label">AI Resume Match</div>
+          </div>
+          <div class="match-track"><div class="match-fill"></div></div>
+        </div>
+      </div>
+      <div class="ext-bottom-border"></div>
+    </div>
+  </div>
+
+  <!-- RIGHT: Website -->
+  <div class="website">
+    <div class="hero">
+      <div class="hero-corner tl"></div>
+      <div class="hero-corner tr"></div>
+      <div class="hero-corner bl"></div>
+      <div class="hero-corner br"></div>
+      <h1>Your job hunt,<br><span>on autopilot.</span></h1>
+      <p class="hero-sub">One-click autofill, application tracking, and AI-powered resume tailoring &mdash; crafted with the warmth and precision of artisan tradition.</p>
+    </div>
+
+    <div class="stats">
+      <div class="stat">
+        <span class="stat-val">87%</span>
+        <span class="stat-label">Match Rate</span>
+      </div>
+      <div class="stat">
+        <span class="stat-val">19</span>
+        <span class="stat-label">Active Apps</span>
+      </div>
+      <div class="stat">
+        <span class="stat-val">3</span>
+        <span class="stat-label">Interviews</span>
+      </div>
+    </div>
+
+    <div class="chart-card">
+      <div class="section-header"><h3>Weekly Applications</h3></div>
+      <div class="chart">
+        <div class="bar-wrap"><div class="bar" style="height:45%"></div><span class="bar-label">Mon</span></div>
+        <div class="bar-wrap"><div class="bar" style="height:70%"></div><span class="bar-label">Tue</span></div>
+        <div class="bar-wrap"><div class="bar" style="height:55%"></div><span class="bar-label">Wed</span></div>
+        <div class="bar-wrap"><div class="bar" style="height:90%"></div><span class="bar-label">Thu</span></div>
+        <div class="bar-wrap"><div class="bar" style="height:35%"></div><span class="bar-label">Fri</span></div>
+      </div>
+    </div>
+
+    <div class="pipeline-section">
+      <div class="section-header"><h3>Application Pipeline</h3></div>
+      <div class="pipeline-web">
+        <div class="pipe-tile"><span class="pipe-count">12</span><span class="pipe-name">Applied</span></div>
+        <div class="pipe-bridge"></div>
+        <div class="pipe-tile"><span class="pipe-count">4</span><span class="pipe-name">Screening</span></div>
+        <div class="pipe-bridge"></div>
+        <div class="pipe-tile"><span class="pipe-count">2</span><span class="pipe-name">Interview</span></div>
+        <div class="pipe-bridge"></div>
+        <div class="pipe-tile"><span class="pipe-count">1</span><span class="pipe-name">Offer</span></div>
+      </div>
+    </div>
+
+    <div class="ornament">
+      <div class="ornament-diamond"></div>
+    </div>
+
+    <div class="cta-row">
+      <a href="#" class="btn">Tailor My Resume</a>
+      <a href="#" class="btn-outline">View All Applications</a>
+    </div>
+
+    <div class="features">
+      <div class="feat">
+        <span class="feat-num">I</span>
+        <h4>One-Click Fill</h4>
+        <p>Autofill entire job applications with a single click. Your data, instantly placed.</p>
+      </div>
+      <div class="feat">
+        <span class="feat-num">II</span>
+        <h4>Application Tracker</h4>
+        <p>Monitor every application through pipeline stages from applied to offer.</p>
+      </div>
+      <div class="feat">
+        <span class="feat-num">III</span>
+        <h4>AI Resume Match</h4>
+        <p>Tailored resumes scored against job descriptions for maximum relevance.</p>
+      </div>
+      <div class="feat">
+        <span class="feat-num">IV</span>
+        <h4>Trend Analytics</h4>
+        <p>Visualize your job hunt with charts, stats, and weekly trend reports.</p>
+      </div>
+    </div>
+
+    <div class="footer">Crafted by Cranium Inc.</div>
+  </div>
+</div>
+
+</body>
+</html>

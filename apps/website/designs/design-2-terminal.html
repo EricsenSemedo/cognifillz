@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Design 2: Terminal</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0a0a0a;--surface:#0f0f0f;--border:rgba(0,255,102,.12);
+  --text:#c0c0c0;--text2:#555;
+  --green:#00FF66;--green-dim:rgba(0,255,102,.08);
+  --amber:#FFB800;--amber-dim:rgba(255,184,0,.08);
+  --red:#FF3366;
+}
+body{
+  font-family:'JetBrains Mono',monospace;background:var(--bg);color:var(--text);
+  -webkit-font-smoothing:antialiased;
+  background-image:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,255,102,.015) 2px,rgba(0,255,102,.015) 4px);
+}
+
+.page{max-width:1100px;margin:0 auto;padding:40px 24px 80px}
+.page-title{font-size:11px;color:var(--text2);border-bottom:1px solid var(--border);padding-bottom:10px;margin-bottom:48px;display:flex;justify-content:space-between}
+.page-title .g{color:var(--green)}
+.columns{display:grid;grid-template-columns:380px 1fr;gap:48px;align-items:start}
+
+/* POPUP */
+.popup{
+  width:380px;background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:4px;
+  position:relative;overflow:hidden;
+  box-shadow:0 0 40px rgba(0,255,102,.04),inset 0 0 80px rgba(0,255,102,.02);
+}
+.popup::after{
+  content:'';position:absolute;inset:0;
+  background:repeating-linear-gradient(0deg,transparent,transparent 1px,rgba(0,255,102,.02) 1px,rgba(0,255,102,.02) 2px);
+  pointer-events:none;
+}
+
+.popup-header{
+  padding:14px 18px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:10px;
+  position:relative;z-index:1;
+}
+.popup-prompt{color:var(--green);font-size:12px;font-weight:700}
+.popup-brand{font-size:13px;font-weight:700;color:var(--text)}
+.popup-ver{margin-left:auto;font-size:9px;color:var(--text2)}
+
+.popup-tabs{display:flex;border-bottom:1px solid var(--border);position:relative;z-index:1}
+.popup-tab{
+  flex:1;padding:8px;text-align:center;
+  font-size:10px;font-weight:600;letter-spacing:.06em;
+  color:var(--text2);background:transparent;border:none;cursor:pointer;
+  border-bottom:2px solid transparent;margin-bottom:-1px;text-transform:uppercase;
+}
+.popup-tab.active{color:var(--green);border-bottom-color:var(--green)}
+
+.popup-body{padding:18px;position:relative;z-index:1}
+
+.section-hdr{font-size:9px;text-transform:uppercase;letter-spacing:.12em;color:var(--text2);margin-bottom:10px}
+.section-hdr .ct{color:var(--green)}
+
+.usr-row{
+  padding:10px 14px;border:1px solid var(--border);border-radius:3px;
+  margin-bottom:16px;background:var(--green-dim);
+}
+.usr-name{font-size:13px;font-weight:700;color:var(--green)}
+.usr-meta{font-size:10px;color:var(--text2);margin-top:2px}
+
+.field-row{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:6px 12px;margin-bottom:3px;border-radius:2px;
+  font-size:10px;border:1px solid transparent;
+  transition:all .12s;
+}
+.field-row:hover{border-color:var(--border);background:var(--green-dim)}
+.field-key{color:var(--green);font-weight:600}
+.field-val{color:var(--text2)}
+
+.empty-term{text-align:center;padding:24px 0;color:var(--text2);font-size:10px}
+.cursor-blink{display:inline-block;width:7px;height:13px;background:var(--green);animation:blink .8s step-end infinite;vertical-align:middle;margin-left:4px}
+@keyframes blink{50%{opacity:0}}
+
+.popup-actions{margin-top:14px;display:flex;flex-direction:column;gap:5px}
+.btn-term{
+  padding:10px;border:1px solid var(--green);background:var(--green);
+  color:var(--bg);font-family:'JetBrains Mono',monospace;font-size:10px;
+  font-weight:700;text-transform:uppercase;letter-spacing:.06em;
+  cursor:pointer;border-radius:3px;text-align:center;transition:all .15s;
+}
+.btn-term:hover{background:transparent;color:var(--green);box-shadow:0 0 12px rgba(0,255,102,.2)}
+.btn-ghost{
+  padding:8px;border:1px solid var(--border);background:transparent;
+  color:var(--text2);font-family:'JetBrains Mono',monospace;font-size:10px;
+  letter-spacing:.04em;cursor:pointer;border-radius:3px;text-align:center;
+  transition:all .15s;
+}
+.btn-ghost:hover{border-color:var(--green);color:var(--text)}
+
+/* HERO */
+.hero{}
+.hero-prompt{
+  font-size:11px;color:var(--text2);margin-bottom:28px;
+}
+.hero-prompt .g{color:var(--green)}
+.hero-title{
+  font-size:clamp(32px,5vw,56px);font-weight:800;line-height:1.05;
+  letter-spacing:-.03em;margin-bottom:20px;
+}
+.hero-title .g{color:var(--green);text-shadow:0 0 20px rgba(0,255,102,.3)}
+.hero-sub{font-size:13px;color:var(--text2);max-width:440px;line-height:1.7;margin-bottom:36px}
+.hero-cta{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:48px}
+.hero-btn{
+  padding:12px 28px;border:1px solid var(--green);background:var(--green);
+  color:var(--bg);font-family:'JetBrains Mono',monospace;font-size:11px;
+  font-weight:700;text-transform:uppercase;letter-spacing:.05em;
+  cursor:pointer;text-decoration:none;border-radius:3px;transition:all .15s;
+}
+.hero-btn:hover{background:transparent;color:var(--green);box-shadow:0 0 20px rgba(0,255,102,.2)}
+.hero-btn-o{
+  padding:12px 28px;border:1px solid var(--border);background:transparent;
+  color:var(--text2);font-family:'JetBrains Mono',monospace;font-size:11px;
+  letter-spacing:.04em;text-decoration:none;border-radius:3px;transition:all .15s;
+}
+.hero-btn-o:hover{border-color:var(--green);color:var(--text)}
+
+.stats{display:flex;gap:28px}
+.stat-val{font-size:22px;font-weight:800;color:var(--green);text-shadow:0 0 10px rgba(0,255,102,.2)}
+.stat-lbl{font-size:8px;text-transform:uppercase;letter-spacing:.14em;color:var(--text2);margin-top:3px}
+
+.sep{height:1px;background:var(--border);margin:40px 0}
+
+.feat-hdr{font-size:9px;text-transform:uppercase;letter-spacing:.14em;color:var(--text2);margin-bottom:20px}
+.feat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.feat-card{
+  border:1px solid var(--border);border-radius:3px;padding:20px;
+  transition:all .15s;background:var(--surface);
+}
+.feat-card:hover{border-color:var(--green);box-shadow:0 0 16px rgba(0,255,102,.06)}
+.feat-tag{font-size:8px;text-transform:uppercase;letter-spacing:.1em;color:var(--green);margin-bottom:8px;opacity:.5}
+.feat-card h4{font-size:12px;font-weight:700;margin-bottom:6px}
+.feat-card p{font-size:10px;color:var(--text2);line-height:1.6}
+
+@media(max-width:860px){.columns{grid-template-columns:1fr}.popup{margin:0 auto}}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="page-title">
+    <span><span class="g">$</span> design --variant=02 --theme=terminal</span>
+    <span class="g">cognifillz v0.1.0</span>
+  </div>
+  <div class="columns">
+    <div class="popup">
+      <div class="popup-header">
+        <span class="popup-prompt">&gt;_</span>
+        <span class="popup-brand">cognifillz</span>
+        <span class="popup-ver">v0.1.0</span>
+      </div>
+      <div class="popup-tabs">
+        <button class="popup-tab active">profile</button>
+        <button class="popup-tab">analyze</button>
+      </div>
+      <div class="popup-body">
+        <div class="section-hdr">user.profile</div>
+        <div class="usr-row">
+          <div class="usr-name">Jane Doe</div>
+          <div class="usr-meta">jane@email.com &middot; San Francisco, CA</div>
+        </div>
+        <div class="section-hdr">detected.fields <span class="ct">[0]</span></div>
+        <div class="empty-term">
+          awaiting job application page<span class="cursor-blink"></span>
+        </div>
+        <div class="popup-actions">
+          <button class="btn-term">$ autofill --run</button>
+          <button class="btn-ghost">$ profile --edit</button>
+        </div>
+      </div>
+    </div>
+    <div class="hero">
+      <div class="hero-prompt"><span class="g">$</span> cognifillz --describe</div>
+      <h1 class="hero-title">
+        Job applications,<br><span class="g">filled in seconds.</span>
+      </h1>
+      <p class="hero-sub">
+        Local AI autofill across LinkedIn, Indeed, Greenhouse and 50+ platforms. Your data never leaves your machine. Zero cloud. Zero tracking.
+      </p>
+      <div class="hero-cta">
+        <a href="#" class="hero-btn">$ install</a>
+        <a href="#" class="hero-btn-o">$ git clone</a>
+      </div>
+      <div class="stats">
+        <div><div class="stat-val">100%</div><div class="stat-lbl">Private</div></div>
+        <div><div class="stat-val">5+</div><div class="stat-lbl">Browsers</div></div>
+        <div><div class="stat-val">$0</div><div class="stat-lbl">Forever</div></div>
+      </div>
+      <div class="sep"></div>
+      <div class="feat-hdr">// features</div>
+      <div class="feat-grid">
+        <div class="feat-card"><div class="feat-tag">module.01</div><h4>Instant Autofill</h4><p>One click to fill 50+ ATS platforms.</p></div>
+        <div class="feat-card"><div class="feat-tag">module.02</div><h4>Local Privacy</h4><p>All AI runs on your machine via LM Studio.</p></div>
+        <div class="feat-card"><div class="feat-tag">module.03</div><h4>AI Matching</h4><p>Match score via your local LLM.</p></div>
+        <div class="feat-card"><div class="feat-tag">module.04</div><h4>Free Forever</h4><p>Open source. No subs. No credits.</p></div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
