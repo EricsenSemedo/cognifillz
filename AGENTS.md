@@ -1,28 +1,19 @@
-# AGENTS.md
+# CogniFillz
 
-CogniFillz is a browser extension + FastAPI backend for AI-powered job application autofill, tracking, and resume tailoring.
+Personal job-search pipeline. See README.md for the steps and commands.
 
-## Services
+## Privacy rules
 
-| Service | Command | Port |
-|---------|---------|------|
-| Extension (Chrome) | `cd apps/extension && npm run build:chrome` | N/A |
-| Extension (dev) | `cd apps/extension && npm run dev` | N/A |
-| Website (dev) | `cd apps/website && npx serve . -l 3000` | 3000 |
-| FastAPI backend | `cd apps/server && source venv/bin/activate && uvicorn main:app --reload` | 8000 |
+- Nothing personal is committed: home town, commute places and target companies live in the gitignored `config/portals.json`; `config/portals.example.json` stays generic. Tests use made-up companies and places.
+- The tracker holds public job data and status only. Never store contact details, resumes, form answers, citizenship/EEO answers or account credentials in `state/`, `config/` or tests.
+- Importers only read their sources (`~/job_search/job-review`, `Applied_Jobs.md`, roles files). Never write to them from here; job-review's `state/selections.sqlite` is opened read-only.
+- Do not open contact-detail files, finished private resume PDFs or unredacted resumes from this project. The private-resume CLI and local-autofill handle those.
+- The scanner uses only public board APIs listed in `src/scan/providers.js`. Do not scrape or automate LinkedIn, and never solve or bypass CAPTCHAs.
+- Nothing here submits an application. Statuses `submitted` and beyond are set only after the user confirms.
 
-## Key commands
+## Working on it
 
-- **Install deps**: `npm install` (root) + `cd apps/server && source venv/bin/activate && pip install -r requirements.txt`
-- **Build extension**: `npm run build:extension` or `cd apps/extension && npm run build`
-- **Type-check**: `cd apps/extension && npm run type-check`
-- **Tests**: No automated test framework. Manual testing only.
-
-## Gotchas
-
-- Icon PNGs don't exist by default -- run `apps/extension/create-icons.sh` (needs ImageMagick).
-- Python venv goes in `apps/server/venv/`. May need `sudo apt-get install -y python3.12-venv`.
-- `/health` reports `"llm_connected": false` without a local LLM -- expected, not a bug.
-- Webpack: `webpack.chrome.js` and `webpack.firefox.js` extend `webpack.common.js`. The standalone `webpack.config.js` is unused.
-- Supabase is optional; extension works with `chrome.storage.local` alone.
-- Extension fonts are self-hosted (no external Google Fonts requests in MV3).
+- Bun only (`bun test`, `bun run cogni ...`); no dependencies.
+- Tests use in-memory databases and synthetic fixtures; they never read real job-search data or the network.
+- `state/` is gitignored and holds the real tracker. Don't delete it to "reset"; use `COGNI_DB=/tmp/x.sqlite` for experiments.
+- Statuses only move forward on scan/import (`src/statuses.js`); manual `set` can move anywhere and is logged in history.

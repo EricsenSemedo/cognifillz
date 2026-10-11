@@ -1,0 +1,92 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>
+:root{--ink:var(--foreground,#1d1f24);--mut:var(--muted-foreground,#6b7080);--line:var(--border,#e3e1db);--cardbg:var(--card,#fff);
+--you:#d9822b;--cl:#7c6cf0;--loc:#1f9d6a}
+*{box-sizing:border-box}html,body{background:transparent;margin:0}
+body{color:var(--ink);font:14.5px/1.45 system-ui,-apple-system,Segoe UI,sans-serif}
+main{padding:28px 20px 32px;max-width:760px;margin:0 auto}
+h3{font:600 12px/1 system-ui;letter-spacing:.08em;text-transform:uppercase;color:var(--mut);margin:26px 0 12px}
+h3:first-child{margin-top:4px}
+.legend{display:flex;flex-wrap:wrap;gap:8px 18px;margin-bottom:14px;font-size:13px}
+.legend span{display:flex;align-items:center;gap:7px}.dot{width:11px;height:11px;border-radius:3px}
+.flow{display:grid;gap:0}
+.step{display:grid;grid-template-columns:44px 1fr;gap:12px;position:relative}
+.rail{display:flex;flex-direction:column;align-items:center}
+.num{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-weight:700;color:#fff;flex:none}
+.wire{width:2px;flex:1;background:var(--line);margin:4px 0}
+.step:last-child .wire{display:none}
+.box{background:var(--cardbg);border:1px solid var(--line);border-left:4px solid var(--c);border-radius:12px;padding:12px 14px;margin-bottom:12px}
+.box b{font-size:16px}.box p{margin:3px 0 8px;color:var(--mut)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-size:12px;font-weight:600;padding:2px 9px;border-radius:99px;border:1px solid var(--line)}
+.have{background:color-mix(in srgb,var(--loc) 16%,transparent);border-color:transparent;color:var(--loc)}
+.build{background:color-mix(in srgb,var(--you) 18%,transparent);border-color:transparent;color:var(--you)}
+.borrow{background:color-mix(in srgb,var(--cl) 18%,transparent);border-color:transparent;color:var(--cl)}
+.gate{border:2px dashed var(--you)}
+.wall{display:grid;grid-template-columns:1fr 34px 1fr;align-items:stretch}
+.side{background:var(--cardbg);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+.side b{display:block;margin-bottom:6px}.side ul{margin:0;padding-left:17px}.side li{margin:2px 0}
+.side.l{border-top:4px solid var(--loc)}.side.r{border-top:4px solid var(--cl)}
+.brick{display:flex;flex-direction:column;justify-content:center;align-items:center;gap:3px;color:var(--mut);font-size:11px;writing-mode:vertical-rl;letter-spacing:.1em;text-transform:uppercase}
+.road{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}
+.ph{background:var(--cardbg);border:1px solid var(--line);border-radius:10px;padding:9px 9px 10px;font-size:12.5px;position:relative}
+.ph i{font-style:normal;display:block;font-weight:700;font-size:11px;color:var(--mut);margin-bottom:2px}
+.ph.now{border:2px solid var(--loc)}.ph.now i{color:var(--loc)}
+@media (max-width:560px){.wall{grid-template-columns:1fr}.brick{writing-mode:horizontal-tb;padding:6px 0}.road{grid-template-columns:repeat(2,1fr)}}
+</style></head><body><main>
+<h1 style="font:600 24px/1.2 Georgia,serif;margin:0 0 6px">CogniFillz job pipeline</h1>
+<p style="margin:0 0 8px;color:var(--mut)">Find, rate, pick, tailor, fill, review, track. Contact details never leave your machines.</p>
+
+<h3>How one job flows through it</h3>
+<div class="legend">
+ <span><i class="dot" style="background:var(--you)"></i>You (seconds per job)</span>
+ <span><i class="dot" style="background:var(--cl)"></i>Claude: judgment &amp; writing</span>
+ <span><i class="dot" style="background:var(--loc)"></i>Your machines: private, local</span>
+</div>
+
+<div class="flow">
+ <div class="step" style="--c:var(--loc)"><div class="rail"><span class="num" style="background:var(--loc)">1</span><span class="wire"></span></div>
+  <div class="box"><b>Find jobs</b><p>Scan company job boards every morning; drop duplicates and dead posts.</p>
+  <div class="chips"><span class="chip borrow">Borrow: career-ops scanner</span><span class="chip have">Have: 7 AM career.py</span></div></div></div>
+
+ <div class="step" style="--c:var(--cl)"><div class="rail"><span class="num" style="background:var(--cl)">2</span><span class="wire"></span></div>
+  <div class="box"><b>Rate the fit</b><p>Score each job: can you do it, enough experience, pay, commute.</p>
+  <div class="chips"><span class="chip have">Have: job-fit rules</span><span class="chip borrow">Borrow: A–F scoring</span></div></div></div>
+
+ <div class="step" style="--c:var(--you)"><div class="rail"><span class="num" style="background:var(--you)">3</span><span class="wire"></span></div>
+  <div class="box"><b>You pick</b><p>Tap Apply or Pass on your phone.</p>
+  <div class="chips"><span class="chip have">Have: job-review cards</span></div></div></div>
+
+ <div class="step" style="--c:var(--cl)"><div class="rail"><span class="num" style="background:var(--cl)">4</span><span class="wire"></span></div>
+  <div class="box"><b>Tailor resume + cover letter</b><p>Claude rewrites from your real facts; local model double-checks nothing was invented; contacts added locally.</p>
+  <div class="chips"><span class="chip build">Build: tailoring + fact check</span><span class="chip have">Have: private-resume</span></div></div></div>
+
+ <div class="step" style="--c:var(--loc)"><div class="rail"><span class="num" style="background:var(--loc)">5</span><span class="wire"></span></div>
+  <div class="box"><b>Fill the application</b><p>Local filler types your info; local Qwen matches odd fields; Claude drafts any essay answers.</p>
+  <div class="chips"><span class="chip have">Have: local-autofill</span><span class="chip build">Build: per-site adapters</span></div></div></div>
+
+ <div class="step" style="--c:var(--you)"><div class="rail"><span class="num" style="background:var(--you)">6</span><span class="wire"></span></div>
+  <div class="box gate"><b>Review gate</b><p>You solve the CAPTCHA, glance at the screenshots, click Submit.</p>
+  <div class="chips"><span class="chip">Always you</span></div></div></div>
+
+ <div class="step" style="--c:var(--loc)"><div class="rail"><span class="num" style="background:var(--loc)">7</span><span class="wire"></span></div>
+  <div class="box"><b>Track it</b><p>One status list updates everywhere: job-review, vault, workbook.</p>
+  <div class="chips"><span class="chip have">Have: job-review</span><span class="chip build">Build: single tracker</span></div></div></div>
+</div>
+
+<h3>What crosses the privacy line</h3>
+<div class="wall">
+ <div class="side l"><b>Stays on your laptop / PC</b><ul><li>Email, phone, address</li><li>Finished resume PDFs</li><li>Form answers you typed</li><li>Citizenship, EEO, legal answers</li></ul></div>
+ <div class="brick">privacy line</div>
+ <div class="side r"><b>Goes to Claude</b><ul><li>Job postings</li><li>Your redacted resume facts</li><li>Fit scores &amp; rankings</li><li>Draft bullets &amp; cover letters</li></ul></div>
+</div>
+
+<h3>Build order</h3>
+<div class="road">
+ <div class="ph now"><i>STEP 1 · NOW</i>One tracker + try career-ops</div>
+ <div class="ph"><i>STEP 2</i>Greenhouse, Lever, Ashby filling</div>
+ <div class="ph"><i>STEP 3</i>Tailored resume + letter</div>
+ <div class="ph"><i>STEP 4</i>Runs on its own queue</div>
+ <div class="ph"><i>STEP 5</i>Workday + iCIMS</div>
+ <div class="ph"><i>STEP 6</i>Maybe drop the review step</div>
+</div>
+</main></body></html>
