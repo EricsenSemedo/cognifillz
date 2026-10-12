@@ -1,20 +1,12 @@
 {
   "name": "cognifillz",
-  "version": "0.1.0",
   "private": true,
-  "workspaces": [
-    "apps/*",
-    "packages/*"
-  ],
+  "type": "module",
+  "description": "Personal job-search pipeline: find, rate, tailor, fill, review, track.",
+  "bin": { "cogni": "bin/cogni.js" },
   "scripts": {
-    "dev:extension": "cd apps/extension && npm run dev",
-    "dev:server": "cd apps/server && uvicorn main:app --reload",
-    "build:extension": "cd apps/extension && npm run build",
-    "install:all": "npm install && npm run install:extension && npm run install:server",
-    "install:extension": "cd apps/extension && npm install",
-    "install:server": "cd apps/server && pip install -r requirements.txt"
-  },
-  "devDependencies": {
-    "typescript": "^5.3.3"
+    "cogni": "bun bin/cogni.js",
+    "scan": "bun bin/cogni.js scan",
+    "test": "bun test"
   }
 }

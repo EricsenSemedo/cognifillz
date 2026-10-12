@@ -1,61 +1,10 @@
-# Dependencies
 node_modules/
-*.pyc
-__pycache__/
-*.pyo
-*.pyd
-.Python
-env/
-venv/
-*.egg-info/
-
-# Build outputs
-dist/
-build/
-*.js.map
-
-# Environment files
+state/
 .env
-.env.local
-.env.*.local
-
-# IDE
-.vscode/
-.idea/
-*.swp
-*.swo
-*~
-
-# OS
-.DS_Store
-Thumbs.db
-
-# Logs
+.env.*
 *.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
+.DS_Store
+.claude/
 
-# Testing
-coverage/
-.nyc_output/
-
-# Temporary files
-*.tmp
-.cache/
-
-# Extension specific
-apps/extension/dist/
-apps/extension/web-ext-artifacts/
-
-# Python specific
-*.egg
-*.egg-info
-dist/
-build/
-*.pyc
-__pycache__/
-
-# Don't commit actual icons (until we have real ones)
-apps/extension/icons/*.png
-!apps/extension/icons/README.md
+# Your own places and companies; see config/portals.example.json
+config/portals.json
